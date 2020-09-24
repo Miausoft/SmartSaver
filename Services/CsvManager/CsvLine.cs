@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FileManager
+namespace Services.CsvManager
 {
     public class CsvLine
     {

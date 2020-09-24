@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Enumeration;
 using System.Linq;
 using System.Text;
 using CsvHelper;
 
-namespace FileManager
+namespace Services.CsvManager
 {
     public class CsvManager
     {
@@ -22,11 +21,6 @@ namespace FileManager
             var lines = csv.GetRecords<CsvLine>().ToList();
 
             return lines;
-        }
-
-        public string Pvz(string message)
-        {
-            return message;
         }
 
         /// <summary>
