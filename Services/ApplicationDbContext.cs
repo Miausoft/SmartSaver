@@ -7,7 +7,7 @@ using Services.Models;
 
 namespace Services
 {
-    class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext() {}
         public ApplicationDbContext(DbContextOptions options) : base(options) {}
