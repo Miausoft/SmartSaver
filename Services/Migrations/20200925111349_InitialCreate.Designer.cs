@@ -9,7 +9,7 @@ using Services;
 namespace Services.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200924111136_InitialCreate")]
+    [Migration("20200925111349_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,7 +20,7 @@ namespace Services.Migrations
 
             modelBuilder.Entity("Services.Models.Priority", b =>
                 {
-                    b.Property<int>("PriorityId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -30,24 +30,19 @@ namespace Services.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TransactionId")
+                    b.Property<int?>("UserFinancesId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("INTEGER");
+                    b.HasKey("Id");
 
-                    b.HasKey("PriorityId");
-
-                    b.HasIndex("TransactionId");
-
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserFinancesId");
 
                     b.ToTable("Priorities");
                 });
 
             modelBuilder.Entity("Services.Models.Transaction", b =>
                 {
-                    b.Property<int>("TransactionId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -60,10 +55,15 @@ namespace Services.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("UserFinancesId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("TransactionId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserFinancesId");
 
                     b.HasIndex("UserId");
 
@@ -72,45 +72,71 @@ namespace Services.Migrations
 
             modelBuilder.Entity("Services.Models.User", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("FirstName")
+                    b.Property<DateTime>("DateJoined")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Goal")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("LastName")
+                    b.Property<string>("PasswordHash")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("UserId");
+                    b.Property<int>("UserFinancesId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserFinancesId");
 
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Services.Models.UserFinances", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("Goal")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserFinances");
+                });
+
             modelBuilder.Entity("Services.Models.Priority", b =>
                 {
-                    b.HasOne("Services.Models.Transaction", "Transaction")
-                        .WithMany()
-                        .HasForeignKey("TransactionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Services.Models.User", null)
+                    b.HasOne("Services.Models.UserFinances", null)
                         .WithMany("Priorities")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserFinancesId");
                 });
 
             modelBuilder.Entity("Services.Models.Transaction", b =>
                 {
-                    b.HasOne("Services.Models.User", "User")
+                    b.HasOne("Services.Models.UserFinances", null)
                         .WithMany("Transactions")
+                        .HasForeignKey("UserFinancesId");
+
+                    b.HasOne("Services.Models.User", "User")
+                        .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Services.Models.User", b =>
+                {
+                    b.HasOne("Services.Models.UserFinances", "UserFinances")
+                        .WithMany()
+                        .HasForeignKey("UserFinancesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
