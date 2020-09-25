@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SmartSaver.Models
+namespace Services.Models
 {
     public class Transaction
     {
@@ -10,5 +10,8 @@ namespace SmartSaver.Models
         public DateTime DateTime { get; set; }
         public string Category { get; set; }
         public double Amount { get; set; }
+
+        public int UserId { get; set; }
+        public User User { get; set; }
     }
 }

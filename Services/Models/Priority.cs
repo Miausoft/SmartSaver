@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SmartSaver.Models
+namespace Services.Models
 {
     public enum PriorityImportance 
     {
@@ -16,6 +16,9 @@ namespace SmartSaver.Models
         public int PriorityId { get; set; }
         public string Name { get; set; }
         public PriorityImportance Importance { get; set; }
+
+        public int TransactionId { get; set; }
+        public Transaction Transaction { get; set; }
     }
 
 }
