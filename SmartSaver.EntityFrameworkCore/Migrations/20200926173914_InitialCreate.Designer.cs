@@ -2,30 +2,29 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Services;
+using Services.EFCore;
 
 namespace Services.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200926173914_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.8");
 
-            modelBuilder.Entity("Services.Models.Priority", b =>
+            modelBuilder.Entity("Services.EFCore.Models.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Importance")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("UserFinancesId")
@@ -38,7 +37,7 @@ namespace Services.Migrations
                     b.ToTable("Priorities");
                 });
 
-            modelBuilder.Entity("Services.Models.Transaction", b =>
+            modelBuilder.Entity("Services.EFCore.Models.Transaction", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -47,8 +46,8 @@ namespace Services.Migrations
                     b.Property<double>("Amount")
                         .HasColumnType("REAL");
 
-                    b.Property<string>("Category")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("TEXT");
@@ -56,19 +55,16 @@ namespace Services.Migrations
                     b.Property<int?>("UserFinancesId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserFinancesId");
+                    b.HasIndex("CategoryId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserFinancesId");
 
                     b.ToTable("Transactions");
                 });
 
-            modelBuilder.Entity("Services.Models.User", b =>
+            modelBuilder.Entity("Services.EFCore.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -96,7 +92,7 @@ namespace Services.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Services.Models.UserFinances", b =>
+            modelBuilder.Entity("Services.EFCore.Models.UserFinances", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -105,34 +101,43 @@ namespace Services.Migrations
                     b.Property<double>("Goal")
                         .HasColumnType("REAL");
 
+                    b.Property<double>("MonthlyExpenses")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("Revenue")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("TimeMonths")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.ToTable("UserFinances");
                 });
 
-            modelBuilder.Entity("Services.Models.Priority", b =>
+            modelBuilder.Entity("Services.EFCore.Models.Category", b =>
                 {
-                    b.HasOne("Services.Models.UserFinances", null)
+                    b.HasOne("Services.EFCore.Models.UserFinances", null)
                         .WithMany("Priorities")
                         .HasForeignKey("UserFinancesId");
                 });
 
-            modelBuilder.Entity("Services.Models.Transaction", b =>
+            modelBuilder.Entity("Services.EFCore.Models.Transaction", b =>
                 {
-                    b.HasOne("Services.Models.UserFinances", null)
-                        .WithMany("Transactions")
-                        .HasForeignKey("UserFinancesId");
-
-                    b.HasOne("Services.Models.User", "User")
+                    b.HasOne("Services.EFCore.Models.Category", "Category")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Services.EFCore.Models.UserFinances", null)
+                        .WithMany("Transactions")
+                        .HasForeignKey("UserFinancesId");
                 });
 
-            modelBuilder.Entity("Services.Models.User", b =>
+            modelBuilder.Entity("Services.EFCore.Models.User", b =>
                 {
-                    b.HasOne("Services.Models.UserFinances", "UserFinances")
+                    b.HasOne("Services.EFCore.Models.UserFinances", "UserFinances")
                         .WithMany()
                         .HasForeignKey("UserFinancesId")
                         .OnDelete(DeleteBehavior.Cascade)

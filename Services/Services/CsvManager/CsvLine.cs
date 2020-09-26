@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Services.CsvManager
+namespace SmartSaver.Domain.Services.CsvManager
 {
     public class CsvLine
     {

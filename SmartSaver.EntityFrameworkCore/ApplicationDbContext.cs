@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-using Services.Models;
+using SmartSaver.EntityFrameworkCore.Models;
 
-namespace Services
+namespace SmartSaver.EntityFrameworkCore
 {
     public class ApplicationDbContext : DbContext
     {
@@ -15,7 +15,7 @@ namespace Services
         public DbSet<User> Users { get; set; }
         public DbSet<UserFinances> UserFinances { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
-        public DbSet<Priority> Priorities { get; set; }
+        public DbSet<Category> Priorities { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
