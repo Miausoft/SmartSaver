@@ -3,7 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Services;
+using Services.EFCore;
 
 namespace Services.Migrations
 {
@@ -16,7 +16,7 @@ namespace Services.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.8");
 
-            modelBuilder.Entity("Services.Models.Category", b =>
+            modelBuilder.Entity("Services.EFCore.Models.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -35,7 +35,7 @@ namespace Services.Migrations
                     b.ToTable("Priorities");
                 });
 
-            modelBuilder.Entity("Services.Models.Transaction", b =>
+            modelBuilder.Entity("Services.EFCore.Models.Transaction", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,7 +65,7 @@ namespace Services.Migrations
                     b.ToTable("Transactions");
                 });
 
-            modelBuilder.Entity("Services.Models.User", b =>
+            modelBuilder.Entity("Services.EFCore.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -93,7 +93,7 @@ namespace Services.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Services.Models.UserFinances", b =>
+            modelBuilder.Entity("Services.EFCore.Models.UserFinances", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -116,29 +116,29 @@ namespace Services.Migrations
                     b.ToTable("UserFinances");
                 });
 
-            modelBuilder.Entity("Services.Models.Category", b =>
+            modelBuilder.Entity("Services.EFCore.Models.Category", b =>
                 {
-                    b.HasOne("Services.Models.UserFinances", null)
+                    b.HasOne("Services.EFCore.Models.UserFinances", null)
                         .WithMany("Priorities")
                         .HasForeignKey("UserFinancesId");
                 });
 
-            modelBuilder.Entity("Services.Models.Transaction", b =>
+            modelBuilder.Entity("Services.EFCore.Models.Transaction", b =>
                 {
-                    b.HasOne("Services.Models.UserFinances", null)
+                    b.HasOne("Services.EFCore.Models.UserFinances", null)
                         .WithMany("Transactions")
                         .HasForeignKey("UserFinancesId");
 
-                    b.HasOne("Services.Models.User", "User")
+                    b.HasOne("Services.EFCore.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Services.Models.User", b =>
+            modelBuilder.Entity("Services.EFCore.Models.User", b =>
                 {
-                    b.HasOne("Services.Models.UserFinances", "UserFinances")
+                    b.HasOne("Services.EFCore.Models.UserFinances", "UserFinances")
                         .WithMany()
                         .HasForeignKey("UserFinancesId")
                         .OnDelete(DeleteBehavior.Cascade)

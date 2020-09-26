@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-using Services.Models;
+using Services.EFCore.Models;
 
-namespace Services
+namespace Services.EFCore
 {
     public class ApplicationDbContext : DbContext
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Services.Models
+namespace Services.EFCore.Models
 {
     public class UserFinances
     {

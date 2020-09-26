@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Services;
-using Services.Models;
+using Services.ExtensionMethods;
 
 namespace SmartSaver
 {
@@ -29,9 +29,10 @@ namespace SmartSaver
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //test
-            //using var db = new ApplicationDbContext();
-            //var list = db.Users.ToList();
+            //var password = "hello";
+            //var p2 = "other";
+
+            //password.Verify(p2.Hash());
         }
     }
 }
