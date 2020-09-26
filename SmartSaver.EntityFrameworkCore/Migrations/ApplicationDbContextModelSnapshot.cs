@@ -3,9 +3,9 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Services.EFCore;
+using SmartSaver.EntityFrameworkCore;
 
-namespace Services.Migrations
+namespace SmartSaver.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -16,7 +16,7 @@ namespace Services.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.8");
 
-            modelBuilder.Entity("Services.EFCore.Models.Category", b =>
+            modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -35,7 +35,7 @@ namespace Services.Migrations
                     b.ToTable("Priorities");
                 });
 
-            modelBuilder.Entity("Services.EFCore.Models.Transaction", b =>
+            modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Transaction", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -62,7 +62,7 @@ namespace Services.Migrations
                     b.ToTable("Transactions");
                 });
 
-            modelBuilder.Entity("Services.EFCore.Models.User", b =>
+            modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -90,7 +90,7 @@ namespace Services.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Services.EFCore.Models.UserFinances", b =>
+            modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.UserFinances", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -113,29 +113,29 @@ namespace Services.Migrations
                     b.ToTable("UserFinances");
                 });
 
-            modelBuilder.Entity("Services.EFCore.Models.Category", b =>
+            modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Category", b =>
                 {
-                    b.HasOne("Services.EFCore.Models.UserFinances", null)
+                    b.HasOne("SmartSaver.EntityFrameworkCore.Models.UserFinances", null)
                         .WithMany("Priorities")
                         .HasForeignKey("UserFinancesId");
                 });
 
-            modelBuilder.Entity("Services.EFCore.Models.Transaction", b =>
+            modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Transaction", b =>
                 {
-                    b.HasOne("Services.EFCore.Models.Category", "Category")
+                    b.HasOne("SmartSaver.EntityFrameworkCore.Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Services.EFCore.Models.UserFinances", null)
+                    b.HasOne("SmartSaver.EntityFrameworkCore.Models.UserFinances", null)
                         .WithMany("Transactions")
                         .HasForeignKey("UserFinancesId");
                 });
 
-            modelBuilder.Entity("Services.EFCore.Models.User", b =>
+            modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.User", b =>
                 {
-                    b.HasOne("Services.EFCore.Models.UserFinances", "UserFinances")
+                    b.HasOne("SmartSaver.EntityFrameworkCore.Models.UserFinances", "UserFinances")
                         .WithMany()
                         .HasForeignKey("UserFinancesId")
                         .OnDelete(DeleteBehavior.Cascade)
