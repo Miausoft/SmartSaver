@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmartSaver.Domain\SmartSaver.Domain.csproj" />
-    <ProjectReference Include="..\SmartSaver.EntityFrameworkCore\SmartSaver.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
 </Project>

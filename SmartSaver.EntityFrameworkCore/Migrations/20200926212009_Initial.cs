@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SmartSaver.EntityFrameworkCore.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -24,7 +24,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Priorities",
+                name: "Category",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -34,9 +34,9 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Priorities", x => x.Id);
+                    table.PrimaryKey("PK_Category", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Priorities_UserFinances_UserFinancesId",
+                        name: "FK_Category_UserFinances_UserFinancesId",
                         column: x => x.UserFinancesId,
                         principalTable: "UserFinances",
                         principalColumn: "Id",
@@ -44,7 +44,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "User",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -57,9 +57,9 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.PrimaryKey("PK_User", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_UserFinances_UserFinancesId",
+                        name: "FK_User_UserFinances_UserFinancesId",
                         column: x => x.UserFinancesId,
                         principalTable: "UserFinances",
                         principalColumn: "Id",
@@ -67,7 +67,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Transactions",
+                name: "Transaction",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -79,15 +79,15 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Transactions", x => x.Id);
+                    table.PrimaryKey("PK_Transaction", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Transactions_Priorities_CategoryId",
+                        name: "FK_Transaction_Category_CategoryId",
                         column: x => x.CategoryId,
-                        principalTable: "Priorities",
+                        principalTable: "Category",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Transactions_UserFinances_UserFinancesId",
+                        name: "FK_Transaction_UserFinances_UserFinancesId",
                         column: x => x.UserFinancesId,
                         principalTable: "UserFinances",
                         principalColumn: "Id",
@@ -95,36 +95,36 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Priorities_UserFinancesId",
-                table: "Priorities",
+                name: "IX_Category_UserFinancesId",
+                table: "Category",
                 column: "UserFinancesId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_CategoryId",
-                table: "Transactions",
+                name: "IX_Transaction_CategoryId",
+                table: "Transaction",
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_UserFinancesId",
-                table: "Transactions",
+                name: "IX_Transaction_UserFinancesId",
+                table: "Transaction",
                 column: "UserFinancesId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_UserFinancesId",
-                table: "Users",
+                name: "IX_User_UserFinancesId",
+                table: "User",
                 column: "UserFinancesId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Transactions");
+                name: "Transaction");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "User");
 
             migrationBuilder.DropTable(
-                name: "Priorities");
+                name: "Category");
 
             migrationBuilder.DropTable(
                 name: "UserFinances");

@@ -32,7 +32,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
 
                     b.HasIndex("UserFinancesId");
 
-                    b.ToTable("Priorities");
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Transaction", b =>
@@ -59,7 +59,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
 
                     b.HasIndex("UserFinancesId");
 
-                    b.ToTable("Transactions");
+                    b.ToTable("Transaction");
                 });
 
             modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.User", b =>
@@ -87,7 +87,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
 
                     b.HasIndex("UserFinancesId");
 
-                    b.ToTable("Users");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.UserFinances", b =>

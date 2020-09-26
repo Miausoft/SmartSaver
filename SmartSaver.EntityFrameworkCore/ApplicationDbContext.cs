@@ -12,14 +12,17 @@ namespace SmartSaver.EntityFrameworkCore
         public ApplicationDbContext() {}
         public ApplicationDbContext(DbContextOptions options) : base(options) {}
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<User> User { get; set; }
         public DbSet<UserFinances> UserFinances { get; set; }
-        public DbSet<Transaction> Transactions { get; set; }
-        public DbSet<Category> Priorities { get; set; }
+        public DbSet<Transaction> Transaction { get; set; }
+        public DbSet<Category> Category { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Filename=Database.db");
+            optionsBuilder.UseSqlite(@"Data Source=Database.db;", options =>
+            {
+                options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
+            });
 
             base.OnConfiguring(optionsBuilder);
         }

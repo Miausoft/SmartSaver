@@ -9,8 +9,8 @@ using SmartSaver.EntityFrameworkCore;
 namespace SmartSaver.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200926182846_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20200926212009_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,7 +34,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
 
                     b.HasIndex("UserFinancesId");
 
-                    b.ToTable("Priorities");
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Transaction", b =>
@@ -61,7 +61,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
 
                     b.HasIndex("UserFinancesId");
 
-                    b.ToTable("Transactions");
+                    b.ToTable("Transaction");
                 });
 
             modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.User", b =>
@@ -89,7 +89,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
 
                     b.HasIndex("UserFinancesId");
 
-                    b.ToTable("Users");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.UserFinances", b =>

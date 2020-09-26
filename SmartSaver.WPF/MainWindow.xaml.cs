@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SmartSaver.Domain.Services;
 using SmartSaver.Domain.ExtensionMethods;
+using SmartSaver.Domain.Services.AuthenticationServices;
 
 namespace SmartSaver
 {
@@ -29,7 +30,8 @@ namespace SmartSaver
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
+            var ars = new AuthenticationServices();
+            ars.Register("povilasleka", "hakunamatata", "+37062571220");
         }
     }
 }
