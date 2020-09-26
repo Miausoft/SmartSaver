@@ -29,10 +29,7 @@ namespace SmartSaver
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //var password = "hello";
-            //var p2 = "other";
 
-            //password.Verify(p2.Hash());
         }
     }
 }
