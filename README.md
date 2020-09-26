@@ -2,7 +2,7 @@
 Trello: https://trello.com/b/amb6EPR8/smartsaver
 
 ### Database design
-![Database diagram](https://www.part.lt/img/879efe4f7c2f34e02149b07f0ad53564612.png)
+![Database diagram](https://www.part.lt/img/ff763b3ce4f6be3af921540fbaca1c92508.png)
 
 ### Requirements
 
