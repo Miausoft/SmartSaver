@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Services.EFCore.Models
+namespace SmartSaver.EntityFrameworkCore.Models
 {
     public class Category
     {

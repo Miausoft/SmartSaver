@@ -12,8 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Services;
-using Services.ExtensionMethods;
+using SmartSaver.Domain.Services;
+using SmartSaver.Domain.ExtensionMethods;
 
 namespace SmartSaver
 {

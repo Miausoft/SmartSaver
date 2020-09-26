@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-using Services.EFCore.Models;
+using SmartSaver.EntityFrameworkCore.Models;
 
-namespace Services.EFCore
+namespace SmartSaver.EntityFrameworkCore
 {
     public class ApplicationDbContext : DbContext
     {

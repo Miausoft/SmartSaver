@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using CsvHelper;
 
-namespace Services.CsvManager
+namespace SmartSaver.Domain.Services.CsvManager
 {
     public class CsvManager
     {

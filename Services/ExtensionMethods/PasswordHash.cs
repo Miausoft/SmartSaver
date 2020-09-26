@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
-namespace Services.ExtensionMethods
+namespace SmartSaver.Domain.ExtensionMethods
 {
     public static class PasswordHash
     {
