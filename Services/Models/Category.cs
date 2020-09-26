@@ -6,20 +6,11 @@ using System.Text;
 
 namespace Services.Models
 {
-    public enum PriorityImportance 
-    {
-        High = 1,
-        Medium = 2,
-        Low = 3
-    }
-
-    public class Priority
+    public class Category
     {
         [Key]
         public int Id { get; set; }
-        public string Name { get; set; }
-        public PriorityImportance Importance { get; set; }
-
+        public string Title { get; set; }
     }
 
 }

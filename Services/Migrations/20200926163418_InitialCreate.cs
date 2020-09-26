@@ -13,7 +13,10 @@ namespace Services.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Goal = table.Column<double>(nullable: false)
+                    Goal = table.Column<double>(nullable: false),
+                    Revenue = table.Column<double>(nullable: false),
+                    MonthlyExpenses = table.Column<double>(nullable: false),
+                    TimeMonths = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -26,8 +29,7 @@ namespace Services.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(nullable: true),
-                    Importance = table.Column<int>(nullable: false),
+                    Title = table.Column<string>(nullable: true),
                     UserFinancesId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>

@@ -9,7 +9,7 @@ using Services;
 namespace Services.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200925111349_InitialCreate")]
+    [Migration("20200926163418_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,16 +18,13 @@ namespace Services.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.8");
 
-            modelBuilder.Entity("Services.Models.Priority", b =>
+            modelBuilder.Entity("Services.Models.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Importance")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("UserFinancesId")
@@ -107,12 +104,21 @@ namespace Services.Migrations
                     b.Property<double>("Goal")
                         .HasColumnType("REAL");
 
+                    b.Property<double>("MonthlyExpenses")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("Revenue")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("TimeMonths")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.ToTable("UserFinances");
                 });
 
-            modelBuilder.Entity("Services.Models.Priority", b =>
+            modelBuilder.Entity("Services.Models.Category", b =>
                 {
                     b.HasOne("Services.Models.UserFinances", null)
                         .WithMany("Priorities")
