@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.XPath;
+using Microsoft.EntityFrameworkCore;
 using SmartSaver.Domain.ExtensionMethods;
 using SmartSaver.EntityFrameworkCore;
 using SmartSaver.EntityFrameworkCore.Models;
@@ -10,36 +13,71 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
 {
     public class AuthenticationServices : IAuthenticationServices
     {
-
+        /// <summary>
+        /// Tries to match username with password.
+        /// Logs user in.
+        /// </summary>
+        /// <param name="username">His username</param>
+        /// <param name="password">His password</param>
+        /// <returns>User object if successful.</returns>
         public User Login(string username, string password)
         {
-            throw new NotImplementedException();
+            using var db = new ApplicationDbContext();
+
+            var user = db.User.FirstOrDefault(p => p.Username.Equals(username));
+            if (user == null)
+                return null;
+
+            if (!password.Verify(user.PasswordHash))
+                return null;
+
+            user.Account = db.Account.FirstOrDefault(p => p.Id.Equals(user.AccountId));
+
+            return user;
         }
 
-        public bool Register(string username, string password, string number)
+        /// <summary>
+        /// Registers new user with given username, password, mobile number.
+        /// </summary>
+        /// <param name="username">User's username</param>
+        /// <param name="password">His password</param>
+        /// <param name="number">His mobile number.</param>
+        /// <returns>RegistrationResult</returns>
+        public RegistrationResult Register(string username, string password, string number)
         {
+            using var db = new ApplicationDbContext();
+
+            if (CheckUserExist(username, number))
+                return RegistrationResult.UserAlreadyExist;
+
             var user = new User()
             {
                 Username = username,
-                PasswordHash = password.Hash(),
+                PasswordHash = password,
                 PhoneNumber = number,
-                UserFinances = new UserFinances()
+                DateJoined = DateTime.Now,
+                Account = new Account()
             };
 
-            if (!IsCorrect(user))
-                return false;
+            if (!user.IsFormatCorrect())
+                return RegistrationResult.InvalidUserObject;
 
-            using var db = new ApplicationDbContext();
+            user.PasswordHash = password.Hash();
 
             db.User.Add(user);
             db.SaveChanges();
 
-            return true;
+            return RegistrationResult.Success;
         }
 
-        private bool IsCorrect(User user)
+        public bool CheckUserExist(string username, string number)
         {
-            return true;
+            using var db = new ApplicationDbContext();
+
+            var user = db.User.FirstOrDefault(p => p.Username.Equals(username) || p.PhoneNumber.Equals(number));
+            if (user != null) return true;
+
+            return false;
         }
     }
 }

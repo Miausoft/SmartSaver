@@ -13,7 +13,7 @@ namespace SmartSaver.EntityFrameworkCore
         public ApplicationDbContext(DbContextOptions options) : base(options) {}
 
         public DbSet<User> User { get; set; }
-        public DbSet<UserFinances> UserFinances { get; set; }
+        public DbSet<Account> Account { get; set; }
         public DbSet<Transaction> Transaction { get; set; }
         public DbSet<Category> Category { get; set; }
 

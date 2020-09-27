@@ -8,7 +8,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "UserFinances",
+                name: "Account",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -20,7 +20,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserFinances", x => x.Id);
+                    table.PrimaryKey("PK_Account", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -30,15 +30,15 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Title = table.Column<string>(nullable: true),
-                    UserFinancesId = table.Column<int>(nullable: true)
+                    AccountId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Category", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Category_UserFinances_UserFinancesId",
-                        column: x => x.UserFinancesId,
-                        principalTable: "UserFinances",
+                        name: "FK_Category_Account_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Account",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -49,7 +49,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserFinancesId = table.Column<int>(nullable: false),
+                    AccountId = table.Column<int>(nullable: false),
                     Username = table.Column<string>(nullable: true),
                     PasswordHash = table.Column<string>(nullable: true),
                     PhoneNumber = table.Column<string>(nullable: true),
@@ -59,9 +59,9 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                 {
                     table.PrimaryKey("PK_User", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_User_UserFinances_UserFinancesId",
-                        column: x => x.UserFinancesId,
-                        principalTable: "UserFinances",
+                        name: "FK_User_Account_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Account",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -75,29 +75,34 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                     DateTime = table.Column<DateTime>(nullable: false),
                     Amount = table.Column<double>(nullable: false),
                     CategoryId = table.Column<int>(nullable: false),
-                    UserFinancesId = table.Column<int>(nullable: true)
+                    AccountId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Transaction", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Transaction_Account_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Account",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Transaction_Category_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Category",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Transaction_UserFinances_UserFinancesId",
-                        column: x => x.UserFinancesId,
-                        principalTable: "UserFinances",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Category_UserFinancesId",
+                name: "IX_Category_AccountId",
                 table: "Category",
-                column: "UserFinancesId");
+                column: "AccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transaction_AccountId",
+                table: "Transaction",
+                column: "AccountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transaction_CategoryId",
@@ -105,14 +110,9 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transaction_UserFinancesId",
-                table: "Transaction",
-                column: "UserFinancesId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_User_UserFinancesId",
+                name: "IX_User_AccountId",
                 table: "User",
-                column: "UserFinancesId");
+                column: "AccountId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -127,7 +127,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                 name: "Category");
 
             migrationBuilder.DropTable(
-                name: "UserFinances");
+                name: "Account");
         }
     }
 }

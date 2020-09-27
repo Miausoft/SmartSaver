@@ -6,10 +6,17 @@ using SmartSaver.EntityFrameworkCore.Models;
 
 namespace SmartSaver.Domain.Services.AuthenticationServices
 {
-    interface IAuthenticationServices
+    public enum RegistrationResult
+    {
+        Success,
+        UserAlreadyExist,
+        InvalidUserObject
+    }
+
+    public interface IAuthenticationServices
     {
         User Login(string username, string password);
-        bool Register(string username, string password, string number);
+        RegistrationResult Register(string username, string password, string number);
 
     }
 }

@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using SmartSaver.Domain.Services;
 using SmartSaver.Domain.ExtensionMethods;
 using SmartSaver.Domain.Services.AuthenticationServices;
+using SmartSaver.EntityFrameworkCore;
 
 namespace SmartSaver
 {
@@ -23,15 +24,24 @@ namespace SmartSaver
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly AuthenticationServices _auth;
+
         public MainWindow()
         {
             InitializeComponent();
+            _auth = new AuthenticationServices();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var ars = new AuthenticationServices();
-            ars.Register("povilasleka", "hakunamatata", "+37062571220");
+            // Veikia
+            // _auth.Register("povilasl", "HaK8N!Mat!8", "+370625111220");
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            // Veikia
+            //var user = _auth.Login("povilasl", "HaK8N!Mat!8");
         }
     }
 }

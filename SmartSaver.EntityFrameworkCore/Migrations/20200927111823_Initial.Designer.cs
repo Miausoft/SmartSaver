@@ -9,7 +9,7 @@ using SmartSaver.EntityFrameworkCore;
 namespace SmartSaver.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200926212009_Initial")]
+    [Migration("20200927111823_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,81 +18,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.8");
 
-            modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Category", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("UserFinancesId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserFinancesId");
-
-                    b.ToTable("Category");
-                });
-
-            modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Transaction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<double>("Amount")
-                        .HasColumnType("REAL");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("UserFinancesId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("UserFinancesId");
-
-                    b.ToTable("Transaction");
-                });
-
-            modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("DateJoined")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("UserFinancesId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Username")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserFinancesId");
-
-                    b.ToTable("User");
-                });
-
-            modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.UserFinances", b =>
+            modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Account", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -112,34 +38,108 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserFinances");
+                    b.ToTable("Account");
                 });
 
             modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Category", b =>
                 {
-                    b.HasOne("SmartSaver.EntityFrameworkCore.Models.UserFinances", null)
-                        .WithMany("Priorities")
-                        .HasForeignKey("UserFinancesId");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("AccountId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Transaction", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("AccountId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Transaction");
+                });
+
+            modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("DateJoined")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.ToTable("User");
+                });
+
+            modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Category", b =>
+                {
+                    b.HasOne("SmartSaver.EntityFrameworkCore.Models.Account", null)
+                        .WithMany("Priorities")
+                        .HasForeignKey("AccountId");
+                });
+
+            modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Transaction", b =>
+                {
+                    b.HasOne("SmartSaver.EntityFrameworkCore.Models.Account", null)
+                        .WithMany("Transactions")
+                        .HasForeignKey("AccountId");
+
                     b.HasOne("SmartSaver.EntityFrameworkCore.Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("SmartSaver.EntityFrameworkCore.Models.UserFinances", null)
-                        .WithMany("Transactions")
-                        .HasForeignKey("UserFinancesId");
                 });
 
             modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.User", b =>
                 {
-                    b.HasOne("SmartSaver.EntityFrameworkCore.Models.UserFinances", "UserFinances")
+                    b.HasOne("SmartSaver.EntityFrameworkCore.Models.Account", "Account")
                         .WithMany()
-                        .HasForeignKey("UserFinancesId")
+                        .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
