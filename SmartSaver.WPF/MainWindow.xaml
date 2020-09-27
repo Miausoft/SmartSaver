@@ -5,37 +5,64 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SmartSaver"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="625" Background="#FF263533" Foreground="#FF194D4C">
+        Title="MainWindow" Height="450" Width="625" Foreground="#FF194D4C">
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FF1A685B"/>
+            <GradientStop Color="#FF7C9D9A" Offset="0.187"/>
+        </LinearGradientBrush>
+    </Window.Background>
     <Grid>
-        <TabControl Background="#FF2B4441" BorderBrush="#FF263533">
-            <TabItem Header="STATUS" Margin="1,9,-1,-9" Width="120" FontFamily="Bahnschrift SemiBold" FontSize="16">
+        <TabControl BorderBrush="{x:Null}" Background="White">
+            <TabItem Header="➢" Margin="475,13,-480,-13" FontFamily="Bahnschrift SemiBold" FontSize="20" BorderBrush="{x:Null}">
                 <TabItem.Background>
                     <LinearGradientBrush EndPoint="0,1">
                         <GradientStop Color="#FFF0F0F0"/>
-                        <GradientStop Color="#FFE7E7E7" Offset="1"/>
+                        <GradientStop Color="White" Offset="0.689"/>
                     </LinearGradientBrush>
                 </TabItem.Background>
-                <Grid Background="#FFE7E7E7" Margin="0,10,0,0">
+                <Grid Margin="0,10,0,0">
+                    <Grid.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="White"/>
+                            <GradientStop Color="#FF74C0B9" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Grid.Background>
                     <Grid.ColumnDefinitions>
 
                         <ColumnDefinition Width="74*"/>
                         <ColumnDefinition Width="323*"/>
 
                     </Grid.ColumnDefinitions>
-                    <GroupBox Grid.Column="1" Header="" Margin="300,71,10,145" Background="White"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="37,69,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="46" Width="314" FontFamily="Corbel Light" FontStyle="Normal" FontSize="32" FontWeight="Normal" Grid.Column="1" TextAlignment="Center"><Run Language="lt-lt" Text="SMART SAVER"/></TextBlock>
+                    <Button Content="LOG IN" Grid.Column="1" HorizontalAlignment="Left" Margin="97,177,0,0" VerticalAlignment="Top" Height="42" Width="195" FontFamily="Calibri Light" BorderBrush="{x:Null}" Background="White" Click="Button_Click"/>
+                    <Label Content="Don't have an account?" Grid.Column="1" HorizontalAlignment="Left" Margin="133,229,0,0" VerticalAlignment="Top" FontFamily="Calibri Light" FontSize="12" FontStyle="Normal"/>
+                    <Button Content="REGISTER" Grid.Column="1" HorizontalAlignment="Left" Margin="97,250,0,0" VerticalAlignment="Top" Height="32" Width="195" FontFamily="Calibri Light" BorderBrush="{x:Null}" Background="White" Click="Button_Click_1"/>
+                    <Label Content="Save easier." Grid.Column="1" HorizontalAlignment="Left" Margin="155,96,0,0" VerticalAlignment="Top" FontFamily="Calibri Light" FontSize="15" FontStyle="Normal"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="STATUS" Margin="-31,13,31,-13" Width="120" FontFamily="Bahnschrift SemiBold" FontSize="16" BorderBrush="{x:Null}">
+                <TabItem.Background>
+                    <LinearGradientBrush EndPoint="0,1">
+                        <GradientStop Color="#FFF0F0F0"/>
+                        <GradientStop Color="White" Offset="1"/>
+                    </LinearGradientBrush>
+                </TabItem.Background>
+                <Grid Background="White" Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+
+                        <ColumnDefinition Width="74*"/>
+                        <ColumnDefinition Width="323*"/>
+
+                    </Grid.ColumnDefinitions>
                     <TextBlock HorizontalAlignment="Left" Margin="12,60,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="230" FontFamily="Candara Light" FontStyle="Italic" FontSize="14" FontWeight="Normal" Grid.ColumnSpan="2"><Run Text="Next su"/><Run Language="lt-lt" Text="g"/><Run Text="gestions"/><Run Text=": YYYY-MM-DD"/></TextBlock>
                     <GroupBox Header="" Margin="10,71,228,71" Background="White" Grid.ColumnSpan="2">
                         <TextBlock HorizontalAlignment="Left" Margin="22,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="250" Width="330" FontSize="18"><Run Text="INFORMACIJA kaip ir kiek buvo galima sutaupyti"/><Run Language="lt-lt" Text=" / INFORMACIJA kaip ir kiek buvo galima sutaupyti / "/><Run Text="INFORMACIJA kaip ir kiek buvo galima sutaupyti"/><Run Language="lt-lt" Text=" / INFORMACIJA kaip ir kiek buvo galima sutaupyti / "/><Run Text="INFORMACIJA kaip ir kiek buvo galima sutaupyti"/><Run Language="lt-lt" Text=" / INFORMACIJA kaip ir kiek buvo galima sutaupyti /"/><LineBreak/><Run Language="lt-lt"/></TextBlock>
                     </GroupBox>
-                    <Button Content="Log in" HorizontalAlignment="Left" Margin="315,153,0,0" VerticalAlignment="Top" Height="24" Grid.Column="1" Width="167" Click="Button_Click"/>
-                    <Button Content="Register" HorizontalAlignment="Left" Margin="315,205,0,0" VerticalAlignment="Top" Height="24" Grid.Column="1" Width="167"/>
-                    <TextBox Grid.Column="1" HorizontalAlignment="Left" Margin="315,127,0,0" Text="Password" TextWrapping="Wrap" VerticalAlignment="Top" Width="167"/>
-                    <TextBox Grid.Column="1" HorizontalAlignment="Left" Margin="315,100,0,0" Text="Username" TextWrapping="Wrap" VerticalAlignment="Top" Width="167" Height="22"/>
-                    <Label Content="Don't have an account?" Grid.Column="1" HorizontalAlignment="Left" Margin="325,182,0,0" VerticalAlignment="Top" FontSize="12" FontFamily="Arial" FontStyle="Italic"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="ENTRIES" Margin="3,9,-3,-9" Width="120" Background="#FFE7E7E7" FontFamily="Bahnschrift SemiBold" FontSize="16">
-                <Grid Background="#FFE7E7E7" Margin="0,10,0,0">
+            <TabItem Header="ENTRIES" Margin="-33,13,33,-13" Width="120" Background="White" FontFamily="Bahnschrift SemiBold" FontSize="16" BorderBrush="{x:Null}">
+                <Grid Background="White" Margin="0,10,0,0">
                     <Grid.ColumnDefinitions>
 
                     </Grid.ColumnDefinitions>
@@ -52,14 +79,14 @@
                     <Label Content="Nessecity" HorizontalAlignment="Left" Margin="210,243,0,0" VerticalAlignment="Top" FontFamily="Arial" FontStyle="Normal" FontWeight="Bold" FontSize="11"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="HISTORY" Margin="3,9,-3,-9" Width="120" FontSize="16" FontFamily="Bahnschrift SemiBold">
+            <TabItem Header="HISTORY" Margin="-36,13,0,-13" Width="120" FontSize="16" FontFamily="Bahnschrift SemiBold" BorderBrush="{x:Null}" HorizontalAlignment="Left">
                 <TabItem.Background>
                     <LinearGradientBrush EndPoint="0,1">
                         <GradientStop Color="#FFF0F0F0"/>
-                        <GradientStop Color="#FFE7E7E7" Offset="1"/>
+                        <GradientStop Color="White" Offset="1"/>
                     </LinearGradientBrush>
                 </TabItem.Background>
-                <Grid Background="#FFE7E7E7" Margin="0,10,0,0">
+                <Grid Background="White" Margin="0,10,0,0">
                     <Grid.ColumnDefinitions>
 
                     </Grid.ColumnDefinitions>
@@ -72,14 +99,8 @@
                     </ListView>
                 </Grid>
             </TabItem>
-            <TabItem Header="SAVING PLANS" Margin="3,9,-1,-9" FontSize="16" FontFamily="Bahnschrift SemiBold">
-                <TabItem.Background>
-                    <LinearGradientBrush EndPoint="0,1">
-                        <GradientStop Color="#FFF0F0F0"/>
-                        <GradientStop Color="#FFE7E7E7" Offset="1"/>
-                    </LinearGradientBrush>
-                </TabItem.Background>
-                <Grid Background="#FFE5E5E5" Margin="0,10,0,0">
+            <TabItem Header="SAVING PLANS" Margin="-38,13,40,-13" FontSize="16" FontFamily="Bahnschrift SemiBold" BorderBrush="{x:Null}" Background="White">
+                <Grid Background="White" Margin="0,10,0,0">
                     <Grid.ColumnDefinitions>
 
                         <ColumnDefinition/>
@@ -88,6 +109,7 @@
                     <Label Content="Priorities?&#xD;&#xA;&#xD;&#xA;etc." HorizontalAlignment="Left" Margin="24,66,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
+
 
         </TabControl>
     </Grid>
