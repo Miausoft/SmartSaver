@@ -9,11 +9,11 @@ namespace SmartSaver.SavingMethodSuggestion
     {
         public double AmountToAllocate(double goal, double savedSum, DateTime startDate, DateTime endDate)
         {
-            Console.WriteLine("Praejo dienu: " + DaysPassed(endDate, startDate));
-            Console.WriteLine("Liko dienu: " + DaysLeft(endDate));
-            Console.WriteLine("Vidurkis: " + Average(DaysPassed(endDate, startDate), savedSum));
-            Console.Write("Numatomas laikas (po kiek dienu nuo siandien datos): ");
-            Console.WriteLine(EstimatedTime(goal, savedSum, startDate, endDate));
+            //Console.WriteLine("Praejo dienu: " + DaysPassed(endDate, startDate));
+            //Console.WriteLine("Liko dienu: " + DaysLeft(endDate));
+            //Console.WriteLine("Vidurkis: " + Average(DaysPassed(endDate, startDate), savedSum));
+            //Console.Write("Numatomas laikas (po kiek dienu nuo siandien datos): ");
+            //Console.WriteLine(EstimatedTime(goal, savedSum, startDate, endDate));
            
             return (goal - savedSum) / DaysLeft(endDate);
         }
