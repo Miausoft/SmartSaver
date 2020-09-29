@@ -24,13 +24,14 @@ namespace SmartSaver
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly AuthenticationServices _auth;
+
         public MainWindow()
         {
             InitializeComponent();
-
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e) //LOG IN launch button
+        private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             LogInWindow loginW = new LogInWindow(); 
             loginW.Show();
@@ -40,7 +41,6 @@ namespace SmartSaver
         {
             RegisterWindow registerW = new RegisterWindow();
             registerW.Show();
-            
         }
     }
 }

@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SmartSaver.EntityFrameworkCore.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "UserFinances",
+                name: "Account",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -20,36 +20,36 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserFinances", x => x.Id);
+                    table.PrimaryKey("PK_Account", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Priorities",
+                name: "Category",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Title = table.Column<string>(nullable: true),
-                    UserFinancesId = table.Column<int>(nullable: true)
+                    AccountId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Priorities", x => x.Id);
+                    table.PrimaryKey("PK_Category", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Priorities_UserFinances_UserFinancesId",
-                        column: x => x.UserFinancesId,
-                        principalTable: "UserFinances",
+                        name: "FK_Category_Account_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Account",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "User",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserFinancesId = table.Column<int>(nullable: false),
+                    AccountId = table.Column<int>(nullable: false),
                     Username = table.Column<string>(nullable: true),
                     PasswordHash = table.Column<string>(nullable: true),
                     PhoneNumber = table.Column<string>(nullable: true),
@@ -57,17 +57,17 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.PrimaryKey("PK_User", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_UserFinances_UserFinancesId",
-                        column: x => x.UserFinancesId,
-                        principalTable: "UserFinances",
+                        name: "FK_User_Account_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Account",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Transactions",
+                name: "Transaction",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -75,59 +75,59 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                     DateTime = table.Column<DateTime>(nullable: false),
                     Amount = table.Column<double>(nullable: false),
                     CategoryId = table.Column<int>(nullable: false),
-                    UserFinancesId = table.Column<int>(nullable: true)
+                    AccountId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Transactions", x => x.Id);
+                    table.PrimaryKey("PK_Transaction", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Transactions_Priorities_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Priorities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Transactions_UserFinances_UserFinancesId",
-                        column: x => x.UserFinancesId,
-                        principalTable: "UserFinances",
+                        name: "FK_Transaction_Account_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Account",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Transaction_Category_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Category",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Priorities_UserFinancesId",
-                table: "Priorities",
-                column: "UserFinancesId");
+                name: "IX_Category_AccountId",
+                table: "Category",
+                column: "AccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_CategoryId",
-                table: "Transactions",
+                name: "IX_Transaction_AccountId",
+                table: "Transaction",
+                column: "AccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transaction_CategoryId",
+                table: "Transaction",
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_UserFinancesId",
-                table: "Transactions",
-                column: "UserFinancesId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_UserFinancesId",
-                table: "Users",
-                column: "UserFinancesId");
+                name: "IX_User_AccountId",
+                table: "User",
+                column: "AccountId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Transactions");
+                name: "Transaction");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "User");
 
             migrationBuilder.DropTable(
-                name: "Priorities");
+                name: "Category");
 
             migrationBuilder.DropTable(
-                name: "UserFinances");
+                name: "Account");
         }
     }
 }

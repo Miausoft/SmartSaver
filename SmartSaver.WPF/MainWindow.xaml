@@ -59,6 +59,13 @@
                     <GroupBox Header="" Margin="10,71,228,71" Background="White" Grid.ColumnSpan="2">
                         <TextBlock HorizontalAlignment="Left" Margin="22,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="250" Width="330" FontSize="18"><Run Text="INFORMACIJA kaip ir kiek buvo galima sutaupyti"/><Run Language="lt-lt" Text=" / INFORMACIJA kaip ir kiek buvo galima sutaupyti / "/><Run Text="INFORMACIJA kaip ir kiek buvo galima sutaupyti"/><Run Language="lt-lt" Text=" / INFORMACIJA kaip ir kiek buvo galima sutaupyti / "/><Run Text="INFORMACIJA kaip ir kiek buvo galima sutaupyti"/><Run Language="lt-lt" Text=" / INFORMACIJA kaip ir kiek buvo galima sutaupyti /"/><LineBreak/><Run Language="lt-lt"/></TextBlock>
                     </GroupBox>
+
+                    <Button Content="Log in" HorizontalAlignment="Left" Margin="315,153,0,0" VerticalAlignment="Top" Height="24" Grid.Column="1" Width="167" Click="Button_Click_1"/>
+                    <Button Content="Register" HorizontalAlignment="Left" Margin="315,205,0,0" VerticalAlignment="Top" Height="24" Grid.Column="1" Width="167" Click="Button_Click"/>
+                    <TextBox Grid.Column="1" HorizontalAlignment="Left" Margin="315,127,0,0" Text="Password" TextWrapping="Wrap" VerticalAlignment="Top" Width="167"/>
+                    <TextBox Grid.Column="1" HorizontalAlignment="Left" Margin="315,100,0,0" Text="Username" TextWrapping="Wrap" VerticalAlignment="Top" Width="167" Height="22"/>
+                    <Label Content="Don't have an account?" Grid.Column="1" HorizontalAlignment="Left" Margin="325,182,0,0" VerticalAlignment="Top" FontSize="12" FontFamily="Arial" FontStyle="Italic"/>
+
                 </Grid>
             </TabItem>
             <TabItem Header="ENTRIES" Margin="-33,13,33,-13" Width="120" Background="White" FontFamily="Bahnschrift SemiBold" FontSize="16" BorderBrush="{x:Null}">

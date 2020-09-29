@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartSaver.WPF", "SmartSave
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartSaver.Domain", "SmartSaver.Domain\SmartSaver.Domain.csproj", "{FB018E98-DD7F-4277-9F7D-E6DC1958B38D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartSaver.EntityFrameworkCore", "SmartSaver.EntityFrameworkCore\SmartSaver.EntityFrameworkCore.csproj", "{BD32984B-6ECD-431D-A2AA-2973B0A099EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartSaver.EntityFrameworkCore", "SmartSaver.EntityFrameworkCore\SmartSaver.EntityFrameworkCore.csproj", "{BD32984B-6ECD-431D-A2AA-2973B0A099EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
