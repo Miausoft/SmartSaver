@@ -9,7 +9,7 @@ using SmartSaver.EntityFrameworkCore;
 namespace SmartSaver.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200927111823_Initial")]
+    [Migration("20200929120132_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,14 +27,17 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                     b.Property<double>("Goal")
                         .HasColumnType("REAL");
 
+                    b.Property<DateTime>("GoalEndDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("GoalStartDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<double>("MonthlyExpenses")
                         .HasColumnType("REAL");
 
                     b.Property<double>("Revenue")
                         .HasColumnType("REAL");
-
-                    b.Property<int>("TimeMonths")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -99,7 +102,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                     b.Property<DateTime>("DateJoined")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("PasswordHash")
+                    b.Property<string>("Password")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PhoneNumber")

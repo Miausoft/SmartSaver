@@ -20,11 +20,20 @@ namespace SmartSaver.EntityFrameworkCore.Models
 
         /// <summary>
         /// ** Provided during registration.
+        /// 
+        /// Time interval in which goal has to be reached.
+        /// </summary>
+        public DateTime GoalStartDate { get; set; }
+
+        public DateTime GoalEndDate { get; set; }
+
+        /// <summary>
+        /// ** Provided during registration.
         /// !! Can be received from open banking api.
         /// 
         /// Monthly income.
         /// </summary>
-        public double Revenue { get; set; }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+        public double Revenue { get; set; }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
 
         /// <summary>
         /// ** Provided during registration.
@@ -33,13 +42,6 @@ namespace SmartSaver.EntityFrameworkCore.Models
         /// How much of that Revenue is spent during the month.
         /// </summary>
         public double MonthlyExpenses { get; set; }
-
-        /// <summary>
-        /// ** Provided during registration.
-        /// 
-        /// Time interval in which goal has to be reached.
-        /// </summary>
-        public int TimeMonths { get; set; }
 
         /// <summary>
         /// ** Provided during registration.

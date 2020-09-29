@@ -9,6 +9,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using SmartSaver.Domain.Services.AuthenticationServices;
+using SmartSaver.EntityFrameworkCore.Models;
 
 namespace SmartSaver.WPF
 {
@@ -17,18 +19,21 @@ namespace SmartSaver.WPF
     /// </summary>
     public partial class RegisterWindow : Window
     {
-        string username, password;
+        /*string username, password;
         int phone_number;
-        bool informationCorrect;
+        bool informationCorrect;*/
+
+        private readonly IAuthenticationServices _auth;
 
         public RegisterWindow()
         {
             InitializeComponent();
+            _auth = new AuthenticationServices();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            informationCorrect = true;
+            /*informationCorrect = true;
 
             if (newUsernameTextbox.Text.Length > 5) // username proofreading
             {
@@ -55,8 +60,18 @@ namespace SmartSaver.WPF
             {
                 // ADD USER CONSTRUCTOR HERE WITH username, password, phone_number
                 registerW.Close();
-            }
+            }*/
 
+
+            // Į result metodas gražina ar enum reikšmę su kažkokiu pranešimu.
+            // Su juo galima tikrint ar registracija pavyko.
+
+            RegistrationResult result = _auth.Register(new User
+            {
+                Username = newUsernameTextbox.Text,
+                Password = newPassword1Textbox.Text,
+                PhoneNumber = newPhoneNumberTextbox.Text
+            });
 
         }
     }

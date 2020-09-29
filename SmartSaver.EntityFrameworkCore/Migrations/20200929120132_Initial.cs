@@ -14,9 +14,10 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Goal = table.Column<double>(nullable: false),
+                    GoalStartDate = table.Column<DateTime>(nullable: false),
+                    GoalEndDate = table.Column<DateTime>(nullable: false),
                     Revenue = table.Column<double>(nullable: false),
-                    MonthlyExpenses = table.Column<double>(nullable: false),
-                    TimeMonths = table.Column<int>(nullable: false)
+                    MonthlyExpenses = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -51,7 +52,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     AccountId = table.Column<int>(nullable: false),
                     Username = table.Column<string>(nullable: true),
-                    PasswordHash = table.Column<string>(nullable: true),
+                    Password = table.Column<string>(nullable: true),
                     PhoneNumber = table.Column<string>(nullable: true),
                     DateJoined = table.Column<DateTime>(nullable: false)
                 },

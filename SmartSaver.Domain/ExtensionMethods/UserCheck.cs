@@ -8,7 +8,7 @@ namespace SmartSaver.Domain.ExtensionMethods
 {
     public static class UserCheck
     {
-        public static bool IsFormatCorrect(this User user)
+        public static bool IsPasswordValid(this User user)
         {
             bool isValid = true;
 
@@ -16,9 +16,9 @@ namespace SmartSaver.Domain.ExtensionMethods
             var hasUpperChar = new Regex(@"[A-Z]+");
             var hasMinimum8Chars = new Regex(@".{8,}");
 
-            if (!(hasNumber.IsMatch(user.PasswordHash) 
-                  && hasUpperChar.IsMatch(user.PasswordHash) 
-                  && hasMinimum8Chars.IsMatch(user.PasswordHash)))
+            if (!(hasNumber.IsMatch(user.Password) 
+                  && hasUpperChar.IsMatch(user.Password) 
+                  && hasMinimum8Chars.IsMatch(user.Password)))
                 isValid = false;
 
             return isValid;

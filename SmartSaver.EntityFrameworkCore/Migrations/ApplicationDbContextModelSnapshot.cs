@@ -25,14 +25,17 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                     b.Property<double>("Goal")
                         .HasColumnType("REAL");
 
+                    b.Property<DateTime>("GoalEndDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("GoalStartDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<double>("MonthlyExpenses")
                         .HasColumnType("REAL");
 
                     b.Property<double>("Revenue")
                         .HasColumnType("REAL");
-
-                    b.Property<int>("TimeMonths")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -97,7 +100,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                     b.Property<DateTime>("DateJoined")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("PasswordHash")
+                    b.Property<string>("Password")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PhoneNumber")
