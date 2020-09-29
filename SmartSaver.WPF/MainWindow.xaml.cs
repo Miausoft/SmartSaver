@@ -14,8 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SmartSaver.Domain.Services;
 using SmartSaver.Domain.ExtensionMethods;
-using SmartSaver.Domain.Services.AuthenticationServices;
-using SmartSaver.EntityFrameworkCore;
+using SmartSaver.WPF;
+using System.Collections.Specialized;
 
 namespace SmartSaver
 {
@@ -29,19 +29,18 @@ namespace SmartSaver
         public MainWindow()
         {
             InitializeComponent();
-            _auth = new AuthenticationServices();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            // Veikia
-            // _auth.Register("povilasl", "HaK8N!Mat!8", "+370625111220");
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            // Veikia
-            //var user = _auth.Login("povilasl", "HaK8N!Mat!8");
+            LogInWindow loginW = new LogInWindow(); 
+            loginW.Show();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e) //REGISTER launch button
+        {
+            RegisterWindow registerW = new RegisterWindow();
+            registerW.Show();
         }
     }
 }
