@@ -42,14 +42,12 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
 
         public static double DaysLeft(DateTime endDate)
         {
-            //return iki.DayOfYear - DateTime.Now.DayOfYear;
-            return (endDate - new DateTime(2020, 9, 28)).TotalDays;
+            return iki.DayOfYear - DateTime.Now.DayOfYear;
         }
 
         public static double DaysPassed(DateTime endDate, DateTime startDate)
         {
-            //return (DateTime.Now.Date - nuo).TotalDays;
-            return (new DateTime(2020, 9, 28) - startDate).TotalDays;
+            return (DateTime.Now.Date - nuo).TotalDays;
         }
 
         public static double Average(double daysPassed, double savedSum)
