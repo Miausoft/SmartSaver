@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using SmartSaver.Domain.Services.AuthenticationServices;
 
 namespace SmartSaver.WPF
 {
@@ -17,17 +18,21 @@ namespace SmartSaver.WPF
     /// </summary>
     public partial class LogInWindow : Window
     {
+        private readonly IAuthenticationService _auth;
+
         public LogInWindow()
         {
             InitializeComponent();
+            _auth = new AuthenticationService();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             //usernameTextbox.Text;
             //passwordTextbox.Text;
-            // situs ikeliame kai norime kad grazintu norima useri
-            // man kolkas neveikia normaliai .domain, tad palieku tokioj stadijoj
+
+            var user = _auth.Login(usernameTextbox.Text, passwordTextbox.Text);
+            // O kaip perduot Account tipo objekta i MainWindow???
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e) // REGISTER launch button

@@ -25,14 +25,17 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                     b.Property<double>("Goal")
                         .HasColumnType("REAL");
 
+                    b.Property<DateTime>("GoalEndDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("GoalStartDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<double>("MonthlyExpenses")
                         .HasColumnType("REAL");
 
                     b.Property<double>("Revenue")
                         .HasColumnType("REAL");
-
-                    b.Property<int>("TimeMonths")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -45,15 +48,10 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("AccountId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Title")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
 
                     b.ToTable("Category");
                 });
@@ -67,14 +65,14 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                     b.Property<int?>("AccountId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("ActionTime")
+                        .HasColumnType("TEXT");
+
                     b.Property<double>("Amount")
                         .HasColumnType("REAL");
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -97,7 +95,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                     b.Property<DateTime>("DateJoined")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("PasswordHash")
+                    b.Property<string>("Password")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PhoneNumber")
@@ -111,13 +109,6 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                     b.HasIndex("AccountId");
 
                     b.ToTable("User");
-                });
-
-            modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Category", b =>
-                {
-                    b.HasOne("SmartSaver.EntityFrameworkCore.Models.Account", null)
-                        .WithMany("Priorities")
-                        .HasForeignKey("AccountId");
                 });
 
             modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Transaction", b =>
