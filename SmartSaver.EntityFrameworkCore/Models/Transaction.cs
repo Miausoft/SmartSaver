@@ -10,7 +10,7 @@ namespace SmartSaver.EntityFrameworkCore.Models
     {
         [Key]
         public int Id { get; set; }
-        public DateTime DateTime { get; set; }
+        public DateTime ActionTime { get; set; }
         public double Amount { get; set; }
 
         [ForeignKey("Category")]

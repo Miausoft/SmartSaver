@@ -11,32 +11,25 @@ using SmartSaver.EntityFrameworkCore.Models;
 
 namespace SmartSaver.Domain.Services.AuthenticationServices
 {
-    public class AuthenticationServices : IAuthenticationServices
+    public class AuthenticationService : IAuthenticationService
     {
         /// <summary>
         /// If Username is registered in database and password is correct,
-        /// loggs in.
+        /// logs in.
         /// Fields Username and Password are required.
         /// </summary>
-        /// <param name="login"></param>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
         /// <returns>User object or null if not found.</returns>
-        public virtual User Login(User login)
+        public virtual Account Login(string username, string password)
         {
-            if (login.Username == null || login.Password == null)
-                throw new Exception("Invalid login user object.");
-
             using var db = new ApplicationDbContext();
 
-            var user = GetUser<string>(login.Username);
+            var user = db.User.FirstOrDefault(p => p.Username.Equals(username));
             if (user == null)
                 return null;
 
-            if (!login.Password.Verify(user.Password))
-                return null;
-
-            user.Account = db.Account.FirstOrDefault(p => p.Id.Equals(user.AccountId));
-
-            return user;
+            return !password.Verify(user.Password) ? null : db.Account.FirstOrDefault(p => p.Id.Equals(user.AccountId));
         }
 
         /// <summary>
@@ -56,18 +49,11 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
                 return RegistrationResult.UserAlreadyExist;
 
             if (!newUser.IsPasswordValid())
-                return RegistrationResult.InvalidUserObject;
+                return RegistrationResult.BadPasswordFormat;
 
             Insert(newUser);
 
             return RegistrationResult.Success;
-        }
-
-        protected virtual User GetUser<T>(T value)
-        {
-            using var db = new ApplicationDbContext();
-
-            return db.User.FirstOrDefault(p => p.Username.Equals(value));
         }
 
         /// <summary>
@@ -91,14 +77,12 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
             db.SaveChanges();
         }
 
-        private bool CheckUserExist(string username, string number)
+        protected virtual bool CheckUserExist(string username, string number)
         {
             using var db = new ApplicationDbContext();
 
             var user = db.User.FirstOrDefault(p => p.Username.Equals(username) || p.PhoneNumber.Equals(number));
-            if (user != null) return true;
-
-            return false;
+            return user != null;
         }
     }
 }

@@ -30,18 +30,11 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Title = table.Column<string>(nullable: true),
-                    AccountId = table.Column<int>(nullable: true)
+                    Title = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Category", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Category_Account_AccountId",
-                        column: x => x.AccountId,
-                        principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -73,7 +66,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    DateTime = table.Column<DateTime>(nullable: false),
+                    ActionTime = table.Column<DateTime>(nullable: false),
                     Amount = table.Column<double>(nullable: false),
                     CategoryId = table.Column<int>(nullable: false),
                     AccountId = table.Column<int>(nullable: true)
@@ -94,11 +87,6 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Category_AccountId",
-                table: "Category",
-                column: "AccountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transaction_AccountId",

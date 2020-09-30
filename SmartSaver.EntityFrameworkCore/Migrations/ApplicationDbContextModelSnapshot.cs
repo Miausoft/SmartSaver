@@ -48,15 +48,10 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("AccountId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Title")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
 
                     b.ToTable("Category");
                 });
@@ -70,14 +65,14 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                     b.Property<int?>("AccountId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("ActionTime")
+                        .HasColumnType("TEXT");
+
                     b.Property<double>("Amount")
                         .HasColumnType("REAL");
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -114,13 +109,6 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                     b.HasIndex("AccountId");
 
                     b.ToTable("User");
-                });
-
-            modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Category", b =>
-                {
-                    b.HasOne("SmartSaver.EntityFrameworkCore.Models.Account", null)
-                        .WithMany("Priorities")
-                        .HasForeignKey("AccountId");
                 });
 
             modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Transaction", b =>

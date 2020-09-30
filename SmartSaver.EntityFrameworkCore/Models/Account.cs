@@ -44,14 +44,6 @@ namespace SmartSaver.EntityFrameworkCore.Models
         public double MonthlyExpenses { get; set; }
 
         /// <summary>
-        /// ** Provided during registration.
-        /// 
-        /// User specified priorities. int 1 is the highest priority, n - lowest.
-        /// in v1 this information is held in separate .csv file.
-        /// </summary>
-        public List<Category> Priorities { get; set; }
-
-        /// <summary>
         /// List of purchases and incomes to user balance.
         /// in v1 this information is held in separate .csv file.
         /// </summary>

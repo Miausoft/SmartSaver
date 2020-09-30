@@ -10,12 +10,12 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
     {
         Success,
         UserAlreadyExist,
-        InvalidUserObject
+        BadPasswordFormat
     }
 
-    public interface IAuthenticationServices
+    public interface IAuthenticationService
     {
-        User Login(User user);
+        Account Login(string userAttribute, string password);
         RegistrationResult Register(User user);
 
     }

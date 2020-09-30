@@ -23,12 +23,12 @@ namespace SmartSaver.WPF
         int phone_number;
         bool informationCorrect;*/
 
-        private readonly IAuthenticationServices _auth;
+        private readonly IAuthenticationService _auth;
 
         public RegisterWindow()
         {
             InitializeComponent();
-            _auth = new AuthenticationServices();
+            _auth = new AuthenticationService();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
