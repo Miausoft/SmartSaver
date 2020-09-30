@@ -16,9 +16,9 @@ namespace SmartSaver.Domain.ExtensionMethods
             var hasUpperChar = new Regex(@"[A-Z]+");
             var hasMinimum5Chars = new Regex(@".{5,}");
 
-            if (!(hasNumber.IsMatch(user.PasswordHash) 
-                  && hasUpperChar.IsMatch(user.PasswordHash) 
-                  && hasMinimum5Chars.IsMatch(user.PasswordHash)))
+            if (!(hasNumber.IsMatch(user.Password) 
+                  && hasUpperChar.IsMatch(user.Password) 
+                  && hasMinimum5Chars.IsMatch(user.Password)))
                 isValid = false;
 
             return isValid;

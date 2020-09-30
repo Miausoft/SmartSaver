@@ -11,7 +11,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using SmartSaver.Domain.Services.AuthenticationServices;
 using SmartSaver.EntityFrameworkCore.Models;
 
 namespace SmartSaver.WPF
@@ -21,14 +20,14 @@ namespace SmartSaver.WPF
     /// </summary>
     public partial class RegisterWindow : Window
     {
-        private IAuthenticationServices as1;
+        private IAuthenticationService _auth;
         string username, phone_number;
         bool informationCorrect;
 
         public RegisterWindow()
         {
             InitializeComponent();
-            as1 = new AuthenticationServices();
+            _auth = new AuthenticationService();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e) // REGISTER button
@@ -55,7 +54,13 @@ namespace SmartSaver.WPF
 
             if (informationCorrect)
             {
-                RegistrationResult registrationResult = as1.Register(username, newPassword1Textbox.Password, phone_number);
+                RegistrationResult registrationResult = _auth.Register(new User()
+                {
+                    Username = username, 
+                    Password = newPassword1Textbox.Password, 
+                    PhoneNumber = phone_number
+                });
+
                 switch (registrationResult)
                 {
                     case RegistrationResult.Success:
@@ -67,23 +72,12 @@ namespace SmartSaver.WPF
                         MessageBox.Show("User alerady exists.");
                         break;
 
-                    case RegistrationResult.InvalidUserObject:
+                    case RegistrationResult.BadPasswordFormat:
                         MessageBox.Show("Invalid user object.");
                         break;
                 }
 
             }
-
-            // Į result metodas gražina ar enum reikšmę su kažkokiu pranešimu.
-            // Su juo galima tikrint ar registracija pavyko.
-
-            RegistrationResult result = _auth.Register(new User
-            {
-                Username = newUsernameTextbox.Text,
-                Password = newPassword1Textbox.Text,
-                PhoneNumber = newPhoneNumberTextbox.Text
-            });
-
         }
     }
 }

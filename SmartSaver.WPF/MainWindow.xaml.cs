@@ -26,13 +26,12 @@ namespace SmartSaver
     /// </summary>
     public partial class MainWindow : Window
     {
-        private IAuthenticationServices as1;
-        User user = new User(); // Creating a new user
+        private readonly IAuthenticationService _auth;
 
         public MainWindow()
         {
             InitializeComponent();
-            as1 = new AuthenticationServices();
+            _auth = new AuthenticationService();
         }
 
 
@@ -52,9 +51,9 @@ namespace SmartSaver
 
         private void Button_Click(object sender, RoutedEventArgs e) // LOG IN button
         {
-            if (as1.Login(usernameTextbox.Text, passwordTextbox.Password) != null)
+            if (_auth.Login(usernameTextbox.Text, passwordTextbox.Password) != null)
             {
-                user = as1.Login(usernameTextbox.Text, passwordTextbox.Password); // returning the user for database if data matches
+                Account user = _auth.Login(usernameTextbox.Text, passwordTextbox.Password); // returning the user for database if data matches
 
                 // Enable navigation tabs
                 statusTab.IsEnabled = true;
