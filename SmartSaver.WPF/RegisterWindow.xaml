@@ -8,16 +8,17 @@
         Title="RegisterWindow" Height="301" Width="213" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="Manual">
     <Grid Margin="0,0,0,16" HorizontalAlignment="Right" Width="213">
         <Button Content="CREATE NEW ACCOUNT" HorizontalAlignment="Center" Margin="0,223,0,0" VerticalAlignment="Top" Height="24" Width="166" Click="Button_Click" Background="#FFCBEDEB" BorderBrush="{x:Null}"/>
-        <TextBox x:Name="newPassword1Textbox" HorizontalAlignment="Center" Margin="0,99,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="166" Height="20"/>
         <TextBox x:Name="newUsernameTextbox" HorizontalAlignment="Center" Margin="0,53,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="166" Height="20"/>
+        <PasswordBox x:Name="newPassword1Textbox" HorizontalAlignment="Center" Margin="0,99,0,0" VerticalAlignment="Top" Width="166" Height="20"/>
+        <PasswordBox x:Name="newPassword2Textbox" HorizontalAlignment="Center" Margin="0,135,0,0" VerticalAlignment="Top" Width="166" Height="20"/>
         <Label Content="Password:" Margin="20,68,723,0" VerticalAlignment="Top" FontSize="10" FontFamily="Arial" FontStyle="Italic"/>
         <Label Content="New username:" HorizontalAlignment="Left" Margin="20,34,0,0" VerticalAlignment="Top" FontSize="10" FontFamily="Arial" FontStyle="Italic"/>
         <Label Content="New password:" Margin="20,81,66,0" VerticalAlignment="Top" FontSize="10" FontFamily="Arial" FontStyle="Italic"/>
         <TextBox x:Name="newPhoneNumberTextbox" HorizontalAlignment="Center" Margin="0,195,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="166" Height="20"/>
         <Label Content="Phone number:" Margin="20,175,66,0" VerticalAlignment="Top" FontSize="10" FontFamily="Arial" FontStyle="Italic"/>
-        <TextBox x:Name="newPassword2Textbox" HorizontalAlignment="Center" Margin="0,134,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="166" Height="20"/>
         <Label Content="Repeat password:" Margin="20,116,42,0" VerticalAlignment="Top" FontSize="10" FontFamily="Arial" FontStyle="Italic"/>
         <Label Content="REGISTER" HorizontalAlignment="Left" Margin="60,0,0,0" VerticalAlignment="Top" FontSize="20" FontFamily="Calibri Light" FontStyle="Italic"/>
+
 
     </Grid>
 </Window>
