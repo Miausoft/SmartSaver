@@ -6,7 +6,7 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
 {
     public static class MoneyToSpend
     {
-        public static double AmountToSpendAMonth(double revenue, double goal, DateTime startDate, DateTime endDate)
+        /*public static double AmountToSpendAMonth(double revenue, double goal, DateTime startDate, DateTime endDate)
         {
             return revenue - AmountToSaveAMonth(goal, TimeMonths(startDate, endDate));
         }
@@ -53,6 +53,6 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
         public static double Average(double daysPassed, double savedSum)
         {
             return savedSum / (daysPassed + 1);
-        }
+        }*/
     }
 }

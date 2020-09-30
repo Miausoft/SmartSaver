@@ -14,11 +14,11 @@ namespace SmartSaver.Domain.ExtensionMethods
 
             var hasNumber = new Regex(@"[0-9]+");
             var hasUpperChar = new Regex(@"[A-Z]+");
-            var hasMinimum8Chars = new Regex(@".{8,}");
+            var hasMinimum5Chars = new Regex(@".{5,}");
 
-            if (!(hasNumber.IsMatch(user.Password) 
-                  && hasUpperChar.IsMatch(user.Password) 
-                  && hasMinimum8Chars.IsMatch(user.Password)))
+            if (!(hasNumber.IsMatch(user.PasswordHash) 
+                  && hasUpperChar.IsMatch(user.PasswordHash) 
+                  && hasMinimum5Chars.IsMatch(user.PasswordHash)))
                 isValid = false;
 
             return isValid;
