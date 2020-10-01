@@ -16,6 +16,9 @@ using SmartSaver.Domain.Services;
 using SmartSaver.Domain.ExtensionMethods;
 using SmartSaver.WPF;
 using System.Collections.Specialized;
+using SmartSaver.Domain.Services.AuthenticationServices;
+using SmartSaver.EntityFrameworkCore;
+using SmartSaver.EntityFrameworkCore.Models;
 
 namespace SmartSaver
 {
@@ -24,23 +27,45 @@ namespace SmartSaver
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly AuthenticationServices _auth;
+        private readonly IAuthenticationService _auth;
+        private Account _account;
+        private readonly ApplicationDbContext _context;
 
         public MainWindow()
         {
             InitializeComponent();
+            _auth = new AuthenticationService();
+            _context = new ApplicationDbContext();
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e) //REGISTER launch button
+        {
+            RegisterWindow registerW = new RegisterWindow();
+            registerW.Show();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            LogInWindow loginW = new LogInWindow(); 
-            loginW.Show();
+            statusTab.IsEnabled = true;
+            historyTab.IsEnabled = true;
+            savingPlansTab.IsEnabled = true;
+            entriesTab.IsEnabled = true;
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e) //REGISTER launch button
+        private void Button_Click(object sender, RoutedEventArgs e) // LOG IN button
         {
-            RegisterWindow registerW = new RegisterWindow();
-            registerW.Show();
+            if (_auth.Login(usernameTextbox.Text, passwordTextbox.Password) != null)
+            {
+                _account = _auth.Login(usernameTextbox.Text, passwordTextbox.Password); // returning the user for database if data matches
+
+                // Enable navigation tabs
+                statusTab.IsEnabled = true;
+                historyTab.IsEnabled = true;
+                savingPlansTab.IsEnabled = true;
+                entriesTab.IsEnabled = true;
+            }
+            else
+                MessageBox.Show("Invalid data. Try again."); // If user with such credentials doesn't exist
         }
     }
 }

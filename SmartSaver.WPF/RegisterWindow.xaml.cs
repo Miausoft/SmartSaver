@@ -1,6 +1,8 @@
-﻿using System;
+﻿using SmartSaver.Domain.Services.AuthenticationServices;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -9,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using SmartSaver.EntityFrameworkCore.Models;
 
 namespace SmartSaver.WPF
 {
@@ -17,16 +20,17 @@ namespace SmartSaver.WPF
     /// </summary>
     public partial class RegisterWindow : Window
     {
-        string username, password;
-        int phone_number;
+        private readonly IAuthenticationService _auth;
+        string username, phone_number;
         bool informationCorrect;
 
         public RegisterWindow()
         {
             InitializeComponent();
+            _auth = new AuthenticationService();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e) // REGISTER button
         {
             informationCorrect = true;
 
@@ -34,30 +38,46 @@ namespace SmartSaver.WPF
             {
                 username = newUsernameTextbox.Text;
             }
-            else {
+            else
+            {
                 MessageBox.Show("Username is too short!");
                 informationCorrect = false;
             }
 
-            if (newPassword1Textbox == newPassword2Textbox) // if passwords match
-            {
-                password = newPassword1Textbox.Text;
-            }
-            else
+            if (newPassword1Textbox.Password != newPassword2Textbox.Password) // if passwords match
             {
                 MessageBox.Show("Passwords do not match!");
                 informationCorrect = false;
             }
 
-            phone_number = int.Parse(newPhoneNumberTextbox.Text); // no set restrictions yet
+            phone_number = newPhoneNumberTextbox.Text;
 
-            if(informationCorrect)
+            if (informationCorrect)
             {
-                // ADD USER CONSTRUCTOR HERE WITH username, password, phone_number
-                registerW.Close();
+                RegistrationResult registrationResult = _auth.Register(new User()
+                {
+                    Username = username, 
+                    Password = newPassword1Textbox.Password, 
+                    PhoneNumber = phone_number
+                });
+
+                switch (registrationResult)
+                {
+                    case RegistrationResult.Success:
+                        MessageBox.Show("Accounts successfully created. \n    Try to log in.");
+                        registerW.Close();
+                        break;
+
+                    case RegistrationResult.UserAlreadyExist:
+                        MessageBox.Show("Users alerady exists.");
+                        break;
+
+                    case RegistrationResult.BadPasswordFormat:
+                        MessageBox.Show("Invalid user object.");
+                        break;
+                }
+
             }
-
-
         }
     }
 }

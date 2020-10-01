@@ -11,12 +11,12 @@ namespace SmartSaver.EntityFrameworkCore.Models
         [Key]
         public int Id { get; set; }
 
-        [ForeignKey("Account")] 
-        public int AccountId { get; set; }
+        [ForeignKey("AccountId")]
         public Account Account { get; set; }
+        public int AccountId { get; set; }
 
         public string Username { get; set; }
-        public string PasswordHash { get; set; }
+        public string Password { get; set; }
         public string PhoneNumber { get; set; }
         public DateTime DateJoined { get; set; }
     }
