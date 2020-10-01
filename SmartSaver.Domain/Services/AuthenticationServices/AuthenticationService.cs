@@ -2,91 +2,61 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml.XPath;
 using Microsoft.EntityFrameworkCore;
-using SmartSaver.Domain.ExtensionMethods;
 using SmartSaver.EntityFrameworkCore;
 using SmartSaver.EntityFrameworkCore.Models;
 
 namespace SmartSaver.Domain.Services.AuthenticationServices
 {
-    public class AuthenticationService : IAuthenticationService
+    public class BasicAuthenticationService : IBasicAuthenticationService
     {
-        /// <summary>
-        /// If Username is registered in database and password is correct,
-        /// logs in.
-        /// Fields Username and Password are required.
-        /// </summary>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
-        /// <returns>Users object or null if not found.</returns>
-        public virtual Account Login(string username, string password)
+        private readonly ApplicationDbContext _context;
+
+        public BasicAuthenticationService()
         {
-            using var db = new ApplicationDbContext();
+            _context = new ApplicationDbContext();
+        }
 
-            var user = db.Users.FirstOrDefault(p => p.Username.Equals(username));
-            if (user == null)
-                return null;
-
-            return !password.Verify(user.Password)
-                ? null 
-                : db.Accounts
-                    .Include(a => a.Transactions)
-                    .FirstOrDefault(a => a.Id.Equals(user.AccountId));
+        ~BasicAuthenticationService()
+        {
+            _context.Dispose();
         }
 
         /// <summary>
-        /// Registers new user into database.
-        /// Fields Username, Password and PhoneNumber are required.
+        /// Returns account object that belongs to a user with given username and password.
         /// </summary>
-        /// <param name="newUser"></param>
-        /// <returns>RegistrationResult</returns>
-        public virtual RegistrationResult Register(User newUser)
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns>Account</returns>
+        public Account Login(string username, string password)
         {
-            if (newUser.Username == null || newUser.Password == null || newUser.PhoneNumber == null)
-                throw new Exception("Register user object is invalid.");
+            var user = _context.Users.FirstOrDefault(u => u.Username.Equals(username) && u.Password.Equals(password));
 
-            using var db = new ApplicationDbContext();
+            if (user == null)
+                return null;
 
-            if (CheckUserExist(newUser.Username, newUser.PhoneNumber))
-                return RegistrationResult.UserAlreadyExist;
+            return _context.Accounts
+                .Include(a => a.Transactions)
+                .FirstOrDefault(a => a.Id.Equals(user.AccountId));
+        }
 
-            if (!newUser.IsPasswordValid())
-                return RegistrationResult.BadPasswordFormat;
-
-            Insert(newUser);
+        /// <summary>
+        /// Registers user and returns Success message.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>RegistrationResult.Success</returns>
+        public RegistrationResult Register(User user)
+        {
+            _context.Users.Add(user);
+            FillMandatoryData(ref user);
 
             return RegistrationResult.Success;
         }
 
-        /// <summary>
-        /// AddMandatoryFields is automatically called in Insert() method before
-        /// inserting into database.
-        /// </summary>
-        /// <param name="user"></param>
-        protected virtual void AddMandatoryFields(ref User user)
+        private void FillMandatoryData(ref User user)
         {
-            user.Password = user.Password.Hash();
             user.DateJoined = DateTime.Now;
             user.Account = new Account();
-        }
-
-        protected void Insert(User user)
-        {
-            AddMandatoryFields(ref user);
-
-            using var db = new ApplicationDbContext();
-            db.Users.Add(user);
-            db.SaveChanges();
-        }
-
-        protected virtual bool CheckUserExist(string username, string number)
-        {
-            using var db = new ApplicationDbContext();
-
-            var user = db.Users.FirstOrDefault(p => p.Username.Equals(username) || p.PhoneNumber.Equals(number));
-            return user != null;
         }
     }
 }

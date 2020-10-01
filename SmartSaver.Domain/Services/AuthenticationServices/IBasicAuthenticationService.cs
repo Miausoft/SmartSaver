@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 using SmartSaver.EntityFrameworkCore.Models;
 
 namespace SmartSaver.Domain.Services.AuthenticationServices
@@ -13,10 +12,11 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
         BadPasswordFormat
     }
 
-    public interface IAuthenticationService
+    public interface IBasicAuthenticationService
     {
         Account Login(string userAttribute, string password);
         RegistrationResult Register(User user);
-
     }
+
+    public interface IAuthenticationService : IBasicAuthenticationService, IHash { }
 }
