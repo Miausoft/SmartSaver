@@ -13,8 +13,9 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
         {
             using var db = new ApplicationDbContext();
 
-            var user = db.User.FirstOrDefault(p => p.Username.Equals(username));
-            return user == null ? null : db.Account.FirstOrDefault(p => p.Id.Equals(user.AccountId));
+            var user = db.Users.FirstOrDefault(p => p.Username.Equals(username));
+            //return user == null ? null : db.Accounts.FirstOrDefault(p => p.Id.Equals(user.AccountId));
+            return user?.Account;
         }
 
         public RegistrationResult Register(User user)

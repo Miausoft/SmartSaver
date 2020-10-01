@@ -47,7 +47,7 @@
                     <Button x:Name="LogInButton" Content="Log in" HorizontalAlignment="Center" Margin="0,219,0,0" VerticalAlignment="Top" Height="24" Width="166" Click="Button_Click" Background="#FF3B7A70" BorderBrush="{x:Null}" Foreground="White" FontFamily="Segoe UI" FontSize="11"/>
                     <TextBox x:Name="usernameTextbox" HorizontalAlignment="Center" Margin="0,155,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="166" Height="20"/>
                     <Label Content="Password:" Margin="226,176,343,0" VerticalAlignment="Top" FontSize="10" FontFamily="Arial" FontStyle="Italic"/>
-                    <Label Content="Username:" HorizontalAlignment="Left" Margin="226,136,0,0" VerticalAlignment="Top" FontSize="10" FontFamily="Arial" FontStyle="Italic"/>
+                    <Label Content="Usersname:" HorizontalAlignment="Left" Margin="226,136,0,0" VerticalAlignment="Top" FontSize="10" FontFamily="Arial" FontStyle="Italic"/>
                     <PasswordBox x:Name="passwordTextbox" HorizontalAlignment="Center" VerticalAlignment="Top" Width="166" Height="20" Margin="0,194,0,0"/>
                     <Button Content="Sign up" HorizontalAlignment="Center" Margin="0,276,0,0" VerticalAlignment="Top" Height="24" Width="166" FontFamily="Segoe UI" BorderBrush="{x:Null}" Background="#FF3B7A70" Click="Button_Click_2" FontSize="11" Foreground="White"/>
                     <Label Content="Save easier." HorizontalAlignment="Center" Margin="0,89,0,0" VerticalAlignment="Top" FontFamily="Calibri Light" FontSize="15" FontStyle="Normal" Height="28" Width="79"/>
@@ -81,7 +81,7 @@
 
                     </Grid.ColumnDefinitions>
                     <GroupBox Header="" Margin="10,20,336,10" Background="White"/>
-                    <Label Content="Category" HorizontalAlignment="Left" Margin="38,153,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.781,0.396" Width="218" Height="29" Background="#FFDDDDDD" FontFamily="Arial" FontStyle="Italic"/>
+                    <Label Content="Categories" HorizontalAlignment="Left" Margin="38,153,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.781,0.396" Width="218" Height="29" Background="#FFDDDDDD" FontFamily="Arial" FontStyle="Italic"/>
                     <Label Content="Spendings / Earnings&#xD;&#xA;" HorizontalAlignment="Left" Margin="38,45,0,0" VerticalAlignment="Top" Width="218" FontFamily="Arial" FontStyle="Italic" FontSize="11"/>
                     <TextBox HorizontalAlignment="Left" Margin="38,63,0,0" Text=" 0.00" TextWrapping="Wrap" VerticalAlignment="Top" Width="218" Height="38" FontFamily="Arial" TextAlignment="Center" FontSize="36"/>
                     <Button Content="ENTER" HorizontalAlignment="Left" Margin="38,296,0,0" VerticalAlignment="Top" Height="34" Width="218"/>
@@ -100,17 +100,11 @@
                         <GradientStop Color="White" Offset="1"/>
                     </LinearGradientBrush>
                 </TabItem.Background>
-                <Grid Background="White" Height="400" Width="625" Margin="-2,0,-4,0">
+                <Grid Background="White" Height="386" Margin="10,0,10,0">
                     <Grid.ColumnDefinitions>
 
                     </Grid.ColumnDefinitions>
-                    <ListView Margin="10,10,138,20">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn/>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                    <DataGrid Name="TransactionsGrid" Margin="0,10,0,0"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="savingPlansTab" Header="SAVING PLANS" Margin="-38,13,40,-13" FontSize="16" FontFamily="Bahnschrift SemiBold" BorderBrush="{x:Null}" Background="White" IsEnabled="False">

@@ -12,8 +12,8 @@ namespace SmartSaver.Domain.Services.CsvManager
         public DateTime Time { get; set; }
 
         /// <summary>
-        /// Category of a purchase, eg. "Food", "Transport", ...
-        /// If transaction is negative (means it's not a purchase, but spending), Category is not set.
+        /// Categories of a purchase, eg. "Food", "Transport", ...
+        /// If transaction is negative (means it's not a purchase, but spending), Categories is not set.
         /// </summary>
         public string Category { get; set; }
 
@@ -24,7 +24,7 @@ namespace SmartSaver.Domain.Services.CsvManager
 
         public override string ToString()
         {
-            return $"Transaction: Time: {Time}, Category: {Category}, Amount: {Amount}";
+            return $"Transactions: Time: {Time}, Categories: {Category}, Amount: {Amount}";
         }
 
     }

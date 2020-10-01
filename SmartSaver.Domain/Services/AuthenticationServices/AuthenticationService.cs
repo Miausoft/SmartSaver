@@ -20,16 +20,20 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
         /// </summary>
         /// <param name="username"></param>
         /// <param name="password"></param>
-        /// <returns>User object or null if not found.</returns>
+        /// <returns>Users object or null if not found.</returns>
         public virtual Account Login(string username, string password)
         {
             using var db = new ApplicationDbContext();
 
-            var user = db.User.FirstOrDefault(p => p.Username.Equals(username));
+            var user = db.Users.FirstOrDefault(p => p.Username.Equals(username));
             if (user == null)
                 return null;
 
-            return !password.Verify(user.Password) ? null : db.Account.FirstOrDefault(p => p.Id.Equals(user.AccountId));
+            return !password.Verify(user.Password)
+                ? null 
+                : db.Accounts
+                    .Include(a => a.Transactions)
+                    .FirstOrDefault(a => a.Id.Equals(user.AccountId));
         }
 
         /// <summary>
@@ -73,7 +77,7 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
             AddMandatoryFields(ref user);
 
             using var db = new ApplicationDbContext();
-            db.User.Add(user);
+            db.Users.Add(user);
             db.SaveChanges();
         }
 
@@ -81,7 +85,7 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
         {
             using var db = new ApplicationDbContext();
 
-            var user = db.User.FirstOrDefault(p => p.Username.Equals(username) || p.PhoneNumber.Equals(number));
+            var user = db.Users.FirstOrDefault(p => p.Username.Equals(username) || p.PhoneNumber.Equals(number));
             return user != null;
         }
     }

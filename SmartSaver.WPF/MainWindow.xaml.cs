@@ -17,6 +17,7 @@ using SmartSaver.Domain.ExtensionMethods;
 using SmartSaver.WPF;
 using System.Collections.Specialized;
 using SmartSaver.Domain.Services.AuthenticationServices;
+using SmartSaver.EntityFrameworkCore;
 using SmartSaver.EntityFrameworkCore.Models;
 
 namespace SmartSaver
@@ -27,13 +28,15 @@ namespace SmartSaver
     public partial class MainWindow : Window
     {
         private readonly IAuthenticationService _auth;
+        private Account _account;
+        private readonly ApplicationDbContext _context;
 
         public MainWindow()
         {
             InitializeComponent();
             _auth = new AuthenticationService();
+            _context = new ApplicationDbContext();
         }
-
 
         private void Button_Click_2(object sender, RoutedEventArgs e) //REGISTER launch button
         {
@@ -53,7 +56,7 @@ namespace SmartSaver
         {
             if (_auth.Login(usernameTextbox.Text, passwordTextbox.Password) != null)
             {
-                Account user = _auth.Login(usernameTextbox.Text, passwordTextbox.Password); // returning the user for database if data matches
+                _account = _auth.Login(usernameTextbox.Text, passwordTextbox.Password); // returning the user for database if data matches
 
                 // Enable navigation tabs
                 statusTab.IsEnabled = true;
