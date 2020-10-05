@@ -8,18 +8,18 @@ using SmartSaver.EntityFrameworkCore.Models;
 
 namespace SmartSaver.Domain.Services.AuthenticationServices
 {
-    public class BasicAuthenticationService : IBasicAuthenticationService
+    public class BasicAuthenticationService : IAuthenticationService
     {
-        private readonly ApplicationDbContext _context;
+        protected readonly ApplicationDbContext Context;
 
         public BasicAuthenticationService()
         {
-            _context = new ApplicationDbContext();
+            Context = new ApplicationDbContext();
         }
 
         ~BasicAuthenticationService()
         {
-            _context.Dispose();
+            Context.Dispose();
         }
 
         /// <summary>
@@ -28,16 +28,20 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns>Account</returns>
-        public Account Login(string username, string password)
+        public virtual User Login(string username, string password)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Username.Equals(username) && u.Password.Equals(password));
-
+            var user = Context.Users.FirstOrDefault(u => u.Username.Equals(username));
             if (user == null)
+            {
                 return null;
+            }
 
-            return _context.Accounts
-                .Include(a => a.Transactions)
-                .FirstOrDefault(a => a.Id.Equals(user.AccountId));
+            user.Account = Context.Accounts.FirstOrDefault(a => a.Id == user.AccountId);
+
+            if (user.Account != null)
+                user.Account.Transactions = Context.Transactions.Where(t => t.AccountId == user.AccountId).ToList();
+
+            return user;
         }
 
         /// <summary>
@@ -45,10 +49,11 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
         /// </summary>
         /// <param name="user"></param>
         /// <returns>RegistrationResult.Success</returns>
-        public RegistrationResult Register(User user)
+        public virtual RegistrationResult Register(User user)
         {
-            _context.Users.Add(user);
             FillMandatoryData(ref user);
+            Context.Users.Add(user);
+            Context.SaveChanges();
 
             return RegistrationResult.Success;
         }

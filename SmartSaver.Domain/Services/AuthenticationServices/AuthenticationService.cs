@@ -1,30 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using SmartSaver.Domain.Regex;
+using SmartSaver.Domain.Services.PasswordEncryption;
+using SmartSaver.EntityFrameworkCore;
 using SmartSaver.EntityFrameworkCore.Models;
 
 namespace SmartSaver.Domain.Services.AuthenticationServices
 {
-    class AuthenticationService : IAuthenticationService
+    public class AuthenticationService : BasicAuthenticationService
     {
-        public Account Login(string userAttribute, string password)
+        private readonly IPasswordHasherService _hasher;
+        private readonly IPasswordRegex _passwordRegex;
+        private readonly ApplicationDbContext _context;
+
+        public AuthenticationService()
         {
-            throw new NotImplementedException();
+            _hasher = new PasswordHasherService();
+            _passwordRegex = new PasswordRegex();
+            _context = new ApplicationDbContext();
         }
 
-        public RegistrationResult Register(User user)
+        public override User Login(string username, string password)
         {
-            throw new NotImplementedException();
+            User user = base.Login(username, password);
+            if (user == null || !_hasher.Verify(password: password, passwordHash: user.Password))
+            {
+                return null;
+            }
+
+            return user;
         }
 
-        public string Hash(string password)
+        public override RegistrationResult Register(User user)
         {
-            throw new NotImplementedException();
-        }
+            if (!_passwordRegex.Match(user.Password))
+            {
+                return RegistrationResult.BadPasswordFormat;
+            }
 
-        public bool Verify(string password, string hash)
-        {
-            throw new NotImplementedException();
+            if (_context.Users.FirstOrDefault(u => u.Username.Equals(user.Username)) != null)
+            {
+                return RegistrationResult.UserAlreadyExist;
+            }
+
+            user.Password = _hasher.Hash(user.Password);
+            return base.Register(user);
         }
     }
 }

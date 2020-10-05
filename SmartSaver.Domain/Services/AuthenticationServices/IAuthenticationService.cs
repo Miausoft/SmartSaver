@@ -12,11 +12,9 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
         BadPasswordFormat
     }
 
-    public interface IBasicAuthenticationService
+    public interface IAuthenticationService
     {
-        Account Login(string userAttribute, string password);
+        User Login(string userAttribute, string password);
         RegistrationResult Register(User user);
     }
-
-    public interface IAuthenticationService : IBasicAuthenticationService, IHash { }
 }
