@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SmartSaver.Domain.Services.PasswordEncryption
+namespace SmartSaver.Domain.PasswordHash
 {
     public interface IPasswordHasherService : IPasswordHash, IPasswordVerify { }
 

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using SmartSaver.Domain.PasswordHash;
 using SmartSaver.Domain.Regex;
-using SmartSaver.Domain.Services.PasswordEncryption;
 using SmartSaver.EntityFrameworkCore;
 using SmartSaver.EntityFrameworkCore.Models;
 
