@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SmartSaver.Domain.Regex
+namespace SmartSaver.Domain.Services.Regex
 {
-    class PasswordRegex : IPasswordRegex
+    public class PasswordRegex : IPasswordRegex
     {
         public bool Match(string password)
         {

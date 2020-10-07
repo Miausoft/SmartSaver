@@ -6,11 +6,14 @@ using System.Collections.Specialized;
 using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using MimeKit;
+using SmartSaver.Domain.Entities;
 
 namespace SmartSaver.Domain.Services.EmailServices
 {
-    class Mailer : IMailer
+    public class Mailer : IMailer
     {
+        private readonly SmtpSettings _smtpSettings;
+
         public Mailer()
         {
             
@@ -21,8 +24,8 @@ namespace SmartSaver.Domain.Services.EmailServices
             try
             {
                 var message = new MimeMessage();
-                message.From.Add();
-                message.To.Add();
+                //message.From.Add();
+                //message.To.Add();
                 message.Subject = subject;
                 message.Body = new TextPart("html")
                 {

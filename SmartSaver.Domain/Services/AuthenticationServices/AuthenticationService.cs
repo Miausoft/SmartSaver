@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SmartSaver.Domain.PasswordHash;
-using SmartSaver.Domain.Regex;
+using SmartSaver.Domain.Services.PasswordHash;
+using SmartSaver.Domain.Services.Regex;
 using SmartSaver.EntityFrameworkCore;
 using SmartSaver.EntityFrameworkCore.Models;
 
@@ -15,11 +15,11 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
         private readonly IPasswordRegex _passwordRegex;
         private readonly ApplicationDbContext _context;
 
-        public AuthenticationService()
+        public AuthenticationService(ApplicationDbContext context, IPasswordHasherService hasher, IPasswordRegex passwordRegex)
         {
-            _hasher = new PasswordHasherService();
-            _passwordRegex = new PasswordRegex();
-            _context = new ApplicationDbContext();
+            _hasher = hasher;
+            _passwordRegex = passwordRegex;
+            _context = context;
         }
 
         public override User Login(string username, string password)

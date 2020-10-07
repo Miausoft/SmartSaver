@@ -28,18 +28,18 @@ namespace SmartSaver
     {
         private readonly IAuthenticationService _auth;
         private User _user;
-        private readonly ApplicationDbContext _context;
+        //private readonly ApplicationDbContext _context;
 
-        public MainWindow()
+        public MainWindow(ApplicationDbContext context, IAuthenticationService auth)
         {
             InitializeComponent();
-            _auth = new AuthenticationService();
-            _context = new ApplicationDbContext();
+            _auth = auth;
+            //_context = context;
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e) //REGISTER launch button
         {
-            RegisterWindow registerW = new RegisterWindow();
+            RegisterWindow registerW = new RegisterWindow(_auth);
             registerW.Show();
         }
 
