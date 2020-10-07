@@ -30,11 +30,23 @@ namespace SmartSaver
         private User _user;
         private readonly ApplicationDbContext _context;
 
+        public List<Category> categoryList = new List<Category>()
+        {
+            new Category(){ Id = 0, Title = "Accomodation"},
+            new Category(){ Id = 1, Title = "Food"},
+            new Category(){ Id = 2, Title = "Cloting"},
+            new Category(){ Id = 3, Title = "Fun"},
+            new Category(){ Id = 4, Title = "Partying"},
+            new Category(){ Id = 5, Title = "Other"},
+        };
+
         public MainWindow()
         {
             InitializeComponent();
             _auth = new AuthenticationService();
             _context = new ApplicationDbContext();
+           
+            categoryBox.ItemsSource = categoryList.Select(s => s.Title);
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e) //REGISTER launch button
@@ -58,13 +70,33 @@ namespace SmartSaver
                 _user = _auth.Login(usernameTextbox.Text, passwordTextbox.Password); // returning the user for database if data matches
 
                 // Enable navigation tabs
+                statusTab.IsSelected = true;
                 statusTab.IsEnabled = true;
                 historyTab.IsEnabled = true;
                 savingPlansTab.IsEnabled = true;
                 entriesTab.IsEnabled = true;
+                logInTab.IsEnabled = false;
+
+                // Initializing components used after login
+                
+
             }
             else
                 MessageBox.Show("Invalid data. Try again."); // If user with such credentials doesn't exist
+        }
+
+        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+
+
+
+
+
         }
     }
 }
