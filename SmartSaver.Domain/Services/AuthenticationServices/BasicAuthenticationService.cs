@@ -60,7 +60,7 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
 
         private void FillMandatoryData(ref User user)
         {
-            user.DateJoined = DateTime.Now;
+            user.DateJoined = DateTime.UtcNow;
             user.Account = new Account();
         }
     }
