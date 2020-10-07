@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.IO;
 using System.Text;
 
 namespace SmartSaver.EntityFrameworkCore.Models
@@ -19,6 +20,8 @@ namespace SmartSaver.EntityFrameworkCore.Models
 
         [ForeignKey("CategoryId")] 
         public Category Category { get; set; }
+
+        public DateTime Date { get; set; }
         public int CategoryId { get; set; }
     }
 }
