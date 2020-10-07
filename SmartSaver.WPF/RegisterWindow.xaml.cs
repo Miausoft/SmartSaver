@@ -20,7 +20,7 @@ namespace SmartSaver.WPF
     /// </summary>
     public partial class RegisterWindow : Window
     {
-        private IAuthenticationService _auth;
+        private readonly IAuthenticationService _auth;
         string username, phone_number;
         bool informationCorrect;
 
@@ -64,12 +64,12 @@ namespace SmartSaver.WPF
                 switch (registrationResult)
                 {
                     case RegistrationResult.Success:
-                        MessageBox.Show("Account successfully created. \n    Try to log in.");
+                        MessageBox.Show("Accounts successfully created. \n    Try to log in.");
                         registerW.Close();
                         break;
 
                     case RegistrationResult.UserAlreadyExist:
-                        MessageBox.Show("User alerady exists.");
+                        MessageBox.Show("Users alerady exists.");
                         break;
 
                     case RegistrationResult.BadPasswordFormat:

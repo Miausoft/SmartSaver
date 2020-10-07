@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 using SmartSaver.EntityFrameworkCore.Models;
 
 namespace SmartSaver.Domain.Services.AuthenticationServices
@@ -15,8 +14,7 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
 
     public interface IAuthenticationService
     {
-        Account Login(string userAttribute, string password);
+        User Login(string userAttribute, string password);
         RegistrationResult Register(User user);
-
     }
 }
