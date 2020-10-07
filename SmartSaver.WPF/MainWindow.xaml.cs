@@ -32,6 +32,14 @@ namespace SmartSaver
         {
             InitializeComponent();
             _auth = new AuthenticationService();
+
+            Account acc = new Account();
+            List<Transaction> row = new List<Transaction>
+            {
+                new Transaction() { Date = DateTime.Now, Amount = 500 }
+            };
+
+            listView.ItemsSource = row;
         }
 
 
@@ -55,14 +63,33 @@ namespace SmartSaver
             {
                 Account user = _auth.Login(usernameTextbox.Text, passwordTextbox.Password); // returning the user for database if data matches
 
+
                 // Enable navigation tabs
+                LogInTab.IsEnabled = false;
                 statusTab.IsEnabled = true;
                 historyTab.IsEnabled = true;
                 savingPlansTab.IsEnabled = true;
                 entriesTab.IsEnabled = true;
+                statusTab.IsSelected = true;
             }
             else
                 MessageBox.Show("Invalid data. Try again."); // If user with such credentials doesn't exist
+        }
+
+        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //InitializeComponent();
+            
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

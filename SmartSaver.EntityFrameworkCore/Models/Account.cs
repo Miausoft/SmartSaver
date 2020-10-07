@@ -48,5 +48,6 @@ namespace SmartSaver.EntityFrameworkCore.Models
         /// in v1 this information is held in separate .csv file.
         /// </summary>
         public List<Transaction> Transactions { get; set; }
+
     }
 }
