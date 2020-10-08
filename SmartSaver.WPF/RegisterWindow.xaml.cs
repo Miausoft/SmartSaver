@@ -24,10 +24,10 @@ namespace SmartSaver.WPF
         string username, phone_number;
         bool informationCorrect;
 
-        public RegisterWindow()
+        public RegisterWindow(IAuthenticationService auth)
         {
             InitializeComponent();
-            _auth = new AuthenticationService();
+            _auth = auth;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e) // REGISTER button

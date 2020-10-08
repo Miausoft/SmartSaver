@@ -16,6 +16,7 @@ using SmartSaver.Domain.Services;
 using SmartSaver.WPF;
 using System.Collections.Specialized;
 using SmartSaver.Domain.Services.AuthenticationServices;
+using SmartSaver.Domain.Services.EmailServices;
 using SmartSaver.EntityFrameworkCore;
 using SmartSaver.EntityFrameworkCore.Models;
 
@@ -28,8 +29,7 @@ namespace SmartSaver
     {
         private readonly IAuthenticationService _auth;
         private User _user;
-        private readonly ApplicationDbContext _context;
-
+        
         public List<Category> categoryList = new List<Category>()
         {
             new Category(){ Id = 0, Title = "Accomodation"},
@@ -40,18 +40,16 @@ namespace SmartSaver
             new Category(){ Id = 5, Title = "Other"},
         };
 
-        public MainWindow()
+        public MainWindow(IAuthenticationService auth)
         {
             InitializeComponent();
-            _auth = new AuthenticationService();
-            _context = new ApplicationDbContext();
-           
+            _auth = auth;
             categoryBox.ItemsSource = categoryList.Select(s => s.Title);
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e) //REGISTER launch button
         {
-            RegisterWindow registerW = new RegisterWindow();
+            RegisterWindow registerW = new RegisterWindow(_auth);
             registerW.Show();
         }
 
@@ -65,10 +63,10 @@ namespace SmartSaver
 
         private void Button_Click(object sender, RoutedEventArgs e) // LOG IN button
         {
+            // _mailer.SendEmail("Povilasleka@gmail.com", "Test", "Hello"); Komanda siuncia email vartotojui i pasta.
             if (_auth.Login(usernameTextbox.Text, passwordTextbox.Password) != null)
             {
                 _user = _auth.Login(usernameTextbox.Text, passwordTextbox.Password); // returning the user for database if data matches
-
                 // Enable navigation tabs
                 statusTab.IsSelected = true;
                 statusTab.IsEnabled = true;

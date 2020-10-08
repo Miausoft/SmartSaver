@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SmartSaver.Domain.Regex
+namespace SmartSaver.Domain.Services.Regex
 {
-    interface IPasswordRegex
+    public interface IPasswordRegex
     {
         /// <summary>
         /// Checks if given password is great format.

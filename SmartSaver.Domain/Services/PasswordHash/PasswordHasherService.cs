@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SmartSaver.Domain.PasswordHash
+namespace SmartSaver.Domain.Services.PasswordHash
 {
     public class PasswordHasherService : IPasswordHasherService
     {
