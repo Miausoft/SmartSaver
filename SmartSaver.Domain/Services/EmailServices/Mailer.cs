@@ -5,6 +5,8 @@ using System.Configuration;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
 using MailKit.Net.Smtp;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using MimeKit;
 using SmartSaver.Domain.Entities;
 
@@ -14,23 +16,16 @@ namespace SmartSaver.Domain.Services.EmailServices
     {
         private readonly SmtpSettings _smtpSettings;
 
-        public Mailer()
+        public Mailer(IOptions<SmtpSettings> options)
         {
-            
+            _smtpSettings = options.Value;
         }
 
         public async Task SendEmailAsync(string email, string subject, string body)
         {
             try
             {
-                var message = new MimeMessage();
-                //message.From.Add();
-                //message.To.Add();
-                message.Subject = subject;
-                message.Body = new TextPart("html")
-                {
-                    Text = body
-                };
+                var message = CreateMessage(email, subject, body);
 
                 using (var client = new SmtpClient())
                 {
@@ -45,6 +40,41 @@ namespace SmartSaver.Domain.Services.EmailServices
             {
                 throw new InvalidOperationException(e.Message);
             }
+        }
+
+        public void SendEmail(string email, string subject, string body)
+        {
+            try
+            {
+                var message = CreateMessage(email, subject, body);
+
+                using (var client = new SmtpClient())
+                {
+                    client.ServerCertificateValidationCallback = (s, c, h, e) => true;
+                    client.Connect(_smtpSettings.Server, _smtpSettings.Port, false);
+                    client.Authenticate(_smtpSettings.Username, _smtpSettings.Password);
+                    client.Send(message);
+                    client.Disconnect(true);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        private MimeMessage CreateMessage(string email, string subject, string body)
+        {
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress(_smtpSettings.SenderName, _smtpSettings.SenderEmail));
+            message.To.Add(new MailboxAddress("Customer", email));
+            message.Subject = subject;
+            message.Body = new TextPart("html")
+            {
+                Text = body
+            };
+
+            return message;
         }
     }
 }

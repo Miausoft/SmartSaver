@@ -12,14 +12,9 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
     {
         protected readonly ApplicationDbContext Context;
 
-        public BasicAuthenticationService()
+        public BasicAuthenticationService(ApplicationDbContext context)
         {
-            Context = new ApplicationDbContext();
-        }
-
-        ~BasicAuthenticationService()
-        {
-            Context.Dispose();
+            Context = context;
         }
 
         /// <summary>
@@ -58,7 +53,7 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
             return RegistrationResult.Success;
         }
 
-        private void FillMandatoryData(ref User user)
+        private static void FillMandatoryData(ref User user)
         {
             user.DateJoined = DateTime.UtcNow;
             user.Account = new Account();

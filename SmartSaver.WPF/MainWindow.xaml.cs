@@ -16,6 +16,7 @@ using SmartSaver.Domain.Services;
 using SmartSaver.WPF;
 using System.Collections.Specialized;
 using SmartSaver.Domain.Services.AuthenticationServices;
+using SmartSaver.Domain.Services.EmailServices;
 using SmartSaver.EntityFrameworkCore;
 using SmartSaver.EntityFrameworkCore.Models;
 
@@ -28,13 +29,11 @@ namespace SmartSaver
     {
         private readonly IAuthenticationService _auth;
         private User _user;
-        //private readonly ApplicationDbContext _context;
 
-        public MainWindow(ApplicationDbContext context, IAuthenticationService auth)
+        public MainWindow(IAuthenticationService auth)
         {
             InitializeComponent();
             _auth = auth;
-            //_context = context;
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e) //REGISTER launch button
@@ -53,10 +52,10 @@ namespace SmartSaver
 
         private void Button_Click(object sender, RoutedEventArgs e) // LOG IN button
         {
+            // _mailer.SendEmail("Povilasleka@gmail.com", "Test", "Hello"); Komanda siuncia email vartotojui i pasta.
             if (_auth.Login(usernameTextbox.Text, passwordTextbox.Password) != null)
             {
                 _user = _auth.Login(usernameTextbox.Text, passwordTextbox.Password); // returning the user for database if data matches
-
                 // Enable navigation tabs
                 statusTab.IsEnabled = true;
                 historyTab.IsEnabled = true;

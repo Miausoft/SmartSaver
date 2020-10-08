@@ -15,7 +15,7 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
         private readonly IPasswordRegex _passwordRegex;
         private readonly ApplicationDbContext _context;
 
-        public AuthenticationService(ApplicationDbContext context, IPasswordHasherService hasher, IPasswordRegex passwordRegex)
+        public AuthenticationService(ApplicationDbContext context, IPasswordHasherService hasher, IPasswordRegex passwordRegex) : base(context)
         {
             _hasher = hasher;
             _passwordRegex = passwordRegex;

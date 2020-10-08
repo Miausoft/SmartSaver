@@ -10,32 +10,37 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SmartSaver.Domain;
 using SmartSaver.Domain.Entities;
+using SmartSaver.Domain.Services.EmailServices;
 using SmartSaver.EntityFrameworkCore;
 
 namespace SmartSaver
 {
     public partial class App : Application
     {
-        private readonly ServiceProvider _serviceProvider;
+        private ServiceProvider _serviceProvider;
+        public IConfiguration Configuration;
 
-        public App()
-        {
-            var serviceCollection = new ServiceCollection();
-            ConfigureServices(serviceCollection);
-            _serviceProvider = serviceCollection.BuildServiceProvider();
-        }
+        public App() {}
 
-#pragma warning disable EMB026 // UseStaticMethod
         private void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<SmtpSettings>(Configuration.GetSection("SmtpSettings"));
             services.AddDomainLibrary();
             services.AddDbContext<ApplicationDbContext>();
             services.AddSingleton<MainWindow>();
         }
-#pragma warning restore EMB026 // UseStaticMethod
 
         private void OnStartup(object sender, StartupEventArgs e)
         {
+            Configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", false, true)
+                .Build();
+
+            var serviceCollection = new ServiceCollection();
+            ConfigureServices(serviceCollection);
+            _serviceProvider = serviceCollection.BuildServiceProvider();
+
             var mainWindow = _serviceProvider.GetService<MainWindow>();
             mainWindow.Show();
         }

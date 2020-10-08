@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace SmartSaver.Domain.Services.EmailServices
 {
-    interface IMailer
+    public interface IMailer
     {
         Task SendEmailAsync(string email, string subject, string body);
+        void SendEmail(string email, string subject, string body);
     }
 }
