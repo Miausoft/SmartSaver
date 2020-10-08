@@ -27,12 +27,12 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
             return acc.Goal / TimeDays(acc);
         }
 
-        public static double TimeMonths(Account acc)
+        private static double TimeMonths(Account acc)
         {
             return acc.GoalEndDate.Subtract(acc.GoalStartDate).Days / (365.25 / 12);
         }
 
-        public static double TimeDays(Account acc)
+        private static double TimeDays(Account acc)
         {
             return (acc.GoalEndDate - acc.GoalStartDate).TotalDays;
         }
@@ -45,12 +45,12 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
         //    return Average(DaysPassed(acc), savedSum) == 1 ? DaysLeft(acc) : Math.Ceiling((acc.Goal - savedSum) / Average(DaysPassed(acc), savedSum));
         //}
 
-        public static double DaysLeft(Account acc)
+        private static double DaysLeft(Account acc)
         {
             return acc.GoalEndDate.DayOfYear - DateTime.Now.DayOfYear;
         }
 
-        public static double DaysPassed(Account acc)
+        private static double DaysPassed(Account acc)
         {
             return (DateTime.Now.Date - acc.GoalStartDate).TotalDays;
         }
