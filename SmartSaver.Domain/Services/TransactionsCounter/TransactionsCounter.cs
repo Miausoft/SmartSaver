@@ -1,53 +1,66 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SmartSaver.EntityFrameworkCore.Models;
 
 namespace SmartSaver.Domain.Services.TransactionsCounter
 {
-    class TransactionsCounter
+    public static class TransactionsCounter
     {
-        public IEnumerable<Transaction> FilterAccount(IEnumerable<Transaction> transactions, int accountId)
+        /*
+         * returns list of all accounts' transactions, filtered by date
+         */
+        public static IEnumerable<Transaction> FilterAccount(IEnumerable<Transaction> transactions, int accountId, DateTime from, DateTime to)
         {
-            // return transactions.Where(t => t.AccountId == accountId);
-            return from t in transactions where t.AccountId == accountId select t;
+             return transactions.Where(t => t.AccountId == accountId && InRange(t.ActionTime, from, to));
         }
 
-        public IEnumerable<Transaction> TotalAmountSpentByAccount(IEnumerable<Transaction> transaction) //kiek is viso isleido vartotojas
+        /*
+        * returns account's spent amount of money, filtered by date
+        */
+        public static double TotalAmountSpentByAccount(IEnumerable<Transaction> transaction, int accountId, DateTime from, DateTime to)
         {
-            return transaction.GroupBy(t => t.AccountId).Select(x => new Transaction
-            {
-                AccountId = x.First().AccountId,
-                Amount = x.Where(c => c.Amount < 0).Sum(c => c.Amount),
-            });
+            return transaction.Where(t => t.AccountId == accountId && t.Amount < 0 && InRange(t.ActionTime, from, to)).Sum(c => c.Amount);
         }
 
-        public IEnumerable<Transaction> TotalAmountSavedByAccount(IEnumerable<Transaction> transaction) //kiek is viso sutaupe vartotojas
+        /*
+        * returns account's saved amount of money, filtered by date
+        */
+        public static double TotalAmountSavedByAccount(IEnumerable<Transaction> transaction, int accountId, DateTime from, DateTime to)
         {
-            return transaction.GroupBy(t => t.AccountId).Select(x => new Transaction
-            {
-                AccountId = x.First().AccountId,
-                Amount = x.Where(y => y.Amount > 0).Sum(y => y.Amount),
-            });
+            return transaction.Where(t => t.AccountId == accountId && t.Amount > 0 && InRange(t.ActionTime, from, to)).Sum(c => c.Amount);
         }
 
-        public IEnumerable<Transaction> AmountSavedByCategory(IEnumerable<Transaction> transaction) // kiek vartotojas sutaupe atskiroje kategorijoje
+        /*
+        * returns list of money account saved in every category, filtered by date
+        */
+        public static IEnumerable<Transaction> AmountSavedByCategory(IEnumerable<Transaction> transaction, int accountId, DateTime from, DateTime to)
         {
             return transaction.GroupBy(t => new { t.CategoryId, t.AccountId }).Select(x => new Transaction
             {
                 Amount = x.Where(x => x.Amount > 0).Sum(y => y.Amount),
-                AccountId = x.Key.AccountId,
                 CategoryId = x.Key.CategoryId
-            }).OrderBy(x => x.AccountId);
+            }).Where(x => x.AccountId == accountId && x.Amount > 0 && InRange(x.ActionTime, from, to)).OrderBy(x => x.CategoryId);
         }
 
-        public IEnumerable<Transaction> AmountSpentByCategory(IEnumerable<Transaction> transaction) // kiek vartotojas isleido atskiroje kategorijoje
+        /*
+        * returns list of money account spent in every category, filtered by date
+        */
+        public static IEnumerable<Transaction> AmountSpentByCategory(IEnumerable<Transaction> transaction, int accountId, DateTime from, DateTime to)
         {
             return transaction.GroupBy(t => new { t.CategoryId, t.AccountId }).Select(x => new Transaction
             {
                 Amount = x.Where(x => x.Amount < 0).Sum(y => y.Amount),
-                AccountId = x.Key.AccountId,
                 CategoryId = x.Key.CategoryId
-            }).OrderBy(x => x.AccountId);
+            }).Where(x => x.AccountId == accountId && x.Amount < 0 && InRange(x.ActionTime, from, to)).OrderBy(x => x.CategoryId);
+        }
+
+        /*
+        * returns if date is in range between two dates
+        */
+        public static bool InRange(this DateTime dateToCheck, DateTime startDate, DateTime endDate)
+        {
+            return dateToCheck >= startDate && dateToCheck < endDate;
         }
     }
 }
