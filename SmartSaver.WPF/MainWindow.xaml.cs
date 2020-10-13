@@ -45,6 +45,7 @@ namespace SmartSaver
             InitializeComponent();
             _auth = auth;
             categoryBox.ItemsSource = categoryList.Select(s => s.Title);
+            categoryBox.IsEnabled = false;
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e) //REGISTER launch button
@@ -88,13 +89,51 @@ namespace SmartSaver
             
         }
 
-        private void Button_Click_3(object sender, RoutedEventArgs e)
+        private void Button_Click_3(object sender, RoutedEventArgs e) // Add transaction
         {
+            int selectedIndex = categoryBox.SelectedIndex;
+            Object selectedItem = categoryBox.SelectedItem;
+
+            if((bool)(Double.Parse(amountBox.Text) > 0 &
+                (selectedIndex != -1 & spendingsCheckBox.IsChecked) | selectedIndex == -1 & earningsCheckBox.IsChecked))
+            {
+
+                _user.Account.Transactions.Add(new Transaction() // Creating a new transaction !!!!!
+                {
+                    Amount = Double.Parse(amountBox.Text),
+                    ActionTime = DateTime.Now,
+                    CategoryId = selectedIndex,
+                    Category = (Category)selectedItem
+                });
+
+                MessageBox.Show("Transaction added!");
+
+                // Cleaning fields
+                amountBox.Text = "0.00";
+                categoryBox.SelectedItem = null;
+                earningsCheckBox.IsChecked = false;
+                spendingsCheckBox.IsChecked = false;
+
+            } else
+            {
+                MessageBox.Show("The transaction information was entered incorrectly");
+            }
+               
 
 
+        }
 
+        private void CheckBox_Checked(object sender, RoutedEventArgs e) // Spendings chackbox
+        {
+            categoryBox.IsEnabled = true;
+            earningsCheckBox.IsChecked = false;
+        }
 
-
+        private void CheckBox_Checked_1(object sender, RoutedEventArgs e) // Earnings chackbox
+        {
+            categoryBox.IsEnabled = false;
+            categoryBox.SelectedItem = null;
+            spendingsCheckBox.IsChecked = false;
         }
     }
 }

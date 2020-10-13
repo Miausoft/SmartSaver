@@ -106,8 +106,8 @@
                     <Label Content="Spendings / Earnings&#xA;" HorizontalAlignment="Left" Margin="190,97,0,0" VerticalAlignment="Top" Width="218" FontFamily="Arial" FontStyle="Italic" FontSize="11"/>
                     <TextBox x:Name="amountBox" HorizontalAlignment="Left" Margin="190,117,0,0" Text=" 0.00" TextWrapping="Wrap" VerticalAlignment="Top" Width="218" Height="38" FontFamily="Arial" TextAlignment="Center" FontSize="36"/>
                     <Button Content="ENTER" HorizontalAlignment="Left" Margin="190,243,0,0" VerticalAlignment="Top" Height="34" Width="218" Background="#FF3B7A70" BorderBrush="{x:Null}" FontFamily="Segoe UI" FontWeight="Normal" Foreground="White" Click="Button_Click_3"/>
-                    <CheckBox Content="Spendings&#xA;" HorizontalAlignment="Left" Margin="190,174,0,0" VerticalAlignment="Top"/>
-                    <CheckBox Content="Earinings" HorizontalAlignment="Left" Margin="312,173,0,0" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="spendingsCheckBox" Content="Spendings&#xA;" HorizontalAlignment="Left" Margin="190,174,0,0" VerticalAlignment="Top" Checked="CheckBox_Checked"/>
+                    <CheckBox x:Name="earningsCheckBox" Content="Earinings" HorizontalAlignment="Left" Margin="312,173,0,0" VerticalAlignment="Top" Checked="CheckBox_Checked_1"/>
                     <ComboBox x:Name="categoryBox" HorizontalAlignment="Left" Margin="190,198,0,0" VerticalAlignment="Top" Width="218" Height="29">
                         
                     </ComboBox>
