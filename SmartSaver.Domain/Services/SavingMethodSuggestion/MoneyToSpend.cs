@@ -27,13 +27,14 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
 
         private static double TimeMonths(Account acc)
         {
-            return acc.GoalEndDate.Subtract(acc.GoalStartDate).Days / (365.25 / 12);
+            return acc.GoalEndDate > DateTime.Now ? acc.GoalEndDate.Subtract(DateTime.Now).Days / (365.25 / 12) : 0;
         }
 
         private static double TimeDays(Account acc)
         {
-            return (acc.GoalEndDate - acc.GoalStartDate).TotalDays;
+            return acc.GoalEndDate > DateTime.Now ? (acc.GoalEndDate - DateTime.Now).TotalDays : 0;
         }
+
         /*
          * we will need to return DateTime in the future but default values for some cases are needed so string is chosen for this time
          */
@@ -51,7 +52,7 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
 
         private static double DaysPassed(Account acc)
         {
-            return (DateTime.Now.Date - acc.GoalStartDate).TotalDays;
+            return (DateTime.Now - acc.GoalStartDate).TotalDays;
         }
 
         private static double Average(double daysPassed, double savedSum)
