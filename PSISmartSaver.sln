@@ -9,6 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartSaver.Domain", "SmartS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartSaver.EntityFrameworkCore", "SmartSaver.EntityFrameworkCore\SmartSaver.EntityFrameworkCore.csproj", "{BD32984B-6ECD-431D-A2AA-2973B0A099EC}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForTestingMethods", "ForTestingMethods\ForTestingMethods.csproj", "{9AE7A371-0CD6-4A86-86EF-E88101B8053B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BD32984B-6ECD-431D-A2AA-2973B0A099EC} = {BD32984B-6ECD-431D-A2AA-2973B0A099EC}
+		{9558FD6E-60BC-4DB5-94DC-FFA58155DE38} = {9558FD6E-60BC-4DB5-94DC-FFA58155DE38}
+		{FB018E98-DD7F-4277-9F7D-E6DC1958B38D} = {FB018E98-DD7F-4277-9F7D-E6DC1958B38D}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +34,10 @@ Global
 		{BD32984B-6ECD-431D-A2AA-2973B0A099EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD32984B-6ECD-431D-A2AA-2973B0A099EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD32984B-6ECD-431D-A2AA-2973B0A099EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AE7A371-0CD6-4A86-86EF-E88101B8053B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AE7A371-0CD6-4A86-86EF-E88101B8053B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AE7A371-0CD6-4A86-86EF-E88101B8053B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AE7A371-0CD6-4A86-86EF-E88101B8053B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

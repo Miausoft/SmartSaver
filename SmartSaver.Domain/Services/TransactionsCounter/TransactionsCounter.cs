@@ -1,53 +1,65 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SmartSaver.EntityFrameworkCore.Models;
 
 namespace SmartSaver.Domain.Services.TransactionsCounter
 {
-    class TransactionsCounter
+    public static class TransactionsCounter
     {
-        public IEnumerable<Transaction> FilterAccount(IEnumerable<Transaction> transactions, int accountId)
+        public static IEnumerable<Transaction> FilterAccount(IEnumerable<Transaction> transactions, DateTime from, DateTime to)
         {
-            // return transactions.Where(t => t.AccountId == accountId);
-            return from t in transactions where t.AccountId == accountId select t;
+             return transactions.Where(t => InRange(t.ActionTime, from, to));
         }
 
-        public IEnumerable<Transaction> TotalAmountSpentByAccount(IEnumerable<Transaction> transaction) //kiek is viso isleido vartotojas
+        public static double TotalExpense(IEnumerable<Transaction> transaction, DateTime from, DateTime to)
         {
-            return transaction.GroupBy(t => t.AccountId).Select(x => new Transaction
-            {
-                AccountId = x.First().AccountId,
-                Amount = x.Where(c => c.Amount < 0).Sum(c => c.Amount),
-            });
+            return Math.Round(transaction.Where(t => t.Amount < 0 && InRange(t.ActionTime, from, to)).Sum(c => c.Amount), 2);
         }
 
-        public IEnumerable<Transaction> TotalAmountSavedByAccount(IEnumerable<Transaction> transaction) //kiek is viso sutaupe vartotojas
+        public static double TotalIncome(IEnumerable<Transaction> transaction, DateTime from, DateTime to)
         {
-            return transaction.GroupBy(t => t.AccountId).Select(x => new Transaction
-            {
-                AccountId = x.First().AccountId,
-                Amount = x.Where(y => y.Amount > 0).Sum(y => y.Amount),
-            });
+            return Math.Round(transaction.Where(t => t.Amount > 0 && InRange(t.ActionTime, from, to)).Sum(c => c.Amount), 2);
         }
 
-        public IEnumerable<Transaction> AmountSavedByCategory(IEnumerable<Transaction> transaction) // kiek vartotojas sutaupe atskiroje kategorijoje
+        public static double SavedSum(IEnumerable<Transaction> transaction, DateTime from, DateTime to)
         {
-            return transaction.GroupBy(t => new { t.CategoryId, t.AccountId }).Select(x => new Transaction
+            return Math.Round(TotalIncome(transaction, from, to) + TotalExpense(transaction, from, to), 2);
+        }
+
+        public static Dictionary<int, double> TotalIncomeByCategory(IEnumerable<Transaction> transaction, DateTime from, DateTime to)
+        {
+            return transaction.GroupBy(t => new { t.CategoryId, t.ActionTime }).Select(x => new Transaction
             {
                 Amount = x.Where(x => x.Amount > 0).Sum(y => y.Amount),
-                AccountId = x.Key.AccountId,
-                CategoryId = x.Key.CategoryId
-            }).OrderBy(x => x.AccountId);
+                CategoryId = x.Key.CategoryId,
+                ActionTime = x.Key.ActionTime
+            }).Where(x => x.Amount > 0 && InRange(x.ActionTime, from, to)).GroupBy(x => x.CategoryId).Select(z => new Transaction
+            {
+                Amount = z.Where(z => z.Amount > 0).Select(z => z.Amount).Sum(),
+                CategoryId = z.Select(z => z.CategoryId).First()
+            }
+            ).OrderBy(x => x.CategoryId).ToDictionary(x => x.CategoryId, x => x.Amount);
         }
 
-        public IEnumerable<Transaction> AmountSpentByCategory(IEnumerable<Transaction> transaction) // kiek vartotojas isleido atskiroje kategorijoje
+        public static Dictionary<int, double> TotalExpenseByCategory(IEnumerable<Transaction> transaction, DateTime from, DateTime to)
         {
-            return transaction.GroupBy(t => new { t.CategoryId, t.AccountId }).Select(x => new Transaction
+            return transaction.GroupBy(t => new { t.CategoryId, t.ActionTime }).Select(x => new Transaction
             {
-                Amount = x.Where(x => x.Amount < 0).Sum(y => y.Amount),
-                AccountId = x.Key.AccountId,
-                CategoryId = x.Key.CategoryId
-            }).OrderBy(x => x.AccountId);
+                Amount = x.Where(x => x.Amount < 0).Select(x => x.Amount).Sum(),
+                CategoryId = x.Key.CategoryId,
+                ActionTime = x.Key.ActionTime
+            }).Where(x => x.Amount < 0 && InRange(x.ActionTime, from, to)).GroupBy(x => x.CategoryId).Select(z => new Transaction
+            {
+                Amount = z.Where(z => z.Amount < 0).Select(z => z.Amount).Sum(),
+                CategoryId = z.Select(z => z.CategoryId).First()
+            }
+            ).OrderBy(z => z.CategoryId).ToDictionary(x => x.CategoryId, x => x.Amount);
         }
-    }
+
+        private static bool InRange(DateTime dateToCheck, DateTime startDate, DateTime endDate)
+        {
+            return dateToCheck >= startDate && dateToCheck < endDate;
+        }
+    } 
 }

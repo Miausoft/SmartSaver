@@ -1,7 +1,5 @@
 ﻿using SmartSaver.EntityFrameworkCore.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SmartSaver.Domain.Services.SavingMethodSuggestion
 {
@@ -36,18 +34,19 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
         {
             return (acc.GoalEndDate - acc.GoalStartDate).TotalDays;
         }
-
         /*
-         * to make this method work we have to know how much money an user saved already. This could be implemented in the future as an extra feature
+         * we will need to return DateTime in the future but default values for some cases are needed so string is chosen for this time
          */
-        //public static double EstimatedTime(Account acc)
-        //{
-        //    return Average(DaysPassed(acc), savedSum) == 1 ? DaysLeft(acc) : Math.Ceiling((acc.Goal - savedSum) / Average(DaysPassed(acc), savedSum));
-        //}
-
-        private static double DaysLeft(Account acc)
+        public static string EstimatedTime(Account acc)
         {
-            return acc.GoalEndDate.DayOfYear - DateTime.Now.DayOfYear;
+            double savedSum = TransactionsCounter.TransactionsCounter.SavedSum(acc.Transactions, acc.GoalStartDate, acc.GoalEndDate);
+            Console.WriteLine("Per taupymo laikotarpi nuo " + acc.GoalStartDate.ToShortDateString() + " iki " + acc.GoalEndDate.ToShortDateString() + " sutaupe: " + savedSum);
+
+            if (savedSum < 0) return "Per taupymo laikotarpį kol kas nesutaupėte jokios pinigų sumos";
+            else if (savedSum >= acc.Goal && DateTime.Today < acc.GoalEndDate) return "Sugebėjote sutaupyti anksčiau nei numatėte!";
+            else if (savedSum >= acc.Goal && DateTime.Today > acc.GoalEndDate) return "Sugebėjote sutaupyti, tačiau vėliau nei numatėte!";
+            else if (Average(DaysPassed(acc), savedSum) == 1) return acc.Goal + " sutaupysite iki " + acc.GoalEndDate.ToShortDateString();
+            else return acc.Goal + " sutaupysite iki " + DateTime.Now.AddDays(Math.Ceiling((acc.Goal - savedSum) / Average(DaysPassed(acc), savedSum))).ToShortDateString();
         }
 
         private static double DaysPassed(Account acc)
@@ -55,12 +54,9 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
             return (DateTime.Now.Date - acc.GoalStartDate).TotalDays;
         }
 
-        /*
-         * to make this method work we have to know how much money an user saved already
-         */
-        //public static double Average(double daysPassed, double savedSum)
-        //{
-        //    return savedSum / (daysPassed + 1);
-        //}
+        private static double Average(double daysPassed, double savedSum)
+        {
+            return savedSum / (daysPassed + 1);
+        }
     }
 }
