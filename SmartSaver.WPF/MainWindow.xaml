@@ -20,13 +20,7 @@
                     <GradientStop Color="#FF74C0B9" Offset="1"/>
                 </LinearGradientBrush>
             </TabControl.Background>
-            <TabItem x:Name="logInTab" Header="➢" Margin="475,13,-480,-13" FontFamily="Bahnschrift SemiBold" FontSize="20" BorderBrush="{x:Null}">
-                <TabItem.Background>
-                    <LinearGradientBrush EndPoint="0,1">
-                        <GradientStop Color="#FFF0F0F0"/>
-                        <GradientStop Color="White" Offset="0.689"/>
-                    </LinearGradientBrush>
-                </TabItem.Background>
+            <TabItem x:Name="logInTab" Header="➢" Margin="592,11,-588,-8" FontFamily="Bahnschrift SemiBold" FontSize="20" BorderBrush="{x:Null}" Background="White">
                 <Grid Height="400" Width="625" Margin="-2,0,-4,0">
                     <Grid.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -81,8 +75,14 @@
 
                     </Grid.ColumnDefinitions>
                     <TextBlock HorizontalAlignment="Left" Margin="12,60,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="230" FontFamily="Candara Light" FontStyle="Italic" FontSize="14" FontWeight="Normal" Grid.ColumnSpan="2"><Run Text="Next su"/><Run Language="lt-lt" Text="g"/><Run Text="gestions"/><Run Text=": YYYY-MM-DD"/></TextBlock>
-                    <GroupBox Header="" Margin="10,71,228,71" Background="White" Grid.ColumnSpan="2">
-                        <TextBlock HorizontalAlignment="Left" Margin="22,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="250" Width="330" FontSize="18"><Run Text="INFORMACIJA kaip ir kiek buvo galima sutaupyti"/><Run Language="lt-lt" Text=" / INFORMACIJA kaip ir kiek buvo galima sutaupyti / "/><Run Text="INFORMACIJA kaip ir kiek buvo galima sutaupyti"/><Run Language="lt-lt" Text=" / INFORMACIJA kaip ir kiek buvo galima sutaupyti / "/><Run Text="INFORMACIJA kaip ir kiek buvo galima sutaupyti"/><Run Language="lt-lt" Text=" / INFORMACIJA kaip ir kiek buvo galima sutaupyti /"/><LineBreak/><Run Language="lt-lt"/></TextBlock>
+                    <GroupBox Header="" Margin="10,71,228,124" Background="White" Grid.ColumnSpan="2">
+                        <TextBlock HorizontalAlignment="Left" Margin="22,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="250" Width="330" FontSize="18"><Run Text="Aivaro taupymo informacija kuri dar neprijungta, nes c# "/><Run Language="lt-lt" Text="big oof"/></TextBlock>
+                    </GroupBox>
+                    <GroupBox Header="" Margin="295,128,10,200" Background="White" Grid.Column="1">
+                        <TextBlock HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="43" Width="184" FontSize="16"><Run Text="Tokiu tempu sutaupysite iki"/><Run Language="lt-lt" Text=" YYYY-MM-DD"/></TextBlock>
+                    </GroupBox>
+                    <GroupBox Header="" Margin="295,71,10,271" Background="White" Grid.Column="1">
+                        <TextBlock HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="33" Width="169" FontSize="18"><Run Language="lt-lt" Text="Sutaupyta: "/><Run Text="0.00"/></TextBlock>
                     </GroupBox>
 
                 </Grid>
@@ -95,22 +95,17 @@
                             <GradientStop Color="#FF74C0B9" Offset="1"/>
                         </LinearGradientBrush>
                     </Grid.Background>
-                    <Grid.ColumnDefinitions>
-
-                    </Grid.ColumnDefinitions>
                     <Rectangle HorizontalAlignment="Left" Height="193" Margin="181,96,0,0" VerticalAlignment="Top" Width="237">
                         <Rectangle.Fill>
                             <SolidColorBrush Color="White" Opacity="0.4"/>
                         </Rectangle.Fill>
                     </Rectangle>
                     <Label Content="Spendings / Earnings&#xA;" HorizontalAlignment="Left" Margin="190,97,0,0" VerticalAlignment="Top" Width="218" FontFamily="Arial" FontStyle="Italic" FontSize="11"/>
-                    <TextBox x:Name="amountBox" HorizontalAlignment="Left" Margin="190,117,0,0" Text=" 0.00" TextWrapping="Wrap" VerticalAlignment="Top" Width="218" Height="38" FontFamily="Arial" TextAlignment="Center" FontSize="36"/>
+                    <TextBox x:Name="amountBox" HorizontalAlignment="Left" Margin="190,117,0,0" Text="{Binding Price, StringFormat=#.00, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" VerticalAlignment="Top" Width="218" Height="38" FontFamily="Arial" TextAlignment="Center" FontSize="36"/>
                     <Button Content="ENTER" HorizontalAlignment="Left" Margin="190,243,0,0" VerticalAlignment="Top" Height="34" Width="218" Background="#FF3B7A70" BorderBrush="{x:Null}" FontFamily="Segoe UI" FontWeight="Normal" Foreground="White" Click="Button_Click_3"/>
                     <CheckBox x:Name="spendingsCheckBox" Content="Spendings&#xA;" HorizontalAlignment="Left" Margin="190,174,0,0" VerticalAlignment="Top" Checked="CheckBox_Checked"/>
                     <CheckBox x:Name="earningsCheckBox" Content="Earinings" HorizontalAlignment="Left" Margin="312,173,0,0" VerticalAlignment="Top" Checked="CheckBox_Checked_1"/>
-                    <ComboBox x:Name="categoryBox" HorizontalAlignment="Left" Margin="190,198,0,0" VerticalAlignment="Top" Width="218" Height="29">
-                        
-                    </ComboBox>
+                    <ComboBox x:Name="categoryBox" HorizontalAlignment="Left" Margin="190,198,0,0" VerticalAlignment="Top" Width="218" Height="29"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="historyTab" Header="HISTORY" Margin="-36,13,0,-13" Width="120" FontSize="16" FontFamily="Bahnschrift SemiBold" BorderBrush="{x:Null}" HorizontalAlignment="Left" IsEnabled="False">
@@ -121,10 +116,7 @@
                     </LinearGradientBrush>
                 </TabItem.Background>
                 <Grid Height="400" Width="625" Margin="-2,0,-4,0">
-                    <Grid.ColumnDefinitions>
-
-                    </Grid.ColumnDefinitions>
-                    <ListView Margin="10,21,10,10" FontFamily="Segoe UI" SelectionChanged="ListView_SelectionChanged">
+                    <ListView x:Name="historyTable" Margin="10,21,10,10" FontFamily="Segoe UI" SelectionChanged="ListView_SelectionChanged">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Date and Time"
@@ -139,7 +131,7 @@
                                 <GridViewColumn Header="Category"
                                     DisplayMemberBinding="{Binding Category}"
                                     Width="200"/>
-                                
+
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -152,10 +144,50 @@
                         <ColumnDefinition/>
 
                     </Grid.ColumnDefinitions>
-                    <Label Content="Priorities?&#xD;&#xA;&#xD;&#xA;etc." HorizontalAlignment="Left" Margin="24,66,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Priorities?&#xA;&#xA;etc." HorizontalAlignment="Left" Margin="24,66,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
+            <TabItem x:Name="accountTab" Header="ACCOUNT"  FontFamily="Bahnschrift SemiBold" FontSize="16" BorderBrush="{x:Null}" IsEnabled="False" Margin="-41,13,41,-13">
+                <TabItem.Background>
+                    <LinearGradientBrush EndPoint="0,1">
+                        <GradientStop Color="#FFF0F0F0"/>
+                        <GradientStop Color="White" Offset="1"/>
+                    </LinearGradientBrush>
+                </TabItem.Background>
+                <Grid Height="400" Width="625" Margin="-2,0,-4,0">
+                    <Grid.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="White"/>
+                            <GradientStop Color="#FF74C0B9" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                    <Grid.ColumnDefinitions>
 
+                        <ColumnDefinition Width="74*"/>
+                        <ColumnDefinition Width="323*"/>
+
+                    </Grid.ColumnDefinitions>
+                    <Rectangle HorizontalAlignment="Left" Height="48" Margin="114,58,0,0" VerticalAlignment="Top" Width="396" Grid.ColumnSpan="2">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="White" Opacity="0.4"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Rectangle HorizontalAlignment="Left" Height="166" Margin="80,119,0,0" VerticalAlignment="Top" Width="229" Grid.Column="1">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="White" Opacity="0.4"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Button Content="SUBMIT" Grid.Column="1" HorizontalAlignment="Left" Margin="106,245,0,0" VerticalAlignment="Top" Width="180" Height="27" Background="#FF3B7A70" BorderBrush="{x:Null}" Foreground="White" FontFamily="Segoe UI" FontSize="14" Click="Button_Click_4"/>
+                    <Label Content="Account information is essential for us to provide you &#xD;&#xA;                the best money saving experience" HorizontalAlignment="Left" Margin="115,40,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" Height="82" Width="386" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.ColumnSpan="2"/>
+                    <Label Content="Savings goal:" HorizontalAlignment="Left" Margin="104,129,0,0" VerticalAlignment="Top" FontSize="12" FontFamily="Arial" FontStyle="Italic" Grid.Column="1"/>
+                    <Label Content="Until date:" HorizontalAlignment="Left" Margin="106,180,0,0" VerticalAlignment="Top" FontSize="12" FontFamily="Arial" FontStyle="Italic" Grid.Column="1"/>
+                    <TextBox x:Name="goalBox" Grid.Column="1" HorizontalAlignment="Left" Margin="106,151,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="180" Height="24"/>
+                    <DatePicker x:Name="goalDateBox" Grid.Column="1" HorizontalAlignment="Left" Margin="106,201,0,0" VerticalAlignment="Top" Width="180"/>
+
+                </Grid>
+            </TabItem>
 
         </TabControl>
 

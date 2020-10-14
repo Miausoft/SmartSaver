@@ -46,6 +46,7 @@ namespace SmartSaver
             _auth = auth;
             categoryBox.ItemsSource = categoryList.Select(s => s.Title);
             categoryBox.IsEnabled = false;
+
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e) //REGISTER launch button
@@ -60,6 +61,7 @@ namespace SmartSaver
             historyTab.IsEnabled = true;
             savingPlansTab.IsEnabled = true;
             entriesTab.IsEnabled = true;
+            accountTab.IsEnabled = true;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e) // LOG IN button
@@ -74,6 +76,7 @@ namespace SmartSaver
                 historyTab.IsEnabled = true;
                 savingPlansTab.IsEnabled = true;
                 entriesTab.IsEnabled = true;
+                accountTab.IsEnabled = true;
                 logInTab.IsEnabled = false;
 
                 // Initializing components used after login
@@ -100,10 +103,10 @@ namespace SmartSaver
 
                 _user.Account.Transactions.Add(new Transaction() // Creating a new transaction !!!!!
                 {
-                    Amount = Double.Parse(amountBox.Text),
+                    Amount = double.Parse(amountBox.Text),
                     ActionTime = DateTime.Now,
                     CategoryId = selectedIndex,
-                    Category = (Category)selectedItem
+                    Category = new Category() { Id = selectedIndex, Title = (string)selectedItem }
                 });
 
                 MessageBox.Show("Transaction added!");
@@ -134,6 +137,19 @@ namespace SmartSaver
             categoryBox.IsEnabled = false;
             categoryBox.SelectedItem = null;
             spendingsCheckBox.IsChecked = false;
+        }
+
+        private void Button_Click_4(object sender, RoutedEventArgs e) // Account information submission
+        {
+            if(goalBox.Text != null)
+                _user.Account.Goal = double.Parse(goalBox.Text);
+
+            _user.Account.GoalStartDate = DateTime.Now;
+
+            if (goalDateBox.Text != null)
+                _user.Account.GoalEndDate = (DateTime)goalDateBox.SelectedDate;
+
+            MessageBox.Show("Account details updated");
         }
     }
 }
