@@ -31,7 +31,7 @@ namespace ConsoleApp1
                 Account acc = new Account()
                 {
                     GoalStartDate = new DateTime(2020, 01, 01),
-                    GoalEndDate = new DateTime(2020, 12, 21),
+                    GoalEndDate = new DateTime(2021, 05, 21),
                     Goal = 65,
                     Transactions = transaction
                 };
@@ -63,16 +63,25 @@ namespace ConsoleApp1
                 }
 
                 Console.WriteLine();
-                Console.WriteLine("Ar pliuse ar minuse sedi, tai cia ale sutaupe: " + TransactionsCounter.SavedSum(transaction, from, to));
+                Console.WriteLine("Per taupymo laikotarpi nuo " + from + " iki " + to + " sutaupete: " + TransactionsCounter.SavedSum(transaction, from, to));
 
                 Console.WriteLine();
-                Console.WriteLine("Kiek is viso sutaupe: " + TransactionsCounter.TotalIncome(transaction, from, to));
+                Console.WriteLine("Kiek is viso iplauku: " + TransactionsCounter.TotalIncome(transaction, from, to));
 
                 Console.WriteLine();
-                Console.WriteLine("Kiek is viso isleido: " + TransactionsCounter.TotalExpense(transaction, from, to));
+                Console.WriteLine("Kiek is viso islaidu: " + TransactionsCounter.TotalExpense(transaction, from, to));
 
                 Console.WriteLine();
-                Console.WriteLine(MoneyToSpend.EstimatedTime(acc));
+                Console.WriteLine(MoneyCounter.EstimatedTime(acc));
+
+                Console.WriteLine();
+                Console.WriteLine("Noredami pasiekti savo goal laiku: ");
+                //Console.WriteLine("Kiekviena menesi galite isleisti: " + MoneyCounter.AmountToSpendAMonth(acc)); need better implementation of this method
+                Console.WriteLine("Kiekviena menesi turite sutaupyti: " + MoneyCounter.AmountToSaveAMonth(acc));
+                Console.WriteLine("si menesi jau isleidote: " + MoneyCounter.AmountSpentCurrentMonth(acc));
+                Console.WriteLine("si menesi kolkas sutaupete: " + MoneyCounter.AmountSavedCurrentMonth(acc));
+                Console.WriteLine("Pingu likutis, kuri galite skirti savo islaidoms, kad pasiektumete savo tiksla laiku " + MoneyCounter.AmountLeftToSpend(acc));
+                Console.WriteLine("KODEL butent tiek? nes praejo apie 10 men nuo sausio iki spalio, sutaupyti i menesi jis turi 3,91, todel 44-39 ir turim tuos 5eurus");
             }
         }
     }
