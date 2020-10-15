@@ -29,6 +29,7 @@ namespace SmartSaver
     {
         private readonly IAuthenticationService _auth;
         private User _user;
+        private ApplicationDbContext _context;
         
         public List<Category> categoryList = new List<Category>()
         {
@@ -40,10 +41,11 @@ namespace SmartSaver
             new Category(){ Id = 5, Title = "Other"},
         };
 
-        public MainWindow(IAuthenticationService auth)
+        public MainWindow(IAuthenticationService auth, ApplicationDbContext context)
         {
             InitializeComponent();
             _auth = auth;
+            _context = context;
             categoryBox.ItemsSource = categoryList.Select(s => s.Title);
             categoryBox.IsEnabled = false;
 
@@ -95,19 +97,20 @@ namespace SmartSaver
         private void Button_Click_3(object sender, RoutedEventArgs e) // Add transaction
         {
             int selectedIndex = categoryBox.SelectedIndex;
-            Object selectedItem = categoryBox.SelectedItem;
+            object selectedItem = categoryBox.SelectedItem;
 
-            if((bool)(Double.Parse(amountBox.Text) > 0 &
+            if((bool)(double.Parse(amountBox.Text) > 0 &
                 (selectedIndex != -1 & spendingsCheckBox.IsChecked) | selectedIndex == -1 & earningsCheckBox.IsChecked))
             {
 
                 _user.Account.Transactions.Add(new Transaction() // Creating a new transaction !!!!!
                 {
                     Amount = double.Parse(amountBox.Text),
-                    ActionTime = DateTime.Now,
-                    CategoryId = selectedIndex,
-                    Category = new Category() { Id = selectedIndex, Title = (string)selectedItem }
+                    ActionTime = DateTime.UtcNow,
+                    CategoryId = selectedIndex
                 });
+
+                _context.SaveChanges();
 
                 MessageBox.Show("Transaction added!");
 
@@ -121,9 +124,7 @@ namespace SmartSaver
             {
                 MessageBox.Show("The transaction information was entered incorrectly");
             }
-               
-
-
+            
         }
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e) // Spendings chackbox
@@ -141,15 +142,13 @@ namespace SmartSaver
 
         private void Button_Click_4(object sender, RoutedEventArgs e) // Account information submission
         {
-            if(goalBox.Text != null)
-                _user.Account.Goal = double.Parse(goalBox.Text);
+            if (goalDateBox.Text == null) return;
+            if (goalDateBox.SelectedDate == null) return;
 
-            _user.Account.GoalStartDate = DateTime.Now;
-
-            if (goalDateBox.Text != null)
-                _user.Account.GoalEndDate = (DateTime)goalDateBox.SelectedDate;
-
-            MessageBox.Show("Account details updated");
+            _user.Account.Goal = double.Parse(goalBox.Text);
+            _user.Account.GoalStartDate = DateTime.UtcNow;
+            _user.Account.GoalEndDate = (DateTime)goalDateBox.SelectedDate;
+            _context.SaveChanges(); // Eilute įrašo į duomenų bazę.
         }
     }
 }
