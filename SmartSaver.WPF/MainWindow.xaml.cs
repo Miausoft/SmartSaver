@@ -99,13 +99,13 @@ namespace SmartSaver
             int selectedIndex = categoryBox.SelectedIndex;
             object selectedItem = categoryBox.SelectedItem;
 
-            if((bool)(double.Parse(amountBox.Text) > 0 &
+            if((bool)(decimal.Parse(amountBox.Text) > 0 &
                 (selectedIndex != -1 & spendingsCheckBox.IsChecked) | selectedIndex == -1 & earningsCheckBox.IsChecked))
             {
 
                 _user.Account.Transactions.Add(new Transaction() // Creating a new transaction !!!!!
                 {
-                    Amount = double.Parse(amountBox.Text),
+                    Amount = decimal.Parse(amountBox.Text),
                     ActionTime = DateTime.UtcNow,
                     CategoryId = selectedIndex
                 });
@@ -145,7 +145,7 @@ namespace SmartSaver
             if (goalDateBox.Text == null) return;
             if (goalDateBox.SelectedDate == null) return;
 
-            _user.Account.Goal = double.Parse(goalBox.Text);
+            _user.Account.Goal = decimal.Parse(goalBox.Text);
             _user.Account.GoalStartDate = DateTime.UtcNow;
             _user.Account.GoalEndDate = (DateTime)goalDateBox.SelectedDate;
             _context.SaveChanges(); // Eilute įrašo į duomenų bazę.
