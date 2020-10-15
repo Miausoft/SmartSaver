@@ -116,21 +116,18 @@
                     </LinearGradientBrush>
                 </TabItem.Background>
                 <Grid Height="400" Width="625" Margin="-2,0,-4,0">
-                    <ListView x:Name="historyTable" Margin="10,21,10,10" FontFamily="Segoe UI" SelectionChanged="ListView_SelectionChanged">
+                    <ListView x:Name="HistoryTable" Margin="10,21,10,10" FontFamily="Segoe UI" SelectionChanged="ListView_SelectionChanged">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="Date and Time"
-                                    DisplayMemberBinding="{Binding DateAndTime}"
-                                    Width="200"/>
-                                <GridViewColumn Header="Ammount"
-                                    DisplayMemberBinding="{Binding Ammount}"
-                                    Width="120"/>
-                                <GridViewColumn Header="Direction"
-                                    DisplayMemberBinding="{Binding Direction}"
-                                    Width="80"/>
+                                <GridViewColumn Header="Action Time"
+                                    DisplayMemberBinding="{Binding ActionTime}"
+                                    Width="195"/>
+                                <GridViewColumn Header="Amount"
+                                    DisplayMemberBinding="{Binding Amount}"
+                                    Width="195"/>
                                 <GridViewColumn Header="Category"
                                     DisplayMemberBinding="{Binding Category}"
-                                    Width="200"/>
+                                    Width="195"/>
 
                             </GridView>
                         </ListView.View>
