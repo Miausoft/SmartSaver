@@ -126,7 +126,7 @@
                                     DisplayMemberBinding="{Binding Amount}"
                                     Width="195"/>
                                 <GridViewColumn Header="Category"
-                                    DisplayMemberBinding="{Binding Category}"
+                                    DisplayMemberBinding="{Binding CategoryString}"
                                     Width="195"/>
 
                             </GridView>

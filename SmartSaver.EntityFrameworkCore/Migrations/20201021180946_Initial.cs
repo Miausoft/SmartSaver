@@ -96,14 +96,12 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Transactions_CategoryId",
                 table: "Transactions",
-                column: "CategoryId",
-                unique: true);
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_AccountId",
                 table: "Users",
-                column: "AccountId",
-                unique: true);
+                column: "AccountId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

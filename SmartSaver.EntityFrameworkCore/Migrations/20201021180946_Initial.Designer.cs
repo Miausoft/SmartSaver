@@ -9,7 +9,7 @@ using SmartSaver.EntityFrameworkCore;
 namespace SmartSaver.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201015112636_Initial")]
+    [Migration("20201021180946_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,8 +80,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
 
                     b.HasIndex("AccountId");
 
-                    b.HasIndex("CategoryId")
-                        .IsUnique();
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Transactions");
                 });
@@ -109,8 +108,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountId")
-                        .IsUnique();
+                    b.HasIndex("AccountId");
 
                     b.ToTable("Users");
                 });
@@ -124,8 +122,8 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                         .IsRequired();
 
                     b.HasOne("SmartSaver.EntityFrameworkCore.Models.Category", "Category")
-                        .WithOne()
-                        .HasForeignKey("SmartSaver.EntityFrameworkCore.Models.Transaction", "CategoryId")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -133,8 +131,8 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
             modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.User", b =>
                 {
                     b.HasOne("SmartSaver.EntityFrameworkCore.Models.Account", "Account")
-                        .WithOne()
-                        .HasForeignKey("SmartSaver.EntityFrameworkCore.Models.User", "AccountId")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

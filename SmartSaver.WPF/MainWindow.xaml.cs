@@ -1,20 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using SmartSaver.Domain.Services;
 using SmartSaver.WPF;
-using System.Collections.Specialized;
 using SmartSaver.Domain.Services.AuthenticationServices;
 using SmartSaver.Domain.Services.EmailServices;
 using SmartSaver.EntityFrameworkCore;
@@ -66,49 +55,29 @@ namespace SmartSaver
 
         private void Button_Click_3(object sender, RoutedEventArgs e) // Add transaction
         {
-            int selectedIndex = categoryBox.SelectedIndex;
-            object selectedItem = categoryBox.SelectedItem;
+            int selectedIndex = categoryBox.SelectedIndex + 2;
+            double amount = -double.Parse(amountBox.Text);
 
-            if((bool)(double.Parse(amountBox.Text) > 0 &
-                (selectedIndex != -1 & spendingsCheckBox.IsChecked) | selectedIndex == -1 & earningsCheckBox.IsChecked))
+            if (earningsCheckBox.IsChecked.GetValueOrDefault())
             {
-                double amount = double.Parse(amountBox.Text);
-                int categoryId = selectedIndex + 1;
-                if (selectedIndex > 0)
-                {
-                    amount *= -1;
-                }
-                else
-                {
-                    categoryId = 1;
-                }
-
-                Transaction transaction = new Transaction()
-                {
-                    Amount = amount,
-                    ActionTime = DateTime.UtcNow,
-                    CategoryId = categoryId,
-                    AccountId = _user.Account.Id
-                };
-
-                _context.Transactions.Add(transaction);
-
-                _context.SaveChanges();
-
-                MessageBox.Show("Transaction added!");
-                UpdateHistoryTable();
-
-                // Cleaning fields
-                amountBox.Text = "0.00";
-                categoryBox.SelectedItem = null;
-                earningsCheckBox.IsChecked = false;
-                spendingsCheckBox.IsChecked = false;
-
-            } else
-            {
-                MessageBox.Show("The transaction information was entered incorrectly");
+                amount *= -1; // positive amount (income)
+                selectedIndex = 1;
             }
-            
+
+            Transaction transaction = new Transaction()
+            {
+                ActionTime = DateTime.UtcNow,
+                Amount = amount,
+                Account = _user.Account,
+                Category = _context.Categories.FirstOrDefault(c => c.Id.Equals(selectedIndex))
+            };
+
+            _context.Transactions.Add(transaction);
+            _context.SaveChanges();
+
+            UpdateHistoryTable();
+
+            MessageBox.Show("Transaction added!");
         }
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e) // Spendings chackbox
@@ -132,13 +101,13 @@ namespace SmartSaver
             _user.Account.Goal = double.Parse(goalBox.Text);
             _user.Account.GoalStartDate = DateTime.UtcNow;
             _user.Account.GoalEndDate = (DateTime)goalDateBox.SelectedDate;
-            _context.SaveChanges(); // Eilute įrašo į duomenų bazę.
+            _context.SaveChanges();
         }
 
         private void UpdateHistoryTable()
         {
             List<Transaction> transactions =
-                _context.Transactions.Where(t => t.AccountId.Equals(_user.Account.Id)).ToList();
+                _context.Transactions.Where(t => t.AccountId.Equals(_user.Account.Id)).OrderByDescending(t => t.ActionTime).ToList();
 
             HistoryTable.ItemsSource = transactions;
         }
