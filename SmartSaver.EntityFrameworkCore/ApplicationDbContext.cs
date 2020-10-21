@@ -29,19 +29,6 @@ namespace SmartSaver.EntityFrameworkCore
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-                .HasOne<Account>(p => p.Account)
-                .WithOne();
-
-            modelBuilder.Entity<Account>()
-                .HasMany<Transaction>(p => p.Transactions)
-                .WithOne();
-
-            modelBuilder.Entity<Transaction>()
-                .HasOne<Category>(p => p.Category)
-                .WithOne();
-
-
             base.OnModelCreating(modelBuilder);
         }
     }

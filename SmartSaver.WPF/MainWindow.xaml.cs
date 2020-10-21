@@ -1,20 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using SmartSaver.Domain.Services;
 using SmartSaver.WPF;
-using System.Collections.Specialized;
 using SmartSaver.Domain.Services.AuthenticationServices;
 using SmartSaver.Domain.Services.EmailServices;
 using SmartSaver.EntityFrameworkCore;
@@ -30,25 +19,14 @@ namespace SmartSaver
         private readonly IAuthenticationService _auth;
         private User _user;
         private ApplicationDbContext _context;
-        
-        public List<Category> categoryList = new List<Category>()
-        {
-            new Category(){ Id = 0, Title = "Accomodation"},
-            new Category(){ Id = 1, Title = "Food"},
-            new Category(){ Id = 2, Title = "Cloting"},
-            new Category(){ Id = 3, Title = "Fun"},
-            new Category(){ Id = 4, Title = "Partying"},
-            new Category(){ Id = 5, Title = "Other"},
-        };
 
         public MainWindow(IAuthenticationService auth, ApplicationDbContext context)
         {
             InitializeComponent();
             _auth = auth;
             _context = context;
-            categoryBox.ItemsSource = categoryList.Select(s => s.Title);
-            categoryBox.IsEnabled = false;
 
+            PrepareData();
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e) //REGISTER launch button
@@ -59,72 +37,47 @@ namespace SmartSaver
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            statusTab.IsEnabled = true;
-            historyTab.IsEnabled = true;
-            savingPlansTab.IsEnabled = true;
-            entriesTab.IsEnabled = true;
-            accountTab.IsEnabled = true;
+            EnableTabs();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e) // LOG IN button
         {
-            // _mailer.SendEmail("Povilasleka@gmail.com", "Test", "Hello"); Komanda siuncia email vartotojui i pasta.
-            if (_auth.Login(usernameTextbox.Text, passwordTextbox.Password) != null)
+            _user = _auth.Login(usernameTextbox.Text, passwordTextbox.Password);
+            if (_user == null)
             {
-                _user = _auth.Login(usernameTextbox.Text, passwordTextbox.Password); // returning the user for database if data matches
-                // Enable navigation tabs
-                statusTab.IsSelected = true;
-                statusTab.IsEnabled = true;
-                historyTab.IsEnabled = true;
-                savingPlansTab.IsEnabled = true;
-                entriesTab.IsEnabled = true;
-                accountTab.IsEnabled = true;
-                logInTab.IsEnabled = false;
-
-                // Initializing components used after login
-                
-
-            }
-            else
                 MessageBox.Show("Invalid data. Try again."); // If user with such credentials doesn't exist
-        }
+                return;
+            }
 
-        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            
+            EnableTabs();
+            UpdateHistoryTable();
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e) // Add transaction
         {
-            int selectedIndex = categoryBox.SelectedIndex;
-            object selectedItem = categoryBox.SelectedItem;
+            int selectedIndex = categoryBox.SelectedIndex + 2;
+            double amount = -double.Parse(amountBox.Text);
 
-            if((bool)(decimal.Parse(amountBox.Text) > 0 &
-                (selectedIndex != -1 & spendingsCheckBox.IsChecked) | selectedIndex == -1 & earningsCheckBox.IsChecked))
+            if (earningsCheckBox.IsChecked.GetValueOrDefault())
             {
-
-                _user.Account.Transactions.Add(new Transaction() // Creating a new transaction !!!!!
-                {
-                    Amount = decimal.Parse(amountBox.Text),
-                    ActionTime = DateTime.UtcNow,
-                    CategoryId = selectedIndex
-                });
-
-                _context.SaveChanges();
-
-                MessageBox.Show("Transaction added!");
-
-                // Cleaning fields
-                amountBox.Text = "0.00";
-                categoryBox.SelectedItem = null;
-                earningsCheckBox.IsChecked = false;
-                spendingsCheckBox.IsChecked = false;
-
-            } else
-            {
-                MessageBox.Show("The transaction information was entered incorrectly");
+                amount *= -1; // positive amount (income)
+                selectedIndex = 1;
             }
-            
+
+            Transaction transaction = new Transaction()
+            {
+                ActionTime = DateTime.UtcNow,
+                Amount = amount,
+                Account = _user.Account,
+                Category = _context.Categories.FirstOrDefault(c => c.Id.Equals(selectedIndex))
+            };
+
+            _context.Transactions.Add(transaction);
+            _context.SaveChanges();
+
+            UpdateHistoryTable();
+
+            MessageBox.Show("Transaction added!");
         }
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e) // Spendings chackbox
@@ -148,7 +101,34 @@ namespace SmartSaver
             _user.Account.Goal = decimal.Parse(goalBox.Text);
             _user.Account.GoalStartDate = DateTime.UtcNow;
             _user.Account.GoalEndDate = (DateTime)goalDateBox.SelectedDate;
-            _context.SaveChanges(); // Eilute įrašo į duomenų bazę.
+            _context.SaveChanges();
+        }
+
+        private void UpdateHistoryTable()
+        {
+            List<Transaction> transactions =
+                _context.Transactions.Where(t => t.AccountId.Equals(_user.Account.Id)).OrderByDescending(t => t.ActionTime).ToList();
+
+            HistoryTable.ItemsSource = transactions;
+        }
+
+        private void EnableTabs()
+        {
+            statusTab.IsSelected = true;
+            statusTab.IsEnabled = true;
+            historyTab.IsEnabled = true;
+            savingPlansTab.IsEnabled = true;
+            entriesTab.IsEnabled = true;
+            accountTab.IsEnabled = true;
+            logInTab.IsEnabled = false;
+        }
+
+        private void PrepareData()
+        {
+            categoryBox.ItemsSource = _context.Categories.ToList().Select(s => s.Title);
+            categoryBox.IsEnabled = false;
         }
     }
+
+
 }
