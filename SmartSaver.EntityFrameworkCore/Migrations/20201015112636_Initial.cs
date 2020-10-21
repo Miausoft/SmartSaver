@@ -69,9 +69,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                     ActionTime = table.Column<DateTime>(nullable: false),
                     Amount = table.Column<double>(nullable: false),
                     AccountId = table.Column<int>(nullable: false),
-                    CategoryId = table.Column<int>(nullable: false),
-                    AccountId1 = table.Column<int>(nullable: true),
-                    AccountId2 = table.Column<int>(nullable: false)
+                    CategoryId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -82,12 +80,6 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                         principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Transactions_Accounts_AccountId1",
-                        column: x => x.AccountId1,
-                        principalTable: "Accounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Transactions_Categories_CategoryId",
                         column: x => x.CategoryId,
@@ -100,11 +92,6 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                 name: "IX_Transactions_AccountId",
                 table: "Transactions",
                 column: "AccountId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Transactions_AccountId1",
-                table: "Transactions",
-                column: "AccountId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transactions_CategoryId",

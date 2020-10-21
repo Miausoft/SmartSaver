@@ -116,7 +116,7 @@
                     </LinearGradientBrush>
                 </TabItem.Background>
                 <Grid Height="400" Width="625" Margin="-2,0,-4,0">
-                    <ListView x:Name="HistoryTable" Margin="10,21,10,10" FontFamily="Segoe UI" SelectionChanged="ListView_SelectionChanged">
+                    <ListView x:Name="HistoryTable" Margin="10,21,10,10" FontFamily="Segoe UI">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Action Time"

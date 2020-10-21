@@ -30,25 +30,14 @@ namespace SmartSaver
         private readonly IAuthenticationService _auth;
         private User _user;
         private ApplicationDbContext _context;
-        
-        public List<Category> categoryList = new List<Category>()
-        {
-            new Category(){ Id = 0, Title = "Accomodation"},
-            new Category(){ Id = 1, Title = "Food"},
-            new Category(){ Id = 2, Title = "Cloting"},
-            new Category(){ Id = 3, Title = "Fun"},
-            new Category(){ Id = 4, Title = "Partying"},
-            new Category(){ Id = 5, Title = "Other"},
-        };
 
         public MainWindow(IAuthenticationService auth, ApplicationDbContext context)
         {
             InitializeComponent();
             _auth = auth;
             _context = context;
-            categoryBox.ItemsSource = categoryList.Select(s => s.Title);
-            categoryBox.IsEnabled = false;
 
+            PrepareData();
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e) //REGISTER launch button
@@ -59,39 +48,20 @@ namespace SmartSaver
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            statusTab.IsEnabled = true;
-            historyTab.IsEnabled = true;
-            savingPlansTab.IsEnabled = true;
-            entriesTab.IsEnabled = true;
-            accountTab.IsEnabled = true;
+            EnableTabs();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e) // LOG IN button
         {
-            // _mailer.SendEmail("Povilasleka@gmail.com", "Test", "Hello"); Komanda siuncia email vartotojui i pasta.
-            if (_auth.Login(usernameTextbox.Text, passwordTextbox.Password) != null)
+            _user = _auth.Login(usernameTextbox.Text, passwordTextbox.Password);
+            if (_user == null)
             {
-                _user = _auth.Login(usernameTextbox.Text, passwordTextbox.Password); // returning the user for database if data matches
-                // Enable navigation tabs
-                statusTab.IsSelected = true;
-                statusTab.IsEnabled = true;
-                historyTab.IsEnabled = true;
-                savingPlansTab.IsEnabled = true;
-                entriesTab.IsEnabled = true;
-                accountTab.IsEnabled = true;
-                logInTab.IsEnabled = false;
-
-                // Initializing components used after login
-                
-
-            }
-            else
                 MessageBox.Show("Invalid data. Try again."); // If user with such credentials doesn't exist
-        }
+                return;
+            }
 
-        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            
+            EnableTabs();
+            UpdateHistoryTable();
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e) // Add transaction
@@ -102,17 +72,31 @@ namespace SmartSaver
             if((bool)(double.Parse(amountBox.Text) > 0 &
                 (selectedIndex != -1 & spendingsCheckBox.IsChecked) | selectedIndex == -1 & earningsCheckBox.IsChecked))
             {
-
-                _user.Account.Transactions.Add(new Transaction() // Creating a new transaction !!!!!
+                double amount = double.Parse(amountBox.Text);
+                int categoryId = selectedIndex + 1;
+                if (selectedIndex > 0)
                 {
-                    Amount = double.Parse(amountBox.Text),
+                    amount *= -1;
+                }
+                else
+                {
+                    categoryId = 1;
+                }
+
+                Transaction transaction = new Transaction()
+                {
+                    Amount = amount,
                     ActionTime = DateTime.UtcNow,
-                    CategoryId = selectedIndex
-                });
+                    CategoryId = categoryId,
+                    AccountId = _user.Account.Id
+                };
+
+                _context.Transactions.Add(transaction);
 
                 _context.SaveChanges();
 
                 MessageBox.Show("Transaction added!");
+                UpdateHistoryTable();
 
                 // Cleaning fields
                 amountBox.Text = "0.00";
@@ -150,5 +134,32 @@ namespace SmartSaver
             _user.Account.GoalEndDate = (DateTime)goalDateBox.SelectedDate;
             _context.SaveChanges(); // Eilute įrašo į duomenų bazę.
         }
+
+        private void UpdateHistoryTable()
+        {
+            List<Transaction> transactions =
+                _context.Transactions.Where(t => t.AccountId.Equals(_user.Account.Id)).ToList();
+
+            HistoryTable.ItemsSource = transactions;
+        }
+
+        private void EnableTabs()
+        {
+            statusTab.IsSelected = true;
+            statusTab.IsEnabled = true;
+            historyTab.IsEnabled = true;
+            savingPlansTab.IsEnabled = true;
+            entriesTab.IsEnabled = true;
+            accountTab.IsEnabled = true;
+            logInTab.IsEnabled = false;
+        }
+
+        private void PrepareData()
+        {
+            categoryBox.ItemsSource = _context.Categories.ToList().Select(s => s.Title);
+            categoryBox.IsEnabled = false;
+        }
     }
+
+
 }

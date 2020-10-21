@@ -65,12 +65,6 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                     b.Property<int>("AccountId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("AccountId1")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("AccountId2")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime>("ActionTime")
                         .HasColumnType("TEXT");
 
@@ -83,8 +77,6 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
-
-                    b.HasIndex("AccountId1");
 
                     b.HasIndex("CategoryId")
                         .IsUnique();
@@ -124,14 +116,10 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
             modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Transaction", b =>
                 {
                     b.HasOne("SmartSaver.EntityFrameworkCore.Models.Account", "Account")
-                        .WithMany()
+                        .WithMany("Transactions")
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("SmartSaver.EntityFrameworkCore.Models.Account", null)
-                        .WithMany("Transactions")
-                        .HasForeignKey("AccountId1");
 
                     b.HasOne("SmartSaver.EntityFrameworkCore.Models.Category", "Category")
                         .WithOne()

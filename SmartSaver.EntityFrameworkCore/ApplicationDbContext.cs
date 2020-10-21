@@ -38,9 +38,12 @@ namespace SmartSaver.EntityFrameworkCore
                 .WithOne();
 
             modelBuilder.Entity<Transaction>()
-                .HasOne<Category>(p => p.Category)
+                .HasOne<Category>()
                 .WithOne();
 
+            modelBuilder.Entity<Transaction>()
+                .HasOne<Account>()
+                .WithMany(p => p.Transactions);
 
             base.OnModelCreating(modelBuilder);
         }
