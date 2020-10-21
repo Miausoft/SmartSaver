@@ -6,14 +6,14 @@ Trello: https://trello.com/b/amb6EPR8/smartsaver
 
 ### Requirements
 
-- [ ] Creating and using your own class, struct and enum (with flag(s), preferably).
-- [ ] Property (standard, indexed, auto-implemented) usage in struct and class.
-- [ ] Named and optional argument usage.
-- [ ] Extension method usage.
-- [ ] Reading from file.
+- [x] Creating and using your own class, struct and enum (with flag(s), preferably): **liko padaryti struktūrą**
+- [ ] Property (standard, indexed, auto-implemented) usage in struct and class: **trūksta indexed property**
+- [X] Named and optional argument usage.
+- [X] Extension method usage.
+- [X] Reading from file: **padaryta duombazė**
 - [ ] Generic type usage.
-- [ ] Regex.
+- [X] Regex.
 - [ ] Widening and narrowing type conversions.
-- [ ] Putting data to collection, iterating through it the right way.
-- [ ] LINQ to Objects usage (methods and queries), including groupJoin.
-- [ ] Implementing some of the standard .NET interfaces (IEnumerable, IComparable, IComparer, IEquatable, IEnumerator, etc.)
+- [X] Putting data to collection, iterating through it the right way: **iterate bus kai trauksim info iš dictionary**
+- [X] LINQ to Objects usage (methods and queries), including groupJoin: **groupJoin realiai nežinau kur panaudot**
+- [ ] Implementing some of the standard .NET interfaces (IEnumerable, IComparable, IComparer, IEquatable, IEnumerator, etc.) : **IEnumerable bus, kai iteratinsim, bet ar to užteks?**

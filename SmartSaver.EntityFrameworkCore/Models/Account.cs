@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace SmartSaver.EntityFrameworkCore.Models
 {
@@ -16,7 +14,7 @@ namespace SmartSaver.EntityFrameworkCore.Models
         /// 
         /// Amount he wants to save.
         /// </summary>
-        public double Goal { get; set; }
+        public decimal Goal { get; set; }
 
         /// <summary>
         /// ** Provided during registration.

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace SmartSaver.EntityFrameworkCore.Models
 {
@@ -11,7 +9,7 @@ namespace SmartSaver.EntityFrameworkCore.Models
         [Key]
         public int Id { get; set; }
         public DateTime ActionTime { get; set; }
-        public double Amount { get; set; }
+        public decimal Amount { get; set; }
 
         public int AccountId { get; set; }
         public Account Account { get; set; }

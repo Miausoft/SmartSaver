@@ -98,7 +98,7 @@ namespace SmartSaver
             if (goalDateBox.Text == null) return;
             if (goalDateBox.SelectedDate == null) return;
 
-            _user.Account.Goal = double.Parse(goalBox.Text);
+            _user.Account.Goal = decimal.Parse(goalBox.Text);
             _user.Account.GoalStartDate = DateTime.UtcNow;
             _user.Account.GoalEndDate = (DateTime)goalDateBox.SelectedDate;
             _context.SaveChanges();
