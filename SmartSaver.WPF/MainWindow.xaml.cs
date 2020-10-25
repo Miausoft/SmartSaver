@@ -73,7 +73,7 @@ namespace SmartSaver
             Transaction transaction = new Transaction()
             {
                 ActionTime = DateTime.UtcNow,
-                Amount = (decimal)amount,
+                Amount = amount,
                 Account = _user.Account,
                 Category = _context.Categories.FirstOrDefault(c => c.Id.Equals(selectedIndex))
             };
