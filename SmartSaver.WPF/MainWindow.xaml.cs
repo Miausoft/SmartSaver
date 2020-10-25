@@ -25,12 +25,6 @@ namespace SmartSaver
             InitializeComponent();
             _auth = auth;
             _context = context;
-
-            /*_context.Categories.Add(new Category() { Id = 1, Title = "-" });
-            _context.Categories.Add(new Category() { Id = 2, Title = "Alus" });
-            _context.Categories.Add(new Category() { Id = 3, Title = "Alus2" });
-            _context.SaveChanges();*/
-
             PrepareData();
         }
 
@@ -68,14 +62,13 @@ namespace SmartSaver
         private void Button_Click_3(object sender, RoutedEventArgs e) // Add transaction
         {
             int selectedIndex = categoryBox.SelectedIndex + 2;
-            double amount = -double.Parse(amountBox.Text);
+            decimal amount = -decimal.Parse(amountBox.Text);
 
             if (earningsCheckBox.IsChecked.GetValueOrDefault())
             {
                 amount *= -1; // positive amount (income)
                 selectedIndex = 1;
             }
-
 
             Transaction transaction = new Transaction()
             {
@@ -157,6 +150,4 @@ namespace SmartSaver
             HistoryTable.ItemsSource = transactions;
         }
     }
-
-
 }
