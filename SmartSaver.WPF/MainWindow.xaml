@@ -75,15 +75,24 @@
 
                     </Grid.ColumnDefinitions>
                     <TextBlock HorizontalAlignment="Left" Margin="12,60,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="230" FontFamily="Candara Light" FontStyle="Italic" FontSize="14" FontWeight="Normal" Grid.ColumnSpan="2"><Run Text="Next su"/><Run Language="lt-lt" Text="g"/><Run Text="gestions"/><Run Text=": YYYY-MM-DD"/></TextBlock>
-                    <GroupBox Header="" Margin="10,71,228,124" Background="White" Grid.ColumnSpan="2">
-                        <TextBlock HorizontalAlignment="Left" Margin="22,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="250" Width="330" FontSize="18"><Run Text="Aivaro taupymo informacija kuri dar neprijungta, nes c# "/><Run Language="lt-lt" Text="big oof"/></TextBlock>
-                    </GroupBox>
-                    <GroupBox Header="" Margin="295,128,10,200" Background="White" Grid.Column="1">
-                        <TextBlock HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="43" Width="184" FontSize="16"><Run Text="Tokiu tempu sutaupysite iki"/><Run Language="lt-lt" Text=" YYYY-MM-DD"/></TextBlock>
-                    </GroupBox>
-                    <GroupBox Header="" Margin="295,71,10,271" Background="White" Grid.Column="1">
-                        <TextBlock HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="33" Width="169" FontSize="18"><Run Language="lt-lt" Text="Sutaupyta: "/><Run Text="0.00"/></TextBlock>
-                    </GroupBox>
+                    <Rectangle HorizontalAlignment="Left" Height="159" Margin="10,115,0,0" VerticalAlignment="Top" Width="367" Grid.ColumnSpan="2">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="White" Opacity="0.3"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Rectangle HorizontalAlignment="Left" Height="51" Margin="270,115,0,0" VerticalAlignment="Top" Width="229" Grid.Column="1">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="White" Opacity="0.4"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Rectangle HorizontalAlignment="Left" Height="97" Margin="270,177,0,0" VerticalAlignment="Top" Width="229" Grid.Column="1">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="White" Opacity="0.4"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Label x:Name="savingsLabel1" Content="Label" HorizontalAlignment="Left" Margin="20,115,0,0" VerticalAlignment="Top" Height="159" Width="346" FontSize="14" Grid.ColumnSpan="2"/>
+                    <Label x:Name="savingsLabel2" Content="Label" HorizontalAlignment="Left" Margin="283,115,0,0" VerticalAlignment="Top" Height="78" Width="197" FontSize="14" Grid.Column="1"/>
+                    <Label x:Name="savingsLabel3" Content="Label" HorizontalAlignment="Left" Margin="283,177,0,0" VerticalAlignment="Top" Height="70" Width="197" FontSize="14" Grid.Column="1"/>
 
                 </Grid>
             </TabItem>
@@ -116,7 +125,7 @@
                     </LinearGradientBrush>
                 </TabItem.Background>
                 <Grid Height="400" Width="625" Margin="-2,0,-4,0">
-                    <ListView x:Name="HistoryTable" Margin="10,21,10,10" FontFamily="Segoe UI">
+                    <ListView x:Name="HistoryTable" Margin="10,40,10,10" FontFamily="Segoe UI">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Action Time"
@@ -132,6 +141,10 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
+                    <Label Content="Balance:" HorizontalAlignment="Left" Margin="10,11,0,0" VerticalAlignment="Top" FontFamily="Segoe UI"/>
+                    <Label x:Name="balanceLabel" Content="0.00" HorizontalAlignment="Left" Margin="75,13,0,0" VerticalAlignment="Top" FontSize="18"/>
+                    <Button x:Name="sortByDateButton" Content="Sort by date" HorizontalAlignment="Left" Margin="512,15,0,0" VerticalAlignment="Top" Width="102" BorderBrush="#FF8C8C8C" Background="White" FontFamily="Segoe UI" FontSize="12" Click="sortByDateButton_Click"/>
+                    <Button x:Name="sortByCategoryButton" Content="Sort by category" HorizontalAlignment="Left" Margin="407,15,0,0" VerticalAlignment="Top" Width="102" BorderBrush="#FF8C8C8C" Background="White" FontFamily="Segoe UI" FontSize="12" Click="sortByCategoryButton_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="savingPlansTab" Header="SAVING PLANS" Margin="-38,13,40,-13" FontSize="16" FontFamily="Bahnschrift SemiBold" BorderBrush="{x:Null}" Background="White" IsEnabled="False">
@@ -141,7 +154,7 @@
                         <ColumnDefinition/>
 
                     </Grid.ColumnDefinitions>
-                    <Label Content="Priorities?&#xA;&#xA;etc." HorizontalAlignment="Left" Margin="24,66,0,0" VerticalAlignment="Top"/>
+                    <Label Content="This part has not been implemented yet.&#xD;&#xA;" HorizontalAlignment="Left" Margin="24,66,0,0" VerticalAlignment="Top" Width="526"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="accountTab" Header="ACCOUNT"  FontFamily="Bahnschrift SemiBold" FontSize="16" BorderBrush="{x:Null}" IsEnabled="False" Margin="-41,13,41,-13">
