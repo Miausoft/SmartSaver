@@ -26,6 +26,11 @@ namespace SmartSaver
             _auth = auth;
             _context = context;
 
+            /*_context.Categories.Add(new Category() { Id = 1, Title = "-" });
+            _context.Categories.Add(new Category() { Id = 2, Title = "Alus" });
+            _context.Categories.Add(new Category() { Id = 3, Title = "Alus2" });
+            _context.SaveChanges();*/
+
             PrepareData();
         }
 
@@ -51,6 +56,13 @@ namespace SmartSaver
 
             EnableTabs();
             UpdateHistoryTable();
+            UpdateBalanceLabel();
+        }
+
+        private void UpdateBalanceLabel()
+        {
+            decimal v = _context.Transactions.ToList().Sum(x => x.Amount);
+            balanceLabel.Content = v.ToString("0.00") + " €";
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e) // Add transaction
@@ -64,10 +76,11 @@ namespace SmartSaver
                 selectedIndex = 1;
             }
 
+
             Transaction transaction = new Transaction()
             {
                 ActionTime = DateTime.UtcNow,
-                Amount = amount,
+                Amount = (decimal)amount,
                 Account = _user.Account,
                 Category = _context.Categories.FirstOrDefault(c => c.Id.Equals(selectedIndex))
             };
@@ -76,6 +89,7 @@ namespace SmartSaver
             _context.SaveChanges();
 
             UpdateHistoryTable();
+            UpdateBalanceLabel();
 
             MessageBox.Show("Transaction added!");
         }
@@ -102,6 +116,7 @@ namespace SmartSaver
             _user.Account.GoalStartDate = DateTime.UtcNow;
             _user.Account.GoalEndDate = (DateTime)goalDateBox.SelectedDate;
             _context.SaveChanges();
+            MessageBox.Show("Account details have been updated");
         }
 
         private void UpdateHistoryTable()
@@ -125,8 +140,21 @@ namespace SmartSaver
 
         private void PrepareData()
         {
-            categoryBox.ItemsSource = _context.Categories.ToList().Select(s => s.Title);
+            categoryBox.ItemsSource = _context.Categories.ToList().Where(s => s.Id != 1).Select(s => s.Title);
             categoryBox.IsEnabled = false;
+        }
+
+        private void sortByDateButton_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateHistoryTable();
+        }
+
+        private void sortByCategoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            List<Transaction> transactions =
+                _context.Transactions.Where(t => t.AccountId.Equals(_user.Account.Id)).OrderByDescending(t => t.Category).ToList();
+
+            HistoryTable.ItemsSource = transactions;
         }
     }
 
