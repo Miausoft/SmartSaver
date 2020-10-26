@@ -1,13 +1,12 @@
-﻿using System;
+﻿using SmartSaver.Domain.Services.AuthenticationServices;
+using SmartSaver.EntityFrameworkCore;
+using SmartSaver.EntityFrameworkCore.Models;
+using SmartSaver.WPF;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using SmartSaver.WPF;
-using SmartSaver.Domain.Services.AuthenticationServices;
-using SmartSaver.Domain.Services.EmailServices;
-using SmartSaver.EntityFrameworkCore;
-using SmartSaver.EntityFrameworkCore.Models;
 
 namespace SmartSaver
 {
@@ -20,12 +19,37 @@ namespace SmartSaver
         private readonly ApplicationDbContext _context;
         private User _user;
 
+        private WindowObjectCollection<TabItem> _windowObjectColl;
+
+        /// <summary>
+        /// Initializes component, injects _auth and _context objects.
+        /// Prepares the data 
+        /// </summary>
+        /// <param name="auth"></param>
+        /// <param name="context"></param>
         public MainWindow(IAuthenticationService auth, ApplicationDbContext context)
         {
             InitializeComponent();
             _auth = auth;
             _context = context;
+
             PrepareData();
+            RegisterTabs();
+        }
+
+        private void RegisterTabs()
+        {
+            TabItem[] tabs = new TabItem[]
+            {
+                statusTab,
+                historyTab,
+                savingPlansTab,
+                entriesTab,
+                accountTab,
+                logInTab
+            };
+
+            _windowObjectColl = new WindowObjectCollection<TabItem>(tabs);
         }
 
         private void RegisterButton_Click(object sender, RoutedEventArgs e) //REGISTER launch button
@@ -44,6 +68,7 @@ namespace SmartSaver
             }
 
             EnableTabs();
+            UpdateAccountDisplay();
             UpdateHistoryTable();
             UpdateBalanceLabel();
         }
@@ -116,6 +141,11 @@ namespace SmartSaver
             HistoryTable.ItemsSource = transactions;
         }
 
+        /// <summary>
+        /// If user is logged in, but account info is not set,
+        /// the only active tab is accountTab, in other case
+        /// he can use all tabs.
+        /// </summary>
         private void EnableTabs()
         {
             if (!_user.Account.IsValid())
@@ -126,12 +156,11 @@ namespace SmartSaver
             }
 
             statusTab.IsSelected = true;
-            statusTab.IsEnabled = true;
-            historyTab.IsEnabled = true;
-            savingPlansTab.IsEnabled = true;
-            entriesTab.IsEnabled = true;
-            accountTab.IsEnabled = true;
-            logInTab.IsEnabled = false;
+
+            foreach (TabItem tab in _windowObjectColl)
+            {
+                tab.IsEnabled = true;
+            }
         }
 
         /// <summary>
