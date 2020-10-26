@@ -30,10 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ExtensionMethods\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="System.Configuration.ConfigurationManager">
       <HintPath>..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\3.1.0\ref\netcoreapp3.1\System.Configuration.ConfigurationManager.dll</HintPath>
     </Reference>
