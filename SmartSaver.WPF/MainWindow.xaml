@@ -49,9 +49,8 @@
                     <Label Content="Password:" Margin="226,176,343,0" VerticalAlignment="Top" FontSize="10" FontFamily="Arial" FontStyle="Italic"/>
                     <Label Content="Usersname:" HorizontalAlignment="Left" Margin="226,136,0,0" VerticalAlignment="Top" FontSize="10" FontFamily="Arial" FontStyle="Italic"/>
                     <PasswordBox x:Name="passwordTextbox" HorizontalAlignment="Center" VerticalAlignment="Top" Width="166" Height="20" Margin="0,194,0,0"/>
-                    <Button Content="Sign up" HorizontalAlignment="Center" Margin="0,276,0,0" VerticalAlignment="Top" Height="24" Width="166" FontFamily="Segoe UI" BorderBrush="{x:Null}" Background="#FF3B7A70" Click="Button_Click_2" FontSize="11" Foreground="White"/>
+                    <Button Content="Sign up" HorizontalAlignment="Center" Margin="0,276,0,0" VerticalAlignment="Top" Height="24" Width="166" FontFamily="Segoe UI" BorderBrush="{x:Null}" Background="#FF3B7A70" Click="RegisterButton_Click" FontSize="11" Foreground="White"/>
                     <Label Content="Save easier." HorizontalAlignment="Center" Margin="0,89,0,0" VerticalAlignment="Top" FontFamily="Calibri Light" FontSize="15" FontStyle="Normal" Height="28" Width="79"/>
-                    <Button Content="ENABLE TABS" HorizontalAlignment="Left" Margin="498,70,0,0" VerticalAlignment="Top" Click="Button_Click_1" FontSize="11" Height="17" Width="74"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="statusTab" Header="STATUS" Margin="-31,13,31,-13" Width="120" FontFamily="Bahnschrift SemiBold" FontSize="16" BorderBrush="{x:Null}" IsEnabled="False">

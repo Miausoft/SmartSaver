@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SmartSaver.Domain.Entities
 {
-    public class SmtpSettings
+    public struct SmtpSettings
     {
         public string Server { get; set; }
         public int Port { get; set; }

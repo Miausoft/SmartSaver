@@ -17,8 +17,8 @@ namespace SmartSaver
     public partial class MainWindow : Window
     {
         private readonly IAuthenticationService _auth;
+        private readonly ApplicationDbContext _context;
         private User _user;
-        private ApplicationDbContext _context;
 
         public MainWindow(IAuthenticationService auth, ApplicationDbContext context)
         {
@@ -29,15 +29,10 @@ namespace SmartSaver
             PrepareData();
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e) //REGISTER launch button
+        private void RegisterButton_Click(object sender, RoutedEventArgs e) //REGISTER launch button
         {
             RegisterWindow registerW = new RegisterWindow(_auth);
             registerW.Show();
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            EnableTabs();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e) // LOG IN button
@@ -51,12 +46,13 @@ namespace SmartSaver
 
             EnableTabs();
             UpdateHistoryTable();
+            UpdateAccountDisplay();
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e) // Add transaction
         {
-            int selectedIndex = categoryBox.SelectedIndex + 2;
-            double amount = -double.Parse(amountBox.Text);
+            int selectedIndex = categoryBox.SelectedIndex + 1;
+            decimal amount = -decimal.Parse(amountBox.Text);
 
             if (earningsCheckBox.IsChecked.GetValueOrDefault())
             {
@@ -102,6 +98,8 @@ namespace SmartSaver
             _user.Account.GoalStartDate = DateTime.UtcNow;
             _user.Account.GoalEndDate = (DateTime)goalDateBox.SelectedDate;
             _context.SaveChanges();
+
+            EnableTabs();
         }
 
         private void UpdateHistoryTable()
@@ -114,6 +112,13 @@ namespace SmartSaver
 
         private void EnableTabs()
         {
+            if (!_user.Account.IsValid())
+            {
+                accountTab.IsEnabled = true;
+                accountTab.IsSelected = true;
+                return;
+            }
+
             statusTab.IsSelected = true;
             statusTab.IsEnabled = true;
             historyTab.IsEnabled = true;
@@ -121,6 +126,22 @@ namespace SmartSaver
             entriesTab.IsEnabled = true;
             accountTab.IsEnabled = true;
             logInTab.IsEnabled = false;
+        }
+
+        /// <summary>
+        /// When called, updates Account information in "Account" tab.
+        /// </summary>
+        private void UpdateAccountDisplay()
+        {
+            var goal = _user.Account.Goal;
+            var date = _user.Account.GoalEndDate;
+
+            if (goal != 0)
+            {
+                goalBox.Text = $"{_user.Account.Goal}";
+            }
+
+            // TODO: Ta pati padaryt su data.
         }
 
         private void PrepareData()
