@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using SmartSaver.WPF;
 using SmartSaver.Domain.Services.AuthenticationServices;
 using SmartSaver.EntityFrameworkCore;
 using SmartSaver.EntityFrameworkCore.Models;
+using SmartSaver.WPF;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
 using SmartSaver.Domain.Services.SavingMethodSuggestion;
 using SmartSaver.Domain.Services.TransactionsCounter;
+using System.Windows.Controls;
+using SmartSaver.Domain.Services.TipManager;
 
 namespace SmartSaver
 {
@@ -17,26 +19,46 @@ namespace SmartSaver
     public partial class MainWindow : Window
     {
         private readonly IAuthenticationService _auth;
+        private readonly ApplicationDbContext _context;
         private User _user;
-        private ApplicationDbContext _context;
 
+        private WindowObjectCollection<TabItem> _windowObjectColl;
+
+        /// <summary>
+        /// Initializes component, injects _auth and _context objects.
+        /// Prepares the data 
+        /// </summary>
+        /// <param name="auth"></param>
+        /// <param name="context"></param>
         public MainWindow(IAuthenticationService auth, ApplicationDbContext context)
         {
             InitializeComponent();
             _auth = auth;
             _context = context;
+
             PrepareData();
+            RegisterTabs();
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e) //REGISTER launch button
+        private void RegisterTabs()
+        {
+            TabItem[] tabs = new TabItem[]
+            {
+                statusTab,
+                historyTab,
+                savingPlansTab,
+                entriesTab,
+                accountTab,
+                logInTab
+            };
+
+            _windowObjectColl = new WindowObjectCollection<TabItem>(tabs);
+        }
+
+        private void RegisterButton_Click(object sender, RoutedEventArgs e) //REGISTER launch button
         {
             RegisterWindow registerW = new RegisterWindow(_auth);
             registerW.Show();
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            EnableTabs();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e) // LOG IN button
@@ -50,8 +72,16 @@ namespace SmartSaver
 
             EnableTabs();
             GenerateSuggestions(_user.Account);
+            UpdateAccountDisplay();
+          
             UpdateHistoryTable();
             UpdateBalanceLabel();
+            GenerateTipOfTheDay();
+        }
+
+        private void GenerateTipOfTheDay()
+        {
+            TipOfTheDayLabel.Content = Tips.DayBasedTip();
         }
 
         private void UpdateBalanceLabel()
@@ -111,7 +141,10 @@ namespace SmartSaver
             _user.Account.GoalStartDate = DateTime.UtcNow;
             _user.Account.GoalEndDate = (DateTime)goalDateBox.SelectedDate;
             _context.SaveChanges();
+          
             GenerateSuggestions(_user.Account);
+            EnableTabs();
+
             MessageBox.Show("Account details have been updated");
         }
 
@@ -123,15 +156,42 @@ namespace SmartSaver
             HistoryTable.ItemsSource = transactions;
         }
 
+        /// <summary>
+        /// If user is logged in, but account info is not set,
+        /// the only active tab is accountTab, in other case
+        /// he can use all tabs.
+        /// </summary>
         private void EnableTabs()
         {
+            if (!_user.Account.IsValid())
+            {
+                accountTab.IsEnabled = true;
+                accountTab.IsSelected = true;
+                return;
+            }
+
             statusTab.IsSelected = true;
-            statusTab.IsEnabled = true;
-            historyTab.IsEnabled = true;
-            savingPlansTab.IsEnabled = true;
-            entriesTab.IsEnabled = true;
-            accountTab.IsEnabled = true;
-            logInTab.IsEnabled = false;
+
+            foreach (TabItem tab in _windowObjectColl)
+            {
+                tab.IsEnabled = true;
+            }
+        }
+
+        /// <summary>
+        /// When called, updates Account information in "Account" tab.
+        /// </summary>
+        private void UpdateAccountDisplay()
+        {
+            var goal = _user.Account.Goal;
+            var date = _user.Account.GoalEndDate;
+
+            if (goal != 0)
+            {
+                goalBox.Text = $"{_user.Account.Goal}";
+            }
+
+            // TODO: Ta pati padaryt su data.
         }
 
         private void PrepareData()
@@ -196,7 +256,7 @@ namespace SmartSaver
             savedSum.Text = "Taupymo laikotarpiu sutaupyta suma:";
             moneyToSpend.Text = "Pinigų suma, kurią galite skirti išlaidoms:";
             estimatedTime.Text = "Taip taupydami, savo tikslą pasieksite:";
-            amountToSave.Text = "Kiekvieną mėnesį turėtumėte sutaupyti:";
+            amountToSave.Text = "Kie mėnesį turėtumėte sutaupyti:";
             timeInDays.Text = "Iki tikslo pabaigos jums liko:";
         }
 
