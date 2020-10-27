@@ -35,8 +35,8 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
             else if (savedSum >= acc.Goal && DateTime.Today < acc.GoalEndDate) return "Sugebėjote sutaupyti anksčiau nei numatėte!";
             else if (savedSum >= acc.Goal && DateTime.Today > acc.GoalEndDate) return "Sugebėjote sutaupyti, tačiau vėliau nei numatėte!";
             else if (Average(DaysPassed(acc), savedSum) == 1) return acc.Goal + " sutaupysite iki " + acc.GoalEndDate.ToShortDateString();
-            else if (Average(DaysPassed(acc), savedSum) == 0) return "NIEKO";
-            else return acc.Goal + " sutaupysite iki " + DateTime.Now.AddDays((double)Math.Ceiling((acc.Goal - savedSum) / Average(DaysPassed(acc), savedSum))).ToShortDateString();
+            else if (Average(DaysPassed(acc), savedSum) == 0) return "Numatytas laikas iki taupymo pabaigos:";
+            else return acc.Goal.ToString("C") + " sutaupysite iki\n" + DateTime.Now.AddDays((double)Math.Ceiling((acc.Goal - savedSum) / Average(DaysPassed(acc), savedSum))).ToShortDateString();
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
         /// </summary>
         private static decimal MonthsPassed(Account acc)
         {
-            if (DateTime.Now.DayOfYear == acc.GoalStartDate.DayOfYear)
+            if (DateTime.Now.DayOfYear != acc.GoalStartDate.DayOfYear)
             {
                 return (decimal)(DateTime.Now.Subtract(acc.GoalStartDate).Days / (365.25 / 12));
             }

@@ -29,29 +29,30 @@
                         </LinearGradientBrush>
                     </Grid.Background>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="98*"/>
+                        <ColumnDefinition Width="527*"/>
 
                     </Grid.ColumnDefinitions>
-                    <Rectangle HorizontalAlignment="Center" Height="115" Margin="0,136,0,0" VerticalAlignment="Top" Width="183">
+                    <Rectangle HorizontalAlignment="Left" Height="115" Margin="123,136,0,0" VerticalAlignment="Top" Width="183" Grid.Column="1">
                         <Rectangle.Fill>
                             <SolidColorBrush Color="White" Opacity="0.4"/>
                         </Rectangle.Fill>
                     </Rectangle>
-                    <Rectangle HorizontalAlignment="Center" Height="48" Margin="0,261,0,0" VerticalAlignment="Top" Width="183">
+                    <Rectangle HorizontalAlignment="Left" Height="48" Margin="123,261,0,0" VerticalAlignment="Top" Width="183" Grid.Column="1">
                         <Rectangle.Fill>
                             <SolidColorBrush Color="White" Opacity="0.4"/>
                         </Rectangle.Fill>
                     </Rectangle>
-                    <TextBlock HorizontalAlignment="Center" Margin="0,63,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="46" Width="314" FontFamily="Corbel Light" FontStyle="Normal" FontSize="32" FontWeight="Normal" TextAlignment="Center"><Run Language="lt-lt" Text="SMART SAVER"/></TextBlock>
-                    <Label Content="Don't have an account?" HorizontalAlignment="Center" Margin="0,259,0,0" VerticalAlignment="Top" FontFamily="Arial" FontSize="10" FontStyle="Italic" Height="25" Width="123"/>
-                    <Button x:Name="LogInButton" Content="Log in" HorizontalAlignment="Center" Margin="0,219,0,0" VerticalAlignment="Top" Height="24" Width="166" Click="Button_Click" Background="#FF3B7A70" BorderBrush="{x:Null}" Foreground="White" FontFamily="Segoe UI" FontSize="11"/>
-                    <TextBox x:Name="usernameTextbox" HorizontalAlignment="Center" Margin="0,155,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="166" Height="20" FontSize="15"/>
-                    <Label Content="Password:" Margin="226,176,343,0" VerticalAlignment="Top" FontSize="10" FontFamily="Arial" FontStyle="Italic"/>
-                    <Label Content="Usersname:" HorizontalAlignment="Left" Margin="226,136,0,0" VerticalAlignment="Top" FontSize="10" FontFamily="Arial" FontStyle="Italic"/>
-                    <PasswordBox x:Name="passwordTextbox" HorizontalAlignment="Center" VerticalAlignment="Top" Width="166" Height="20" Margin="0,194,0,0" FontSize="15"/>
-                    <Button Content="Sign up" HorizontalAlignment="Center" Margin="0,276,0,0" VerticalAlignment="Top" Height="24" Width="166" FontFamily="Segoe UI" BorderBrush="{x:Null}" Background="#FF3B7A70" Click="Button_Click_2" FontSize="11" Foreground="White"/>
-                    <Label Content="Save easier." HorizontalAlignment="Center" Margin="0,89,0,0" VerticalAlignment="Top" FontFamily="Calibri Light" FontSize="15" FontStyle="Normal" Height="28" Width="79"/>
-                    <Button Content="ENABLE TABS" HorizontalAlignment="Left" Margin="498,70,0,0" VerticalAlignment="Top" Click="Button_Click_1" FontSize="11" Height="17" Width="74"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="58,63,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="46" Width="314" FontFamily="Corbel Light" FontStyle="Normal" FontSize="32" FontWeight="Normal" TextAlignment="Center" Grid.Column="1"><Run Language="lt-lt" Text="SMART SAVER"/></TextBlock>
+                    <Label Content="Don't have an account?" HorizontalAlignment="Left" Margin="153,259,0,0" VerticalAlignment="Top" FontFamily="Arial" FontSize="10" FontStyle="Italic" Height="25" Width="123" Grid.Column="1"/>
+                    <Button x:Name="LogInButton" Content="Log in" HorizontalAlignment="Left" Margin="132,219,0,0" VerticalAlignment="Top" Height="24" Width="166" Click="Button_Click" Background="#FF3B7A70" BorderBrush="{x:Null}" Foreground="White" FontFamily="Segoe UI" FontSize="11" Grid.Column="1"/>
+                    <TextBox x:Name="usernameTextbox" HorizontalAlignment="Left" Margin="132,155,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="166" Height="20" FontSize="15" Grid.Column="1"/>
+                    <Label Content="Password:" Margin="128,176,343,0" VerticalAlignment="Top" FontSize="10" FontFamily="Arial" FontStyle="Italic" Grid.Column="1"/>
+                    <Label Content="Usersname:" HorizontalAlignment="Left" Margin="128,136,0,0" VerticalAlignment="Top" FontSize="10" FontFamily="Arial" FontStyle="Italic" Grid.Column="1"/>
+                    <PasswordBox x:Name="passwordTextbox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="166" Height="20" Margin="132,194,0,0" FontSize="15" Grid.Column="1"/>
+                    <Button Content="Sign up" HorizontalAlignment="Left" Margin="132,276,0,0" VerticalAlignment="Top" Height="24" Width="166" FontFamily="Segoe UI" BorderBrush="{x:Null}" Background="#FF3B7A70" Click="Button_Click_2" FontSize="11" Foreground="White" Grid.Column="1"/>
+                    <Label Content="Save easier." HorizontalAlignment="Left" Margin="175,89,0,0" VerticalAlignment="Top" FontFamily="Calibri Light" FontSize="15" FontStyle="Normal" Height="28" Width="79" Grid.Column="1"/>
+                    <Button Content="ENABLE TABS" HorizontalAlignment="Left" Margin="400,70,0,0" VerticalAlignment="Top" Click="Button_Click_1" FontSize="11" Height="17" Width="74" Grid.Column="1"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="statusTab" Header="STATUS" Margin="-31,13,31,-13" Width="120" FontFamily="Bahnschrift SemiBold" FontSize="16" BorderBrush="{x:Null}" IsEnabled="False">
@@ -103,12 +104,12 @@
                             <SolidColorBrush Color="White" Opacity="0.4"/>
                         </Rectangle.Fill>
                     </Rectangle>
-                    <TextBlock x:Name="mainSuggestions" HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Height="230" Width="341" Grid.Row="1" Grid.ColumnSpan="2"/>
-                    <TextBlock x:Name="savedSum" HorizontalAlignment="Left" Margin="251,38,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="246" Grid.Column="1"/>
-                    <TextBlock x:Name="amountToSave" Grid.Column="1" HorizontalAlignment="Left" Margin="251,98,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="246"/>
-                    <TextBlock x:Name="moneyToSpend" HorizontalAlignment="Left" Margin="251,158,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="246" Grid.Column="1"/>
-                    <TextBlock x:Name="estimatedTime" HorizontalAlignment="Left" Margin="251,218,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="246" Grid.Column="1"/>
-                    <TextBlock x:Name="timeInDays" HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="23" Width="605" Grid.ColumnSpan="2" Grid.Row="1" Text=""/>
+                    <TextBlock x:Name="mainSuggestions" HorizontalAlignment="Left" Margin="16,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Height="220" Width="330" Grid.Row="1" Grid.ColumnSpan="2"/>
+                    <TextBlock x:Name="savedSum" HorizontalAlignment="Left" Margin="254,43,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Height="40" Width="240" Grid.Column="1" TextAlignment="Center"/>
+                    <TextBlock x:Name="amountToSave" Grid.Column="1" HorizontalAlignment="Left" Margin="251,103,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Height="40" Width="240" TextAlignment="Center"/>
+                    <TextBlock x:Name="moneyToSpend" HorizontalAlignment="Left" Margin="254,163,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Height="40" Width="240" Grid.Column="1" TextAlignment="Center"/>
+                    <TextBlock x:Name="estimatedTime" HorizontalAlignment="Left" Margin="254,223,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Height="40" Width="240" Grid.Column="1" TextAlignment="Center"/>
+                    <TextBlock x:Name="timeInDays" HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="23" Width="605" Grid.ColumnSpan="2" Grid.Row="1" TextAlignment="Center"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="entriesTab" Header="ENTRIES" Margin="-33,13,33,-13" Width="120" Background="White" FontFamily="Bahnschrift SemiBold" FontSize="16" BorderBrush="{x:Null}" IsEnabled="False">
