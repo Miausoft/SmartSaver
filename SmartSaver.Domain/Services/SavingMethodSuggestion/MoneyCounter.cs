@@ -35,7 +35,7 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
             else if (savedSum >= acc.Goal && DateTime.Today < acc.GoalEndDate) return "Sugebėjote sutaupyti anksčiau nei numatėte!";
             else if (savedSum >= acc.Goal && DateTime.Today > acc.GoalEndDate) return "Sugebėjote sutaupyti, tačiau vėliau nei numatėte!";
             else if (Average(DaysPassed(acc), savedSum) == 1) return acc.Goal + " sutaupysite iki " + acc.GoalEndDate.ToShortDateString();
-            else if (Average(DaysPassed(acc), savedSum) == 0) return "Numatytas laikas iki taupymo pabaigos:";
+            else if (Average(DaysPassed(acc), savedSum) == 0) return "Numatytas laikas iki taupymo pabaigos: N/A";
             else return acc.Goal.ToString("C") + " sutaupysite iki\n" + DateTime.Now.AddDays((double)Math.Ceiling((acc.Goal - savedSum) / Average(DaysPassed(acc), savedSum))).ToShortDateString();
         }
 

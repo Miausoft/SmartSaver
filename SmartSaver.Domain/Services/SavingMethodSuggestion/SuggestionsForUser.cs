@@ -49,7 +49,7 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
 
             else if (amountToSaveAMonth > amountSavedCurrentMonth)
             {
-                string suggestion = "Šį mėnesį nesutaupėte numatytos sumos. Jums pritrūko " + Math.Round(amountToSaveAMonth - amountSavedCurrentMonth, 2).ToString("C") + "\n";
+                string suggestion = "Šį mėnesį jums liko sutaupyti: " + Math.Round(amountToSaveAMonth - amountSavedCurrentMonth, 2).ToString("C") + "\n";
                 if (freeMoneyToSpend > 0)
                 {
                     suggestion = suggestion + " Tačiau viskas gerai, nes turėjote daugiau pinigų, kuriuos galėjote skirti papildomoms išlaidoms šį mėnesį";

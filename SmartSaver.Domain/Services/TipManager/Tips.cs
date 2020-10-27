@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 
 namespace SmartSaver.Domain.Services.TipManager
 {
@@ -11,6 +9,7 @@ namespace SmartSaver.Domain.Services.TipManager
     {
         static string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"AllTips.txt");
         static List<string> tips = System.IO.File.ReadLines(path).ToList();
+
 
         /// <summary>
         /// completely random tip from list

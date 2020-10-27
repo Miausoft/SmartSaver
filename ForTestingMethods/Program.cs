@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System;
 using SmartSaver.Domain.Services.TransactionsCounter;
 using SmartSaver.Domain.Services.SavingMethodSuggestion;
+using System.IO;
 
 namespace ConsoleApp1
 {
@@ -82,10 +83,6 @@ namespace ConsoleApp1
                 Console.WriteLine("si menesi kolkas sutaupete: " + TransactionsCounter.AmountSavedCurrentMonth(acc.Transactions));
                 Console.WriteLine("Pingu likutis, kuri galite skirti savo islaidoms, kad pasiektumete savo tiksla laiku " + MoneyCounter.AmountLeftToSpend(acc));
                 Console.WriteLine("KODEL butent tiek? nes praejo apie 10 men nuo sausio iki spalio, sutaupyti i menesi jis turi 3,91, todel 44-39 ir turim tuos 5eurus");
-
-                Console.WriteLine();
-
-                Console.WriteLine(SuggestionsForUser.CompareExpenses(acc));
             }
         }
     }
