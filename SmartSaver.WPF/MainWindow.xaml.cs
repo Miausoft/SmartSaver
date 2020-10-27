@@ -1,4 +1,4 @@
-﻿using SmartSaver.Domain.Services.AuthenticationServices;
+using SmartSaver.Domain.Services.AuthenticationServices;
 using SmartSaver.EntityFrameworkCore;
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.WPF;
@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using SmartSaver.Domain.Services.TipManager;
 
 namespace SmartSaver
 {
@@ -71,6 +72,12 @@ namespace SmartSaver
             UpdateAccountDisplay();
             UpdateHistoryTable();
             UpdateBalanceLabel();
+            GenerateTipOfTheDay();
+        }
+
+        private void GenerateTipOfTheDay()
+        {
+            TipOfTheDayLabel.Content = Tips.DayBasedTip();
         }
 
         private void UpdateBalanceLabel()

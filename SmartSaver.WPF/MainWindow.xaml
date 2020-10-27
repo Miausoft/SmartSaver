@@ -69,8 +69,7 @@
                     </Grid.Background>
                     <Grid.ColumnDefinitions>
 
-                        <ColumnDefinition Width="74*"/>
-                        <ColumnDefinition Width="323*"/>
+
 
                     </Grid.ColumnDefinitions>
                     <TextBlock HorizontalAlignment="Left" Margin="12,60,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="230" FontFamily="Candara Light" FontStyle="Italic" FontSize="14" FontWeight="Normal" Grid.ColumnSpan="2"><Run Text="Next su"/><Run Language="lt-lt" Text="g"/><Run Text="gestions"/><Run Text=": YYYY-MM-DD"/></TextBlock>
@@ -79,19 +78,21 @@
                             <SolidColorBrush Color="White" Opacity="0.3"/>
                         </Rectangle.Fill>
                     </Rectangle>
-                    <Rectangle HorizontalAlignment="Left" Height="51" Margin="270,115,0,0" VerticalAlignment="Top" Width="229" Grid.Column="1">
+                    <Rectangle HorizontalAlignment="Left" Height="51" Margin="386,115,0,0" VerticalAlignment="Top" Width="229">
                         <Rectangle.Fill>
                             <SolidColorBrush Color="White" Opacity="0.4"/>
                         </Rectangle.Fill>
                     </Rectangle>
-                    <Rectangle HorizontalAlignment="Left" Height="97" Margin="270,177,0,0" VerticalAlignment="Top" Width="229" Grid.Column="1">
+                    <Rectangle HorizontalAlignment="Left" Height="97" Margin="386,177,0,0" VerticalAlignment="Top" Width="229">
                         <Rectangle.Fill>
                             <SolidColorBrush Color="White" Opacity="0.4"/>
                         </Rectangle.Fill>
                     </Rectangle>
                     <Label x:Name="savingsLabel1" Content="Label" HorizontalAlignment="Left" Margin="20,115,0,0" VerticalAlignment="Top" Height="159" Width="346" FontSize="14" Grid.ColumnSpan="2"/>
-                    <Label x:Name="savingsLabel2" Content="Label" HorizontalAlignment="Left" Margin="283,115,0,0" VerticalAlignment="Top" Height="78" Width="197" FontSize="14" Grid.Column="1"/>
-                    <Label x:Name="savingsLabel3" Content="Label" HorizontalAlignment="Left" Margin="283,177,0,0" VerticalAlignment="Top" Height="70" Width="197" FontSize="14" Grid.Column="1"/>
+                    <Label x:Name="savingsLabel2" Content="Label" HorizontalAlignment="Left" Margin="399,115,0,0" VerticalAlignment="Top" Height="78" Width="197" FontSize="14"/>
+                    <Label x:Name="savingsLabel3" Content="Label" HorizontalAlignment="Left" Margin="399,177,0,0" VerticalAlignment="Top" Height="70" Width="197" FontSize="14"/>
+                    <Label x:Name="TipOfTheDayLabel" Content="Label" HorizontalAlignment="Center" Margin="0,15,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontStyle="Italic" Height="31" Width="601" HorizontalContentAlignment="Center" FontSize="14"/>
+                    <Label Content="Tip of the day" HorizontalAlignment="Center" Margin="0,34,0,0" VerticalAlignment="Top" FontSize="10" Foreground="DarkGray"/>
 
                 </Grid>
             </TabItem>
