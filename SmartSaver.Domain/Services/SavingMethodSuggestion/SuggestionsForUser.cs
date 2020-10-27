@@ -71,6 +71,7 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
             DateTime firstDayOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1);
             string suggestion = "";
+
             if (TransactionsCounter.TransactionsCounter.TotalExpenseByCategory(acc.Transactions, firstDayOfMonth, lastDayOfMonth).Any())
             {
                 suggestion = "vis dar atsiliekate nuo savo taupymo režimo."; //ka siuo atveju jam pasiulyti vel? reitku kazka vel compare
@@ -86,13 +87,15 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
                     " kategorija, kurios suma viso labo " +
                     Math.Round(TransactionsCounter.TransactionsCounter.TotalExpenseByCategory(acc.Transactions, firstDayOfMonth, lastDayOfMonth).Values.Max(), 2).ToString("C") +
                     "\n";
-                suggestion = suggestion + "c) atsisakysime išlaidų kategorijoje, kuriai pinigų anksčiau niekur neleidote (bus įgyvendinta vėliau)";
+                //suggestion = suggestion + "c) atsisakysime išlaidų kategorijoje, kuriai pinigų anksčiau niekur neleidote (bus įgyvendinta vėliau)";
             }
+
             else
             {
                 suggestion = "neturite jokių išlaidų, todėl pasiūlymų, kaip taypyti pinigus, jums pateikti negalime :(";
             }
+
             return suggestion;
-        }
+        } 
     }
 }
