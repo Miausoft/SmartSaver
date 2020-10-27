@@ -8,6 +8,7 @@ using SmartSaver.Domain.Services.AuthenticationServices;
 using SmartSaver.Domain.Services.EmailServices;
 using SmartSaver.EntityFrameworkCore;
 using SmartSaver.EntityFrameworkCore.Models;
+using SmartSaver.Domain.Services.TipManager;
 
 namespace SmartSaver
 {
@@ -25,6 +26,12 @@ namespace SmartSaver
             InitializeComponent();
             _auth = auth;
             _context = context;
+
+            /*_context.Categories.Add(new Category() { Id = 1, Title = "-" });
+            _context.Categories.Add(new Category() { Id = 2, Title = "Maistas" });
+            _context.Categories.Add(new Category() { Id = 3, Title = "Pramogos" });
+            _context.SaveChanges();*/
+
             PrepareData();
         }
 
@@ -46,6 +53,12 @@ namespace SmartSaver
             EnableTabs();
             UpdateHistoryTable();
             UpdateBalanceLabel();
+            GenerateTipOfTheDay();
+        }
+
+        private void GenerateTipOfTheDay()
+        {
+            TipOfTheDayLabel.Content = Tips.DayBasedTip();
         }
 
         private void UpdateBalanceLabel()
