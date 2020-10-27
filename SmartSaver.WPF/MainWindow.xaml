@@ -45,10 +45,10 @@
                     <TextBlock HorizontalAlignment="Center" Margin="0,63,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="46" Width="314" FontFamily="Corbel Light" FontStyle="Normal" FontSize="32" FontWeight="Normal" TextAlignment="Center"><Run Language="lt-lt" Text="SMART SAVER"/></TextBlock>
                     <Label Content="Don't have an account?" HorizontalAlignment="Center" Margin="0,259,0,0" VerticalAlignment="Top" FontFamily="Arial" FontSize="10" FontStyle="Italic" Height="25" Width="123"/>
                     <Button x:Name="LogInButton" Content="Log in" HorizontalAlignment="Center" Margin="0,219,0,0" VerticalAlignment="Top" Height="24" Width="166" Click="Button_Click" Background="#FF3B7A70" BorderBrush="{x:Null}" Foreground="White" FontFamily="Segoe UI" FontSize="11"/>
-                    <TextBox x:Name="usernameTextbox" HorizontalAlignment="Center" Margin="0,155,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="166" Height="20"/>
+                    <TextBox x:Name="usernameTextbox" HorizontalAlignment="Center" Margin="0,155,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="166" Height="20" FontSize="15"/>
                     <Label Content="Password:" Margin="226,176,343,0" VerticalAlignment="Top" FontSize="10" FontFamily="Arial" FontStyle="Italic"/>
                     <Label Content="Usersname:" HorizontalAlignment="Left" Margin="226,136,0,0" VerticalAlignment="Top" FontSize="10" FontFamily="Arial" FontStyle="Italic"/>
-                    <PasswordBox x:Name="passwordTextbox" HorizontalAlignment="Center" VerticalAlignment="Top" Width="166" Height="20" Margin="0,194,0,0"/>
+                    <PasswordBox x:Name="passwordTextbox" HorizontalAlignment="Center" VerticalAlignment="Top" Width="166" Height="20" Margin="0,194,0,0" FontSize="15"/>
                     <Button Content="Sign up" HorizontalAlignment="Center" Margin="0,276,0,0" VerticalAlignment="Top" Height="24" Width="166" FontFamily="Segoe UI" BorderBrush="{x:Null}" Background="#FF3B7A70" Click="Button_Click_2" FontSize="11" Foreground="White"/>
                     <Label Content="Save easier." HorizontalAlignment="Center" Margin="0,89,0,0" VerticalAlignment="Top" FontFamily="Calibri Light" FontSize="15" FontStyle="Normal" Height="28" Width="79"/>
                     <Button Content="ENABLE TABS" HorizontalAlignment="Left" Margin="498,70,0,0" VerticalAlignment="Top" Click="Button_Click_1" FontSize="11" Height="17" Width="74"/>
@@ -61,7 +61,11 @@
                         <GradientStop Color="White" Offset="1"/>
                     </LinearGradientBrush>
                 </TabItem.Background>
-                <Grid Height="400" Width="625" Margin="-2,0,-4,0">
+                <Grid Height="346" Width="625" Margin="-2,0,-4,0" RenderTransformOrigin="0.467,0.543">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20*"/>
+                        <RowDefinition Height="153*"/>
+                    </Grid.RowDefinitions>
                     <Grid.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <GradientStop Color="White"/>
@@ -70,30 +74,41 @@
                     </Grid.Background>
                     <Grid.ColumnDefinitions>
 
-                        <ColumnDefinition Width="74*"/>
-                        <ColumnDefinition Width="323*"/>
+                        <ColumnDefinition Width="118*"/>
+                        <ColumnDefinition Width="507*"/>
 
                     </Grid.ColumnDefinitions>
-                    <TextBlock HorizontalAlignment="Left" Margin="12,60,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="230" FontFamily="Candara Light" FontStyle="Italic" FontSize="14" FontWeight="Normal" Grid.ColumnSpan="2"><Run Text="Next su"/><Run Language="lt-lt" Text="g"/><Run Text="gestions"/><Run Text=": YYYY-MM-DD"/></TextBlock>
-                    <Rectangle HorizontalAlignment="Left" Height="159" Margin="10,115,0,0" VerticalAlignment="Top" Width="367" Grid.ColumnSpan="2">
+                    <Rectangle HorizontalAlignment="Left" Height="50" Margin="251,218,0,0" VerticalAlignment="Top" Width="246" Grid.Column="1" Grid.Row="1">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="White" Opacity="0.4"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Rectangle HorizontalAlignment="Left" Height="230" Margin="10,0,0,0" VerticalAlignment="Center" Width="341" Grid.ColumnSpan="2" Grid.Row="1">
                         <Rectangle.Fill>
                             <SolidColorBrush Color="White" Opacity="0.3"/>
                         </Rectangle.Fill>
                     </Rectangle>
-                    <Rectangle HorizontalAlignment="Left" Height="51" Margin="270,115,0,0" VerticalAlignment="Top" Width="229" Grid.Column="1">
+                    <Rectangle HorizontalAlignment="Left" Height="50" Margin="251,98,0,0" VerticalAlignment="Top" Width="246" Grid.Column="1" Grid.Row="1">
                         <Rectangle.Fill>
                             <SolidColorBrush Color="White" Opacity="0.4"/>
                         </Rectangle.Fill>
                     </Rectangle>
-                    <Rectangle HorizontalAlignment="Left" Height="97" Margin="270,177,0,0" VerticalAlignment="Top" Width="229" Grid.Column="1">
+                    <Rectangle HorizontalAlignment="Left" Height="50" Margin="251,158,0,0" VerticalAlignment="Top" Width="246" Grid.Column="1" Grid.Row="1">
                         <Rectangle.Fill>
                             <SolidColorBrush Color="White" Opacity="0.4"/>
                         </Rectangle.Fill>
                     </Rectangle>
-                    <Label x:Name="savingsLabel1" Content="Label" HorizontalAlignment="Left" Margin="20,115,0,0" VerticalAlignment="Top" Height="159" Width="346" FontSize="14" Grid.ColumnSpan="2"/>
-                    <Label x:Name="savingsLabel2" Content="Label" HorizontalAlignment="Left" Margin="283,115,0,0" VerticalAlignment="Top" Height="78" Width="197" FontSize="14" Grid.Column="1"/>
-                    <Label x:Name="savingsLabel3" Content="Label" HorizontalAlignment="Left" Margin="283,177,0,0" VerticalAlignment="Top" Height="70" Width="197" FontSize="14" Grid.Column="1"/>
-
+                    <Rectangle HorizontalAlignment="Left" Height="50" Margin="251,38,0,0" VerticalAlignment="Top" Width="246" Grid.Column="1" Grid.Row="1">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="White" Opacity="0.4"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <TextBlock x:Name="mainSuggestions" HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Height="230" Width="341" Grid.Row="1" Grid.ColumnSpan="2"/>
+                    <TextBlock x:Name="savedSum" HorizontalAlignment="Left" Margin="251,38,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="246" Grid.Column="1"/>
+                    <TextBlock x:Name="amountToSave" Grid.Column="1" HorizontalAlignment="Left" Margin="251,98,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="246"/>
+                    <TextBlock x:Name="moneyToSpend" HorizontalAlignment="Left" Margin="251,158,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="246" Grid.Column="1"/>
+                    <TextBlock x:Name="estimatedTime" HorizontalAlignment="Left" Margin="251,218,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="246" Grid.Column="1"/>
+                    <TextBlock x:Name="timeInDays" HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="23" Width="605" Grid.ColumnSpan="2" Grid.Row="1" Text=""/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="entriesTab" Header="ENTRIES" Margin="-33,13,33,-13" Width="120" Background="White" FontFamily="Bahnschrift SemiBold" FontSize="16" BorderBrush="{x:Null}" IsEnabled="False">
@@ -143,8 +158,8 @@
                     </ListView>
                     <Label Content="Balance:" HorizontalAlignment="Left" Margin="10,11,0,0" VerticalAlignment="Top" FontFamily="Segoe UI"/>
                     <Label x:Name="balanceLabel" Content="0.00" HorizontalAlignment="Left" Margin="75,13,0,0" VerticalAlignment="Top" FontSize="18"/>
-                    <Button x:Name="sortByDateButton" Content="Sort by date" HorizontalAlignment="Left" Margin="512,15,0,0" VerticalAlignment="Top" Width="102" BorderBrush="#FF8C8C8C" Background="White" FontFamily="Segoe UI" FontSize="12" Click="sortByDateButton_Click"/>
-                    <Button x:Name="sortByCategoryButton" Content="Sort by category" HorizontalAlignment="Left" Margin="407,15,0,0" VerticalAlignment="Top" Width="102" BorderBrush="#FF8C8C8C" Background="White" FontFamily="Segoe UI" FontSize="12" Click="sortByCategoryButton_Click"/>
+                    <Button x:Name="sortByDateButton" Content="Sort by date" HorizontalAlignment="Left" Margin="512,15,0,0" VerticalAlignment="Top" Width="102" BorderBrush="#FF8C8C8C" Background="White" FontFamily="Segoe UI" FontSize="12" Click="SortByDateButton_Click"/>
+                    <Button x:Name="sortByCategoryButton" Content="Sort by category" HorizontalAlignment="Left" Margin="407,15,0,0" VerticalAlignment="Top" Width="102" BorderBrush="#FF8C8C8C" Background="White" FontFamily="Segoe UI" FontSize="12" Click="SortByCategoryButton_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="savingPlansTab" Header="SAVING PLANS" Margin="-38,13,40,-13" FontSize="16" FontFamily="Bahnschrift SemiBold" BorderBrush="{x:Null}" Background="White" IsEnabled="False">

@@ -12,6 +12,16 @@ namespace SmartSaver.Domain.Services.TransactionsCounter
             return transactions.Where(t => InRange(t.ActionTime, from, to));
         }
 
+        public static decimal AmountSavedCurrentMonth(IEnumerable<Transaction> transaction)
+        {
+            return SavedSum(transaction, new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1), DateTime.Now.AddDays(1));
+        }
+
+        public static decimal AmountSpentCurrentMonth(IEnumerable<Transaction> transaction)
+        {
+            return TotalExpense(transaction, new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1), DateTime.Now.AddDays(1));
+        }
+
         public static decimal TotalExpense(IEnumerable<Transaction> transaction, DateTime from, DateTime to)
         {
             return transaction.Where(t => t.Amount < 0 && InRange(t.ActionTime, from, to)).Sum(c => c.Amount);
@@ -27,7 +37,7 @@ namespace SmartSaver.Domain.Services.TransactionsCounter
             return TotalIncome(transaction, from, to) + TotalExpense(transaction, from, to);
         }
 
-        public static Dictionary<int, decimal> TotalIncomeByCategory(IEnumerable<Transaction> transaction, DateTime from, DateTime to)
+        public static IDictionary<int, decimal> TotalIncomeByCategory(IEnumerable<Transaction> transaction, DateTime from, DateTime to)
         {
             return transaction.GroupBy(t => new { t.CategoryId, t.ActionTime }).Select(x => new Transaction
             {
@@ -42,7 +52,7 @@ namespace SmartSaver.Domain.Services.TransactionsCounter
             ).OrderBy(x => x.CategoryId).ToDictionary(x => x.CategoryId, x => x.Amount);
         }
 
-        public static Dictionary<int, decimal> TotalExpenseByCategory(IEnumerable<Transaction> transaction, DateTime from, DateTime to)
+        public static IDictionary<int, decimal> TotalExpenseByCategory(IEnumerable<Transaction> transaction, DateTime from, DateTime to)
         {
             return transaction.GroupBy(t => new { t.CategoryId, t.ActionTime }).Select(x => new Transaction
             {
@@ -54,7 +64,7 @@ namespace SmartSaver.Domain.Services.TransactionsCounter
                 Amount = z.Where(z => z.Amount < 0).Select(z => z.Amount).Sum(),
                 CategoryId = z.Select(z => z.CategoryId).First()
             }
-            ).OrderBy(z => z.CategoryId).ToDictionary(x => x.CategoryId, x => x.Amount);
+            ).OrderBy(z => z.CategoryId).ToDictionary(x => x.CategoryId, x => x.Amount /* / TransactionsCounter.TotalExpense(transaction, from, to) * 100*/);
         }
 
         private static bool InRange(DateTime dateToCheck, DateTime startDate, DateTime endDate)

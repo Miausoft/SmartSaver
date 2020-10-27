@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using SmartSaver.WPF;
 using SmartSaver.Domain.Services.AuthenticationServices;
-using SmartSaver.Domain.Services.EmailServices;
 using SmartSaver.EntityFrameworkCore;
 using SmartSaver.EntityFrameworkCore.Models;
+using SmartSaver.Domain.Services.SavingMethodSuggestion;
+using SmartSaver.Domain.Services.TransactionsCounter;
 
 namespace SmartSaver
 {
@@ -49,14 +49,15 @@ namespace SmartSaver
             }
 
             EnableTabs();
+            GenerateSuggestions(_user);
             UpdateHistoryTable();
             UpdateBalanceLabel();
         }
 
         private void UpdateBalanceLabel()
         {
-            decimal v = _context.Transactions.ToList().Sum(x => x.Amount);
-            balanceLabel.Content = v.ToString("0.00") + " €";
+            decimal v = TransactionsCounter.SavedSum(_user.Account.Transactions, DateTime.MinValue, DateTime.MaxValue);
+            balanceLabel.Content = v.ToString("C");
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e) // Add transaction
@@ -83,6 +84,7 @@ namespace SmartSaver
 
             UpdateHistoryTable();
             UpdateBalanceLabel();
+            GenerateSuggestions(_user);
 
             MessageBox.Show("Transaction added!");
         }
@@ -109,6 +111,7 @@ namespace SmartSaver
             _user.Account.GoalStartDate = DateTime.UtcNow;
             _user.Account.GoalEndDate = (DateTime)goalDateBox.SelectedDate;
             _context.SaveChanges();
+            GenerateSuggestions(_user);
             MessageBox.Show("Account details have been updated");
         }
 
@@ -137,17 +140,67 @@ namespace SmartSaver
             categoryBox.IsEnabled = false;
         }
 
-        private void sortByDateButton_Click(object sender, RoutedEventArgs e)
+        private void SortByDateButton_Click(object sender, RoutedEventArgs e)
         {
             UpdateHistoryTable();
         }
 
-        private void sortByCategoryButton_Click(object sender, RoutedEventArgs e)
+        private void SortByCategoryButton_Click(object sender, RoutedEventArgs e)
         {
             List<Transaction> transactions =
                 _context.Transactions.Where(t => t.AccountId.Equals(_user.Account.Id)).OrderByDescending(t => t.Category).ToList();
 
             HistoryTable.ItemsSource = transactions;
+        }
+
+        private void GenerateSuggestions(User user)
+        {
+            if (user.Account.GoalEndDate > DateTime.Now)
+            {
+                mainSuggestions.Text = SuggestionsForUser.CompareExpenses(user.Account);
+                savedSum.Text = "Taupymo laikotarpiu sutaupyta suma: " + TransactionsCounter.SavedSum(user.Account.Transactions, user.Account.GoalStartDate, user.Account.GoalEndDate).ToString("C");
+                moneyToSpend.Text = "Pinigų suma, kurią galite skirti papildomoms išlaidoms: " + Math.Round(MoneyCounter.AmountLeftToSpend(user.Account), 2).ToString("C");
+                estimatedTime.Text = MoneyCounter.EstimatedTime(user.Account);
+                amountToSave.Text = "Kiekvieną mėnesį turėtumėte sutaupyti: " + Math.Round(MoneyCounter.AmountToSaveAMonth(user.Account), 2).ToString("C");
+                timeInDays.Text = "Iki tikslo pabaigos jums liko " + MoneyCounter.DaysLeft(user.Account) + " dienos";
+                //gal dar reikia, kiek tą mėnesį žmogus sutaupė/išleido?;
+            }
+
+            else if (user.Account.Goal == 0)
+            {
+                mainSuggestions.Text = "Šiuo metu nesate pasirinkę jokio taupymo režimo";
+                MakeDefaultTextBoxes();
+            }
+
+            else if (TransactionsCounter.SavedSum(_user.Account.Transactions, _user.Account.GoalStartDate, _user.Account.GoalEndDate) < _user.Account.Goal)
+            {
+                mainSuggestions.Text = "Sutaupyti sumos laiku nesugebėjote";
+                MakeDefaultTextBoxes();
+            }
+
+            else
+            {
+                mainSuggestions.Text = "Sveikiname, sugebėjote pasiekti savo tikslą laiku!" +
+                    "Sutaupyta: " + Math.Round(TransactionsCounter.SavedSum(_user.Account.Transactions, _user.Account.GoalStartDate, _user.Account.GoalEndDate), 2).ToString("C");
+                MakeDefaultTextBoxes();
+                RemoveUserGoal();
+            }
+        }
+
+        public void MakeDefaultTextBoxes()
+        {
+            savedSum.Text = "Taupymo laikotarpiu sutaupyta suma:";
+            moneyToSpend.Text = "Pinigų suma, kurią galite skirti išlaidoms:";
+            estimatedTime.Text = "Taip taupydami, savo tikslą pasieksite:";
+            amountToSave.Text = "Kiekvieną mėnesį turėtumėte sutaupyti:";
+            timeInDays.Text = "Iki tikslo pabaigos jums liko ";
+        }
+
+        public void RemoveUserGoal()
+        {
+            _user.Account.GoalStartDate = DateTime.MinValue;
+            _user.Account.GoalStartDate = DateTime.MinValue;
+            _user.Account.Goal = 0;
         }
     }
 }
