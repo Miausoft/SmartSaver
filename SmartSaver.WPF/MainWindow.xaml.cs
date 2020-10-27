@@ -166,7 +166,7 @@ namespace SmartSaver
                 }
                 estimatedTime.Text = MoneyCounter.EstimatedTime(acc);
                 amountToSave.Text = "Kiekvieną mėnesį turėtumėte sutaupyti: " + Math.Round(MoneyCounter.AmountToSaveAMonth(acc), 2).ToString("C");
-                timeInDays.Text = "Iki tikslo pabaigos jums liko " + MoneyCounter.DaysLeft(acc) + " dienos. " + acc.GoalStartDate + " " + acc.GoalEndDate + " " + acc.Goal;
+                timeInDays.Text = "Iki tikslo pabaigos jums liko " + MoneyCounter.DaysLeft(acc) + " dienos. ";
                 //gal dar reikia, kiek tą mėnesį žmogus sutaupė/išleido?;
             }
 
