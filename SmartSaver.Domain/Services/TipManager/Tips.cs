@@ -9,9 +9,7 @@ namespace SmartSaver.Domain.Services.TipManager
 {
     public static class Tips
     {
-        //static string fileName = "AllTips.txt";
         static string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"AllTips.txt");
-
 
         static List<string> tips = System.IO.File.ReadLines(path).ToList();
 
@@ -30,6 +28,5 @@ namespace SmartSaver.Domain.Services.TipManager
 
             return tips[index];
         }
-
     }
 }
