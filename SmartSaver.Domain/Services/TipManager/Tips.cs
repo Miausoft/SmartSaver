@@ -7,7 +7,8 @@ namespace SmartSaver.Domain.Services.TipManager
 {
     public static class Tips
     {
-        static string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"AllTips.txt");
+        static string workingDirectory = Environment.CurrentDirectory;
+        static string path = Directory.GetParent(workingDirectory).Parent.Parent.Parent.FullName + "\\SmartSaver.Domain\\Resources\\AllTips.txt";
         static List<string> tips = System.IO.File.ReadLines(path).ToList();
 
 
