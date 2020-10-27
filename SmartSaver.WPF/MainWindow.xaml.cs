@@ -141,7 +141,7 @@ namespace SmartSaver
             _user.Account.GoalStartDate = DateTime.UtcNow;
             _user.Account.GoalEndDate = (DateTime)goalDateBox.SelectedDate;
             _context.SaveChanges();
-          
+
             GenerateSuggestions(_user.Account);
             EnableTabs();
 
