@@ -10,6 +10,7 @@ using SmartSaver.Domain.Services.SavingMethodSuggestion;
 using SmartSaver.Domain.Services.TransactionsCounter;
 using System.Windows.Controls;
 using SmartSaver.Domain.Services.TipManager;
+using System.IO;
 
 namespace SmartSaver
 {
@@ -81,7 +82,7 @@ namespace SmartSaver
 
         private void GenerateTipOfTheDay()
         {
-            //TipOfTheDayLabel.Content = Tips.DayBasedTip();
+            TipOfTheDayLabel.Content = Tips.DayBasedTip();
         }
 
         private void UpdateBalanceLabel()
