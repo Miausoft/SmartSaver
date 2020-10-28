@@ -57,7 +57,7 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
         }
 
         /// <summary>
-        /// 
+        /// returns remaining days until the end of a month
         /// </summary>
         private static decimal DaysUntilMonthEnd(Account acc)
         {
@@ -68,7 +68,7 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
 
             else if (DateTime.Now.Year == acc.GoalEndDate.Year && DateTime.Now.Month == acc.GoalEndDate.Month)
             {
-                return DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) - acc.GoalStartDate.Day;
+                return acc.GoalEndDate.Day;
             }
 
             else
