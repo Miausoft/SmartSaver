@@ -13,59 +13,52 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
             decimal amountSavedCurrentMonth = TransactionsCounter.AmountSavedCurrentMonth(acc.Transactions);
             decimal amountToSaveAMonth = MoneyCounter.AmountToSaveAMonth(acc.Goal, acc.GoalStartDate, acc.GoalEndDate);
             decimal freeMoneyToSpend = MoneyCounter.AmountLeftToSpend(acc);
+            string suggestion = "Šį mėnesį sutaupėte: " + amountSavedCurrentMonth.ToString("C") + "\n";
 
             if (Math.Round(amountToSaveAMonth, 2) == Math.Round(amountSavedCurrentMonth, 2))
             {
-                string suggestion = "Šį mėnesį sutaupėte tiek, kiek ir reikia.\n";
-
                 if(freeMoneyToSpend < 0)
                 {
-                    suggestion = suggestion + "Tačiau " + HowToIncreaseSavings(acc);
+                    suggestion += "Tačiau " + HowToIncreaseSavings(acc);
                 }
 
                 else if (freeMoneyToSpend >= 0)
                 {
-                    suggestion = suggestion + "Linkime ir toliau taip stropiai taupyti, kadangi nuo savo taupymo režimo neatsiliekate!";
+                    suggestion += "Linkime ir toliau taip stropiai taupyti, kadangi nuo savo taupymo režimo neatsiliekate!";
                 }
-
-                return suggestion;
             }
 
             else if(amountToSaveAMonth < amountSavedCurrentMonth)
             {
-                string suggestion = "Šį mėnesį papildomai sutaupėte " + Math.Round(amountSavedCurrentMonth - amountToSaveAMonth, 2).ToString("C") + "\n";
+                suggestion += "Šį mėnesį papildomai sutaupėte " + Math.Round(amountSavedCurrentMonth - amountToSaveAMonth, 2).ToString("C") + "\n";
 
                 if (freeMoneyToSpend < 0)
                 {
-                    suggestion = suggestion + "Tačiau to nepakanka, kadangi " + HowToIncreaseSavings(acc);
+                    suggestion += "Tačiau to nepakanka, kadangi " + HowToIncreaseSavings(acc);
                 }
 
                 else if (freeMoneyToSpend >= 0)
                 {
-                    suggestion = suggestion + "Linkime ir toliau taip stropiai taupyti, kadangi nuo savo taupymo režimo neatsiliekate!";
+                    suggestion += "Linkime ir toliau taip stropiai taupyti, kadangi nuo savo taupymo režimo neatsiliekate!";
                 }
-
-                return suggestion;
             }
 
             else if (amountToSaveAMonth > amountSavedCurrentMonth)
             {
-                string suggestion = "Šį mėnesį jums liko sutaupyti: " + Math.Round(amountToSaveAMonth - amountSavedCurrentMonth, 2).ToString("C") + "\n";
+                suggestion = suggestion + "Šį mėnesį jums liko sutaupyti: " + Math.Round(amountToSaveAMonth - amountSavedCurrentMonth, 2).ToString("C") + "\n";
 
                 if (freeMoneyToSpend >= 0)
                 {
-                    suggestion = suggestion + " Tačiau viskas gerai, nes turėjote daugiau pinigų, kuriuos galėjote skirti papildomoms išlaidoms šį mėnesį";
+                    suggestion += " Tačiau viskas gerai, nes turėjote daugiau pinigų, kuriuos galėjote skirti papildomoms išlaidoms šį mėnesį";
                 }
 
                 else if (freeMoneyToSpend < 0)
                 {
-                    suggestion = suggestion + "Taip pat " + HowToIncreaseSavings(acc);
+                    suggestion += "Taip pat " + HowToIncreaseSavings(acc);
                 }
-
-                return suggestion;
             }
 
-            else return "Nenumatytas atvejis";
+            return suggestion;
         }
 
         private static string HowToIncreaseSavings(Account acc)
@@ -77,17 +70,17 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
             if (TransactionsCounter.TotalExpenseByCategory(acc.Transactions, firstDayOfMonth, lastDayOfMonth).Any())
             {
                 suggestion = "vis dar atsiliekate nuo savo taupymo režimo."; //ka siuo atveju jam pasiulyti vel? reitku kazka vel compare
-                suggestion = suggestion + " Šį mėnesį daugiausiai buvo išleista " +
+                suggestion += " Šį mėnesį daugiausiai buvo išleista " +
                 (TransactionsCounter.TotalExpenseByCategory(acc.Transactions, firstDayOfMonth, lastDayOfMonth).Aggregate((l, r) => l.Value > r.Value ? r : l).Key-1) +
                     " kategorijai, kurios suma " +
-                    Math.Round(TransactionsCounter.TotalExpenseByCategory(acc.Transactions, firstDayOfMonth, lastDayOfMonth).Values.Min() * (-1), 2).ToString("C") +
+                    Math.Round(-TransactionsCounter.TotalExpenseByCategory(acc.Transactions, firstDayOfMonth, lastDayOfMonth).Values.Min(), 2).ToString("C") +
                     "\n";
-                suggestion = suggestion + "Kad tai daugiau nepasikartotų, siūlome:\n";
-                suggestion = suggestion + "a) sumažinti išlaidas šioje kategorijoje.\n";
-                suggestion = suggestion + "b) visiškai atsisakome išlaidų mažiausiai išleistoje kategorijoje, tai būtų " +
-                    TransactionsCounter.TotalExpenseByCategory(acc.Transactions, firstDayOfMonth, lastDayOfMonth).Aggregate((l, r) => l.Value > r.Value ? l : r).Key +
+                suggestion += "Kad tai daugiau nepasikartotų, siūlome:\n";
+                suggestion += "a) sumažinti išlaidas šioje kategorijoje.\n";
+                suggestion += "b) visiškai atsisakome išlaidų mažiausiai išleistoje kategorijoje, tai būtų " +
+                    (TransactionsCounter.TotalExpenseByCategory(acc.Transactions, firstDayOfMonth, lastDayOfMonth).Aggregate((l, r) => l.Value > r.Value ? l : r).Key-1) +
                     " kategorija, kurios suma viso labo " +
-                    Math.Round(TransactionsCounter.TotalExpenseByCategory(acc.Transactions, firstDayOfMonth, lastDayOfMonth).Values.Max(), 2).ToString("C") +
+                    Math.Round(-TransactionsCounter.TotalExpenseByCategory(acc.Transactions, firstDayOfMonth, lastDayOfMonth).Values.Max(), 2).ToString("C") +
                     "\n";
                 //suggestion = suggestion + "c) atsisakysime išlaidų kategorijoje, kuriai pinigų anksčiau niekur neleidote (bus įgyvendinta vėliau)";
             }
@@ -118,11 +111,11 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
 
             if (MoneyCounter.AmountLeftToSpend(acc) >= 0)
             {
-                suggestion = suggestion + Math.Round(MoneyCounter.AmountLeftToSpend(acc), 2).ToString("C");
+                suggestion += Math.Round(MoneyCounter.AmountLeftToSpend(acc), 2).ToString("C");
             }
             else
             {
-                suggestion = suggestion + "N/A";
+                suggestion += "N/A";
             }
 
             return suggestion;
