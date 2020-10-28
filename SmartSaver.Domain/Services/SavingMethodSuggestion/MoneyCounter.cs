@@ -1,5 +1,6 @@
 ﻿using SmartSaver.EntityFrameworkCore.Models;
 using System;
+using SmartSaver.Domain.Services.TransactionsCounterService;
 
 namespace SmartSaver.Domain.Services.SavingMethodSuggestion
 {
@@ -19,7 +20,7 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
         /// </summary>
         public static decimal AmountLeftToSpend(Account acc)
         {
-            decimal sum = TransactionsCounter.TransactionsCounter.SavedSum(acc.Transactions, DateTime.MinValue, DateTime.MaxValue)
+            decimal sum = TransactionsCounter.SavedSum(acc.Transactions, DateTime.MinValue, DateTime.MaxValue)
                 - (AmountToSaveAMonth(acc) * Math.Ceiling(MonthsPassed(acc)));
             return sum >= 0 ? sum : -1;
         }
@@ -29,7 +30,7 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
         /// </summary>
         public static string EstimatedTime(Account acc)
         {
-            decimal savedSum = TransactionsCounter.TransactionsCounter.SavedSum(acc.Transactions, acc.GoalStartDate, acc.GoalEndDate);
+            decimal savedSum = TransactionsCounter.SavedSum(acc.Transactions, acc.GoalStartDate, acc.GoalEndDate);
 
             if (savedSum < 0) return "Per taupymo laikotarpį kol kas nesutaupėte jokios pinigų sumos";
             else if (savedSum >= acc.Goal && DateTime.Today < acc.GoalEndDate) return "Sugebėjote sutaupyti anksčiau nei numatėte!";

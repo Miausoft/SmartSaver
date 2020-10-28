@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SmartSaver.EntityFrameworkCore.Models;
 
-namespace SmartSaver.Domain.Services.TransactionsCounter
+namespace SmartSaver.Domain.Services.TransactionsCounterService
 {
     public static class TransactionsCounter
     {

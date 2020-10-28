@@ -7,10 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using SmartSaver.Domain.Services.SavingMethodSuggestion;
-using SmartSaver.Domain.Services.TransactionsCounter;
 using System.Windows.Controls;
 using SmartSaver.Domain.Services.TipManager;
 using System.IO;
+using SmartSaver.Domain.Services.TransactionsCounterService;
 
 namespace SmartSaver
 {
