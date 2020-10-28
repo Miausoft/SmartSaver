@@ -29,7 +29,7 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
         public static decimal AmountLeftToSpend(Account acc)
         {
             return TransactionsCounter.SavedSum(acc.Transactions, acc.GoalStartDate, acc.GoalEndDate)
-                - (MoneyCounter.AmountToSaveAMonth(acc.Goal, acc.GoalStartDate, acc.GoalEndDate) * Math.Ceiling(DateCounter.MonthsPassed(acc.GoalStartDate)));
+                - (AmountToSaveAMonth(acc.Goal, acc.GoalStartDate, acc.GoalEndDate) * Math.Ceiling(DateCounter.MonthsPassed(acc.GoalStartDate)));
         }
     }
 }

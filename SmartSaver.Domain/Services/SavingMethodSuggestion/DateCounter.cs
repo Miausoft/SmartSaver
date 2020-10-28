@@ -9,7 +9,7 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
         /// </summary>
         public static int DaysLeft(DateTime goalEndDate)
         {
-            return goalEndDate.Subtract(DateTime.Now).Days;
+            return (int)Math.Ceiling(goalEndDate.Subtract(DateTime.Now).TotalDays);
         }
 
         /// <summary>
@@ -25,13 +25,13 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
         /// </summary>
         public static decimal GoalTimeInDays(DateTime goalStartDate, DateTime goalEndDate)
         {
-            return (decimal)goalEndDate.Subtract(goalStartDate).Days;
+            return (decimal)Math.Ceiling(goalEndDate.Subtract(goalStartDate).TotalDays);
         }
 
         /// <summary>
         /// returns remaining days until the end of a month
         /// </summary>
-        public static decimal DaysUntilMonthEnd(DateTime goalStartDate, DateTime goalEndDate)
+        public static int DaysUntilMonthEnd(DateTime goalStartDate, DateTime goalEndDate)
         {
             if (DateTime.Now.Year == goalEndDate.Year && DateTime.Now.Month == goalEndDate.Month)
             {
@@ -56,7 +56,7 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
         {
             if (DateTime.Now.DayOfYear != goalStartDate.DayOfYear)
             {
-                return (decimal)(DateTime.Now.Subtract(goalStartDate).Days / (365.25 / 12));
+                return (decimal)DateTime.Now.Subtract(goalStartDate).TotalDays / (365.25m / 12);
             }
 
             else
