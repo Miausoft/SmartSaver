@@ -28,8 +28,6 @@ namespace SmartSaver
         /// Initializes component, injects _auth and _context objects.
         /// Prepares the data 
         /// </summary>
-        /// <param name="auth"></param>
-        /// <param name="context"></param>
         public MainWindow(IAuthenticationService auth, ApplicationDbContext context)
         {
             InitializeComponent();
@@ -147,7 +145,7 @@ namespace SmartSaver
 
             MessageBox.Show("Account details have been updated");
         }
-
+        
         private void UpdateHistoryTable()
         {
             List<Transaction> transactions =
@@ -219,18 +217,10 @@ namespace SmartSaver
             {
                 mainSuggestions.Text = SuggestionsForUser.CompareExpenses(acc);
                 savedSum.Text = "Taupymo laikotarpiu sutaupyta: " + TransactionsCounter.SavedSum(acc.Transactions, acc.GoalStartDate, acc.GoalEndDate).ToString("C");
-                amountToSave.Text = "Šį mėnesį turėtumėte sutaupyti: " + Math.Round(MoneyCounter.AmountToSaveAMonth(acc), 2).ToString("C");
-                moneyToSpend.Text = "Pinigų suma, kurią galite skirti papildomoms išlaidoms: ";
-                if(MoneyCounter.AmountLeftToSpend(acc) != -1)
-                { 
-                    moneyToSpend.Text = moneyToSpend.Text + Math.Round(MoneyCounter.AmountLeftToSpend(acc), 2).ToString("C");
-                }
-                else
-                {
-                    moneyToSpend.Text = moneyToSpend.Text + "N/A";
-                }
-                estimatedTime.Text = MoneyCounter.EstimatedTime(acc);
-                timeInDays.Text = "Iki tikslo pabaigos jums liko " + MoneyCounter.DaysLeft(acc) + " dienos";
+                amountToSave.Text = "Šį mėnesį turėtumėte sutaupyti: " + Math.Round(MoneyCounter.AmountToSaveAMonth(acc.Goal, acc.GoalStartDate, acc.GoalEndDate), 2).ToString("C");
+                moneyToSpend.Text = SuggestionsForUser.FreeMoneyToSpend(acc);
+                estimatedTime.Text = SuggestionsForUser.EstimatedTime(acc);
+                timeInDays.Text = "Iki tikslo pabaigos jums liko " + DateCounter.DaysLeft(acc.GoalEndDate) + " dienos";
             }
 
             else if (acc.Goal == 0)
@@ -243,6 +233,7 @@ namespace SmartSaver
             {
                 mainSuggestions.Text = "Sutaupyti sumos laiku nesugebėjote\n";
                 MakeDefaultTextBoxes();
+                RemoveUserGoal();
             }
 
             else

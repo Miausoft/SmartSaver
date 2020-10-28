@@ -1,6 +1,6 @@
-﻿using SmartSaver.EntityFrameworkCore.Models;
+﻿using SmartSaver.Domain.Services.TransactionsCounterService;
+using SmartSaver.EntityFrameworkCore.Models;
 using System;
-using SmartSaver.Domain.Services.TransactionsCounterService;
 
 namespace SmartSaver.Domain.Services.SavingMethodSuggestion
 {
@@ -9,9 +9,17 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
         /// <summary>
         /// a dynamic number to represent amount of money account have to save current month
         /// </summary>
-        public static decimal AmountToSaveAMonth(Account acc)
+        public static decimal AmountToSaveAMonth(decimal goal, DateTime goalStartDate, DateTime goalEndDate)
         {
-            return (acc.Goal / GoalTimeInDays(acc)) * DaysUntilMonthEnd(acc);
+            return (goal / DateCounter.GoalTimeInDays(goalStartDate, goalEndDate)) * DateCounter.DaysUntilMonthEnd(goalStartDate, goalEndDate);
+        }
+
+        /// <summary>
+        /// avarage account saved everyday
+        /// </summary>
+        public static decimal Average(decimal daysPassed, decimal savedSum)
+        {
+            return savedSum / (daysPassed + 1);
         }
 
         /// <summary>
@@ -20,93 +28,8 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
         /// </summary>
         public static decimal AmountLeftToSpend(Account acc)
         {
-            decimal sum = TransactionsCounter.SavedSum(acc.Transactions, acc.GoalStartDate, acc.GoalEndDate)
-                - (AmountToSaveAMonth(acc) * Math.Ceiling(MonthsPassed(acc)));
-            return sum >= 0 ? sum : -1;
-        }
-        
-        /// <summary>
-        /// we will need to return DateTime in the future but default values for some cases are needed so string is chosen for this time
-        /// </summary>
-        public static string EstimatedTime(Account acc)
-        {
-            decimal savedSum = TransactionsCounter.SavedSum(acc.Transactions, acc.GoalStartDate, acc.GoalEndDate);
-
-            if (savedSum < 0) return "Per taupymo laikotarpį kol kas nesutaupėte jokios pinigų sumos";
-            else if (savedSum >= acc.Goal && DateTime.Today < acc.GoalEndDate) return "Sugebėjote sutaupyti anksčiau nei numatėte!";
-            else if (savedSum >= acc.Goal && DateTime.Today > acc.GoalEndDate) return "Sugebėjote sutaupyti, tačiau vėliau nei numatėte!";
-            else if (Average(DaysPassed(acc), savedSum) == 1) return acc.Goal + " sutaupysite iki " + acc.GoalEndDate.ToShortDateString();
-            else if (Average(DaysPassed(acc), savedSum) == 0) return "Numatytas laikas iki taupymo pabaigos: N/A";
-            else return acc.Goal.ToString("C") + " sutaupysite iki\n" + DateTime.Now.AddDays((double)Math.Ceiling((acc.Goal - savedSum) / Average(DaysPassed(acc), savedSum))).ToShortDateString();
-        }
-
-        /// <summary>
-        /// shows how many days left until goal
-        /// </summary>
-        public static int DaysLeft(Account acc)
-        {
-            return acc.GoalEndDate.Subtract(DateTime.Now).Days;
-        }
-
-        /// <summary>
-        /// a static number to represent a goal time in days
-        /// </summary>
-        private static decimal GoalTimeInDays(Account acc)
-        {
-            return (decimal)acc.GoalEndDate.Subtract(acc.GoalStartDate).Days;
-        }
-
-        /// <summary>
-        /// returns remaining days until the end of a month
-        /// </summary>
-        private static decimal DaysUntilMonthEnd(Account acc)
-        {
-            if (DateTime.Now.Year == acc.GoalStartDate.Year && DateTime.Now.Month == acc.GoalStartDate.Month)
-            {
-                return DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) - acc.GoalStartDate.Day + 1;
-            }
-
-            else if (DateTime.Now.Year == acc.GoalEndDate.Year && DateTime.Now.Month == acc.GoalEndDate.Month)
-            {
-                return acc.GoalEndDate.Day;
-            }
-
-            else
-            {
-                return DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
-            }
-        }
-
-        /// <summary>
-        /// a dynamic number which represents how many days have passed since account started to save
-        /// </summary>
-        private static decimal DaysPassed(Account acc)
-        {
-            return (decimal)DateTime.Now.Subtract(acc.GoalStartDate).TotalDays;
-        }
-
-        /// <summary>
-        /// a dynamic number which represents how many months have passed since account started to save
-        /// </summary>
-        private static decimal MonthsPassed(Account acc)
-        {
-            if (DateTime.Now.DayOfYear != acc.GoalStartDate.DayOfYear)
-            {
-                return (decimal)(DateTime.Now.Subtract(acc.GoalStartDate).Days / (365.25 / 12));
-            }
-
-            else
-            {
-                return 1;
-            }
-        }
-
-        /// <summary>
-        /// avarage account saved everyday
-        /// </summary>
-        private static decimal Average(decimal daysPassed, decimal savedSum)
-        {
-            return savedSum / (daysPassed + 1);
+            return TransactionsCounter.SavedSum(acc.Transactions, acc.GoalStartDate, acc.GoalEndDate)
+                - (MoneyCounter.AmountToSaveAMonth(acc.Goal, acc.GoalStartDate, acc.GoalEndDate) * Math.Ceiling(DateCounter.MonthsPassed(acc.GoalStartDate)));
         }
     }
 }

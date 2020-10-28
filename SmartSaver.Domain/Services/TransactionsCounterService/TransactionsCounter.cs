@@ -7,11 +7,6 @@ namespace SmartSaver.Domain.Services.TransactionsCounterService
 {
     public static class TransactionsCounter
     {
-        public static IEnumerable<Transaction> FilterAccount(IEnumerable<Transaction> transactions, DateTime from, DateTime to)
-        {
-            return transactions.Where(t => InRange(t.ActionTime, from, to));
-        }
-
         public static decimal AmountSavedCurrentMonth(IEnumerable<Transaction> transaction)
         {
             return SavedSum(transaction, new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1), DateTime.Now.AddDays(1));
