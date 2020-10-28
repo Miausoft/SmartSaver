@@ -7,11 +7,11 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
     public static class MoneyCounter
     {
         /// <summary>
-        /// a static number to represent amount of money account have to save every month
+        /// a dynamic number to represent amount of money account have to save current month
         /// </summary>
         public static decimal AmountToSaveAMonth(Account acc)
         {
-            return acc.Goal / TimeInMonths(acc);
+            return (acc.Goal / GoalTimeInDays(acc)) * DaysUntilMonthEnd(acc);
         }
 
         /// <summary>
@@ -20,11 +20,11 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
         /// </summary>
         public static decimal AmountLeftToSpend(Account acc)
         {
-            decimal sum = TransactionsCounter.SavedSum(acc.Transactions, DateTime.MinValue, DateTime.MaxValue)
+            decimal sum = TransactionsCounter.SavedSum(acc.Transactions, acc.GoalStartDate, acc.GoalEndDate)
                 - (AmountToSaveAMonth(acc) * Math.Ceiling(MonthsPassed(acc)));
             return sum >= 0 ? sum : -1;
         }
-
+        
         /// <summary>
         /// we will need to return DateTime in the future but default values for some cases are needed so string is chosen for this time
         /// </summary>
@@ -49,11 +49,32 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
         }
 
         /// <summary>
-        /// a static number to represent a goal time in months
+        /// a static number to represent a goal time in days
         /// </summary>
-        private static decimal TimeInMonths(Account acc)
+        private static decimal GoalTimeInDays(Account acc)
         {
-            return (decimal)(acc.GoalEndDate.Subtract(acc.GoalStartDate).Days / (365.25 / 12));
+            return (decimal)acc.GoalEndDate.Subtract(acc.GoalStartDate).Days;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private static decimal DaysUntilMonthEnd(Account acc)
+        {
+            if (DateTime.Now.Year == acc.GoalStartDate.Year && DateTime.Now.Month == acc.GoalStartDate.Month)
+            {
+                return DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) - acc.GoalStartDate.Day + 1;
+            }
+
+            else if (DateTime.Now.Year == acc.GoalEndDate.Year && DateTime.Now.Month == acc.GoalEndDate.Month)
+            {
+                return DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) - acc.GoalStartDate.Day;
+            }
+
+            else
+            {
+                return DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+            }
         }
 
         /// <summary>

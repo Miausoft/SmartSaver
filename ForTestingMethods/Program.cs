@@ -2,9 +2,8 @@
 using SmartSaver.EntityFrameworkCore.Models;
 using System.Collections.Generic;
 using System;
-using SmartSaver.Domain.Services.TransactionsCounter;
+using SmartSaver.Domain.Services.TransactionsCounterService;
 using SmartSaver.Domain.Services.SavingMethodSuggestion;
-using System.IO;
 
 namespace ConsoleApp1
 {

@@ -9,7 +9,6 @@ using System.Windows;
 using SmartSaver.Domain.Services.SavingMethodSuggestion;
 using System.Windows.Controls;
 using SmartSaver.Domain.Services.TipManager;
-using System.IO;
 using SmartSaver.Domain.Services.TransactionsCounterService;
 
 namespace SmartSaver
@@ -219,8 +218,8 @@ namespace SmartSaver
             if (acc.GoalEndDate > DateTime.Now)
             {
                 mainSuggestions.Text = SuggestionsForUser.CompareExpenses(acc);
-                savedSum.Text = "Taupymo laikotarpiu sutaupyta suma: " + TransactionsCounter.SavedSum(acc.Transactions, acc.GoalStartDate, acc.GoalEndDate).ToString("C");
-                amountToSave.Text = "Kiekvieną mėnesį turėtumėte sutaupyti: " + Math.Round(MoneyCounter.AmountToSaveAMonth(acc), 2).ToString("C");
+                savedSum.Text = "Taupymo laikotarpiu sutaupyta: " + TransactionsCounter.SavedSum(acc.Transactions, acc.GoalStartDate, acc.GoalEndDate).ToString("C");
+                amountToSave.Text = "Šį mėnesį turėtumėte sutaupyti: " + Math.Round(MoneyCounter.AmountToSaveAMonth(acc), 2).ToString("C");
                 moneyToSpend.Text = "Pinigų suma, kurią galite skirti papildomoms išlaidoms: ";
                 if(MoneyCounter.AmountLeftToSpend(acc) != -1)
                 { 
@@ -257,10 +256,10 @@ namespace SmartSaver
 
         public void MakeDefaultTextBoxes()
         {
-            savedSum.Text = "Taupymo laikotarpiu sutaupyta suma: N/A";
+            savedSum.Text = "Taupymo laikotarpiu sutaupyta: N/A";
             moneyToSpend.Text = "Pinigų suma, kurią galite skirti išlaidoms: N/A";
             estimatedTime.Text = "Taip taupydami, savo tikslą pasieksite: N/A";
-            amountToSave.Text = "Kiekvieną mėnesį turėtumėte sutaupyti: N/A";
+            amountToSave.Text = "Šį mėnesį turėtumėte sutaupyti: N/A";
             timeInDays.Text = "Iki tikslo pabaigos jums liko: N/A";
         }
 

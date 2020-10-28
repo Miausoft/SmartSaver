@@ -2,8 +2,6 @@
 using SmartSaver.EntityFrameworkCore.Models;
 using System;
 using System.Linq;
-using SmartSaver.EntityFrameworkCore;
-using SQLitePCL;
 using SmartSaver.Domain.Services.TransactionsCounterService;
 
 namespace SmartSaver.Domain.Services.SavingMethodSuggestion
