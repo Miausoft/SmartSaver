@@ -54,15 +54,7 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
         /// </summary>
         public static decimal MonthsPassed(DateTime goalStartDate)
         {
-            if (DateTime.Now.DayOfYear != goalStartDate.DayOfYear)
-            {
-                return (decimal)DateTime.Now.Subtract(goalStartDate).TotalDays / (365.25m / 12);
-            }
-
-            else
-            {
-                return 1;
-            }
+            return (DateTime.Now.Month - goalStartDate.Month) + 12 * (DateTime.Now.Year - goalStartDate.Year) + 1;
         }
     }
 }
