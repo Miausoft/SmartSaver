@@ -68,6 +68,9 @@ ScaffoldingReadMe.txt
 # StyleCop
 StyleCopReport.xml
 
+appsettings.json
+appsettings.Development.json
+
 # Files built by Visual Studio
 *_i.c
 *_p.c
