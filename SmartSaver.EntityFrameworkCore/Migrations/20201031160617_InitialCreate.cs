@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SmartSaver.EntityFrameworkCore.Migrations
 {
-    public partial class Initial : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,8 +12,8 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Goal = table.Column<double>(nullable: false),
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Goal = table.Column<decimal>(nullable: false),
                     GoalStartDate = table.Column<DateTime>(nullable: false),
                     GoalEndDate = table.Column<DateTime>(nullable: false),
                     Revenue = table.Column<double>(nullable: false),
@@ -29,7 +29,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -42,7 +42,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     AccountId = table.Column<int>(nullable: false),
                     Username = table.Column<string>(nullable: true),
                     Password = table.Column<string>(nullable: true),
@@ -65,9 +65,9 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     ActionTime = table.Column<DateTime>(nullable: false),
-                    Amount = table.Column<double>(nullable: false),
+                    Amount = table.Column<decimal>(nullable: false),
                     AccountId = table.Column<int>(nullable: false),
                     CategoryId = table.Column<int>(nullable: false)
                 },

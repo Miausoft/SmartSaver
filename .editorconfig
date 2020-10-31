@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# EMB001: MethodLinesOfCodeViolation
+dotnet_diagnostic.EMB001.severity = none
