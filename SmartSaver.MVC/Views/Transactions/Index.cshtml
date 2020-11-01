@@ -1,0 +1,58 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model TransactionViewModel
+
+<h2 class="mb-3 mt-5">All transactions of all people</h2>
+<div class="card card-outline-secondary mb-5">
+    <div class="card-body">
+        <form autocomplete="off" class="form" role="form">
+            <div class="form-group row">
+                <div class="col-md-4">
+                    <label>Spending category</label>
+                    <select class="form-control" name="Category">
+                        @foreach (var c in Model.Categories)
+                        {
+                            <option>
+                                @c.Title
+                            </option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label>Amount</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="Amount">
+                        <div class="input-group-append">
+                            <span class="input-group-text">€</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label>&zwnj;</label>
+                    <button class="btn btn-success btn-block" type="submit">ADD</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<table class="table table-hover table-sm">
+    <thead>
+    <tr>
+        <th scope="col">Time</th>
+        <th scope="col">Amount</th>
+        <th scope="col">Category</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var t in Model.Transactions)
+    {
+        <tr>
+            <td>@t.ActionTime.ToShortDateString()</td>
+            <td>@Math.Round(t.Amount, 2) €</td>
+            <td>@t.Category.Title</td>
+        </tr>
+    }
+    </tbody>
+</table>
