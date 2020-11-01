@@ -2,3 +2,9 @@
 
 # EMB001: MethodLinesOfCodeViolation
 dotnet_diagnostic.EMB001.severity = none
+
+# EMB026: UseStaticMethod
+dotnet_diagnostic.EMB026.severity = none
+
+# EMB007: DisposableTypePublicallyExposed
+dotnet_diagnostic.EMB007.severity = none
