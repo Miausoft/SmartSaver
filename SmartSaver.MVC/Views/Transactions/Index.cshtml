@@ -6,6 +6,8 @@
 <h2 class="mb-3 mt-5">All transactions of all people</h2>
 <div class="card card-outline-secondary mb-5">
     <div class="card-body">
+        <h5>Spending</h5>
+        <hr>
         <form autocomplete="off" role="form" asp-controller="Transactions" asp-action="Create" method="POST">
             <div class="form-group row">
                 <div class="col-md-4">
@@ -19,7 +21,7 @@
                         }
                     </select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <label>Amount</label>
                     <div class="input-group">
                         <input type="text" class="form-control" id="Amount" name="Amount"> <!-- Amount -->
@@ -28,9 +30,20 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-md-2">
+                    <label>Select operation</label>
+                    <select class="form-control" id="Operation" name="Operation">
+                        <option>
+                            Spending
+                        </option>
+                        <option>
+                            Income
+                        </option>
+                    </select>
+                </div>
                 <div class="col-md-4">
                     <label>&zwnj;</label>
-                    <button class="btn btn-success btn-block" type="submit">ADD</button>
+                    <button class="btn btn-success btn-block" type="submit">most important button</button>
                 </div>
             </div>
         </form>

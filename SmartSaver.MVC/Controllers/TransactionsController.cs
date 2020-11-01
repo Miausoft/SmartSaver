@@ -28,7 +28,11 @@ namespace SmartSaver.MVC.Controllers
         {
             var model = new TransactionViewModel()
             {
-                Transactions = _context.Transactions.Include(p => p.Category).ToList(),
+                Transactions = _context.Transactions
+                    .Include(p => p.Category) // Includes Category object.
+                    .OrderByDescending(a => a.ActionTime) // Order transactions from newest to oldest.
+                    .ToList(),
+
                 Categories = _context.Categories.ToList()
             };
 
