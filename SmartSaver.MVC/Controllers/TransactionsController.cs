@@ -44,8 +44,14 @@ namespace SmartSaver.MVC.Controllers
         // POST: TransactionsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind("ActionTime,Amount,ActionId,CategoryId")] Transaction transaction)
+        public ActionResult Create([Bind("Amount,CategoryId")] Transaction transaction)
         {
+            // Set action time to entry datetime (DateTime.Now)
+            transaction.ActionTime = DateTime.UtcNow;
+
+            // Set AccountId to user account id.
+            transaction.AccountId = 1; // TODO: Changes this to real behavior
+
             _context.Transactions.Add(transaction);
             _context.SaveChanges();
 

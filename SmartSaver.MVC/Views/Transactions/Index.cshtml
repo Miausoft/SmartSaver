@@ -6,15 +6,15 @@
 <h2 class="mb-3 mt-5">All transactions of all people</h2>
 <div class="card card-outline-secondary mb-5">
     <div class="card-body">
-        <form autocomplete="off" class="form" role="form">
+        <form autocomplete="off" role="form" asp-controller="Transactions" asp-action="Create" method="POST">
             <div class="form-group row">
                 <div class="col-md-4">
                     <label>Spending category</label>
-                    <select class="form-control" name="Category">
+                    <select class="form-control" id="CategoryId" name="CategoryId"> <!-- Category -->
                         @foreach (var c in Model.Categories)
                         {
-                            <option>
-                                @c.Title
+                            <option value="@c.Id">
+                                (@c.Id) @c.Title
                             </option>
                         }
                     </select>
@@ -22,7 +22,7 @@
                 <div class="col-md-4">
                     <label>Amount</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" name="Amount">
+                        <input type="text" class="form-control" id="Amount" name="Amount"> <!-- Amount -->
                         <div class="input-group-append">
                             <span class="input-group-text">€</span>
                         </div>
