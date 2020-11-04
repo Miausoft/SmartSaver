@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartSaver.Domain", "SmartS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartSaver.EntityFrameworkCore", "SmartSaver.EntityFrameworkCore\SmartSaver.EntityFrameworkCore.csproj", "{BD32984B-6ECD-431D-A2AA-2973B0A099EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartSaver.MVC", "SmartSaver.MVC\SmartSaver.MVC.csproj", "{CF8278DD-925A-43B0-8F5D-9B864FD1CFD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartSaver.MVC", "SmartSaver.MVC\SmartSaver.MVC.csproj", "{CF8278DD-925A-43B0-8F5D-9B864FD1CFD7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E5E67534-76CA-455F-BEEE-739D237E6AED}"
 	ProjectSection(SolutionItems) = preProject
