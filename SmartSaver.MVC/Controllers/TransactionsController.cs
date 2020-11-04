@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -26,17 +24,22 @@ namespace SmartSaver.MVC.Controllers
         // GET: TransactionsController
         public ActionResult Index()
         {
-            var model = new TransactionViewModel()
+            if (User.Identity.IsAuthenticated)
             {
-                Transactions = _context.Transactions
-                    .Include(p => p.Category) // Includes Category object.
-                    .OrderByDescending(a => a.ActionTime) // Order transactions from newest to oldest.
-                    .ToList(),
+                var model = new TransactionViewModel()
+                {
+                    Transactions = _context.Transactions
+                        .Include(p => p.Category) // Includes Category object.
+                        .OrderByDescending(a => a.ActionTime) // Order transactions from newest to oldest.
+                        .ToList(),
 
-                Categories = _context.Categories.ToList()
-            };
+                    Categories = _context.Categories.ToList()
+                };
 
-            return View(model);
+                return View(model);
+            }
+
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: TransactionsController/Create

@@ -1,0 +1,9 @@
+﻿@model IEnumerable<SmartSaver.MVC.Models.LoginViewModel>
+<h1>USER</h1>
+@if (User.Identity.IsAuthenticated)
+{
+    <form method="post" asp-controller="Authentication" asp-action="Logout">
+        <button class="btn btn-info">Logout</button>
+        <text>Kai isjungi browseri cookis neissitrina del chromo settingsu. Po kazkurio laiko tik issitrina. O kaip atvaizduoti informacija neissiaiskinau:( Siaip visa kita lyg ir veikia jau</text>
+    </form>
+}
