@@ -15,7 +15,7 @@ namespace SmartSaver.EntityFrameworkCore
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<Transaction> Transactions { get; set; }
-        public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Category> Categories { get; set; } 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -32,6 +32,10 @@ namespace SmartSaver.EntityFrameworkCore
             modelBuilder.Entity<Transaction>()
                 .Property(t => t.Amount)
                 .HasColumnType("decimal(18,4)");
+
+            modelBuilder.Entity<Transaction>()
+                .Property(t => t.CategoryId)
+                .HasDefaultValue(1);
         }
     }
 }
