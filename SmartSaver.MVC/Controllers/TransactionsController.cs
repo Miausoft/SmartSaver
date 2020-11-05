@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using SmartSaver.MVC.Models;
 
 namespace SmartSaver.MVC.Controllers
 {
+    [Authorize]
     public class TransactionsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -24,22 +26,23 @@ namespace SmartSaver.MVC.Controllers
         // GET: TransactionsController
         public ActionResult Index()
         {
-            if (User.Identity.IsAuthenticated)
+            Account account = _context.Users
+                .Include(u => u.Account)
+                .First(u => u.Username.Equals(User.Identity.Name))
+                .Account;
+
+            var model = new TransactionViewModel()
             {
-                var model = new TransactionViewModel()
-                {
-                    Transactions = _context.Transactions
-                        .Include(p => p.Category) // Includes Category object.
-                        .OrderByDescending(a => a.ActionTime) // Order transactions from newest to oldest.
-                        .ToList(),
+                Transactions = _context.Transactions
+                    .Include(p => p.Category)// Includes Category object.
+                    .Where(t => t.AccountId == account.Id)
+                    .OrderByDescending(a => a.ActionTime) // Order transactions from newest to oldest.
+                    .ToList(),
 
-                    Categories = _context.Categories.ToList()
-                };
+                Categories = _context.Categories.ToList()
+            };
 
-                return View(model);
-            }
-
-            return RedirectToAction("Index", "Home");
+            return View(model);
         }
 
         // GET: TransactionsController/Create
@@ -57,7 +60,10 @@ namespace SmartSaver.MVC.Controllers
             transaction.ActionTime = DateTime.UtcNow;
 
             // Set AccountId to user account id.
-            transaction.AccountId = 1; // TODO: Changes this to real behavior
+            transaction.AccountId = _context.Users
+                .Include(u => u.Account)
+                .First(u => u.Username.Equals(User.Identity.Name))
+                .Account.Id;
 
             // If there is a category, means amount is spending and should be negative.
             if (transaction.CategoryId > 0)
