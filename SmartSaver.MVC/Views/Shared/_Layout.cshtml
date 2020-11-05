@@ -1,23 +1,21 @@
-﻿<!DOCTYPE html>
+@{
+    ViewData["Title"] = "Home Page";
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - SmartSaver.MVC</title>
+    <title>SmartSaver.MVC</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
     <header>
-        <!--<img src="~/img/background.png"/>-->
-        <div class="jumbotron">
-            <div class="container" style="color: white">
-                <h1>SmartSaver</h1>
-                <p>Happily created by MIAUsoft</p>
-            </div>
-        </div>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark mb-3" style="background: #D42CC1">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white">
             <div class="container">
+                <img src="/images/cat_animal_5835.png" width="30" height="30" alt="">
+                <a class="navbar-brand font-weight-bold" asp-area="" asp-controller="Home" asp-action="Index">smartsaver</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -27,20 +25,23 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Transactions" asp-action="Index">Transaction</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Transactions" asp-action="Index">Transaction</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="User" asp-action="Index">Main</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Main</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                             </li>
                         }
                         else
                         {
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Authentication" asp-action="Login">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Authentication" asp-action="Register">Register</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="Register">Register</a>
+                            </li>
                         }
                     </ul>
                 </div>

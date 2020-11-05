@@ -78,7 +78,9 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<int>("CategoryId")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
 
                     b.HasKey("Id");
 

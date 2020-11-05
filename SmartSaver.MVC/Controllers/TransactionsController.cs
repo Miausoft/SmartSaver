@@ -59,6 +59,12 @@ namespace SmartSaver.MVC.Controllers
             // Set AccountId to user account id.
             transaction.AccountId = 1; // TODO: Changes this to real behavior
 
+            // If there is a category, means amount is spending and should be negative.
+            if (transaction.CategoryId > 0)
+            {
+                transaction.Amount *= -1;
+            }
+
             _context.Transactions.Add(transaction);
             _context.SaveChanges();
 

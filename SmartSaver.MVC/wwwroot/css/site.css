@@ -9,7 +9,7 @@ a.navbar-brand {
 
 /* Provide sufficient contrast against white background */
 a {
-  color: #0366d6;
+  color: #fff;
 }
 
 .btn-primary {
@@ -74,7 +74,15 @@ body {
     background-image: url("../img/background.png");
     background-size: cover;
     margin: 0;
-
     border-radius: 0;
     width: 100%;
+}
+
+#deletebutton {
+    color: red;
+    opacity: 0;
+}
+
+#deletebutton:hover {
+    opacity: 1;
 }

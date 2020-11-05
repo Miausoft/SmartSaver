@@ -165,16 +165,6 @@
                     <Button x:Name="sortByCategoryButton" Content="Sort by category" HorizontalAlignment="Left" Margin="407,15,0,0" VerticalAlignment="Top" Width="102" BorderBrush="#FF8C8C8C" Background="White" FontFamily="Segoe UI" FontSize="12" Click="SortByCategoryButton_Click"/>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="savingPlansTab" Header="SAVING PLANS" Margin="-38,13,40,-13" FontSize="16" FontFamily="Bahnschrift SemiBold" BorderBrush="{x:Null}" Background="White" IsEnabled="False">
-                <Grid Background="White" Height="400" Width="625" Margin="-2,0,-4,0">
-                    <Grid.ColumnDefinitions>
-
-                        <ColumnDefinition/>
-
-                    </Grid.ColumnDefinitions>
-                    <Label Content="This part has not been implemented yet.&#xD;&#xA;" HorizontalAlignment="Left" Margin="24,66,0,0" VerticalAlignment="Top" Width="526"/>
-                </Grid>
-            </TabItem>
             <TabItem x:Name="accountTab" Header="ACCOUNT"  FontFamily="Bahnschrift SemiBold" FontSize="16" BorderBrush="{x:Null}" IsEnabled="False" Margin="-41,13,41,-13">
                 <TabItem.Background>
                     <LinearGradientBrush EndPoint="0,1">
