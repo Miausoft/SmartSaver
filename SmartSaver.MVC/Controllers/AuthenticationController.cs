@@ -14,7 +14,6 @@ using SmartSaver.MVC.Models;
 
 namespace SmartSaver.MVC.Controllers
 {
-    // kad jau isiloginus negaletume vel login ar register
     public class AuthenticationController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -32,7 +31,7 @@ namespace SmartSaver.MVC.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Dashboard");
             }
             return View();
         }
@@ -42,12 +41,13 @@ namespace SmartSaver.MVC.Controllers
         {
             if(User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Dashboard");
             }
             return View();
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
@@ -59,6 +59,8 @@ namespace SmartSaver.MVC.Controllers
                         Username = model.Username,
                         Password = model.Password
                     });
+
+                    // TODO: check for registration result.
 
                     return RedirectToAction("Login");
                 }
@@ -86,14 +88,14 @@ namespace SmartSaver.MVC.Controllers
                 var props = new AuthenticationProperties();
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, props).Wait();
 
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Dashboard");
             }
 
             ModelState.AddModelError("Username", "Incorrect username or password.");
             return View();
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();

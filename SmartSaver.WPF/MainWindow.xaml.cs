@@ -44,7 +44,6 @@ namespace SmartSaver
             {
                 statusTab,
                 historyTab,
-                savingPlansTab,
                 entriesTab,
                 accountTab,
                 logInTab
