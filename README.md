@@ -6,14 +6,13 @@ Trello: https://trello.com/b/amb6EPR8/smartsaver
 
 ### Requirements
 
-- [ ] Creating and using your own class, struct and enum (with flag(s), preferably): **liko padaryti struktūrą**
-- [ ] Property (standard, indexed, auto-implemented) usage in struct and class: **trūksta indexed property**
-- [X] Named and optional argument usage.
-- [X] Extension method usage.
-- [X] Reading from file: **padaryta duombazė**
-- [X] Generic type usage.
-- [X] Regex.
-- [ ] Widening and narrowing type conversions.
-- [X] Putting data to collection, iterating through it the right way: **iterate bus kai trauksim info iš dictionary**
-- [X] LINQ to Objects usage (methods and queries), including groupJoin: **groupJoin realiai nežinau kur panaudot**
-- [X] Implementing some of the standard .NET interfaces (IEnumerable, IComparable, IComparer, IEquatable, IEnumerator, etc.)
+- [ ] Lazy initialization.
+- [ ] Generics (in delegates, events and methods)
+- [ ] Delegates.
+- [ ] Events and their usage: standard and custom.
+- [ ] Exceptions and dealing with them in a meaningfull way.
+- [ ] Anonymous methods.
+- [ ] Lambda expressions.
+- [ ] concurrent programming (threading or async/await (for your own written classes); common resource usage between threads).
+- [ ] Config file usage (both - app and user).
+- [ ] Dependency Injection
