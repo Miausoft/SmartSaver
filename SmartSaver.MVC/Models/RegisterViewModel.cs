@@ -8,7 +8,6 @@ namespace SmartSaver.MVC.Models
         [Required]
         [MinLength(5, ErrorMessage = "Username must be at least 5 characters long")]
         [Display(Name = "New Username")]
-        [Remote("doesUserNameExist", "Authentication", ErrorMessage = "WOW")]
         public string Username { get; set; }
 
         [Required, DataType(DataType.Password)]
