@@ -12,7 +12,7 @@ Trello: https://trello.com/b/amb6EPR8/smartsaver
 - [ ] Events and their usage: standard and custom.
 - [ ] Exceptions and dealing with them in a meaningfull way.
 - [ ] Anonymous methods.
-- [ ] Lambda expressions.
+- [X] Lambda expressions.
 - [ ] concurrent programming (threading or async/await (for your own written classes); common resource usage between threads).
 - [ ] Config file usage (both - app and user).
-- [ ] Dependency Injection
+- [X] Dependency Injection
