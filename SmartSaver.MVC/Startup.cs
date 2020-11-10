@@ -31,7 +31,7 @@ namespace SmartSaver.MVC
                 options.LoginPath = "/Authentication/Login";
                 options.Cookie.Name = "UserCookie";
                 options.AccessDeniedPath = "/Home/Index";
-                options.ExpireTimeSpan = TimeSpan.Zero;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
             });
             services.AddMvc();
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AzureSqlServer")));
