@@ -1,3 +1,6 @@
 ﻿@model IEnumerable<SmartSaver.MVC.Models.LoginViewModel>
-<h1>Dashboard</h1>
-@User.Identity.Name
+
+<h4>@User.Identity.Name's dashboard</h4>
+
+<p style="text-align: center;">@SmartSaver.Domain.Services.TipManager.Tips.DayBasedTip()</p>
+<p style="font-size: 10px; text-align: center;"> tip of the day </p>
