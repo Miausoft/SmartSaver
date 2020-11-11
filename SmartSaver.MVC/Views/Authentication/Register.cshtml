@@ -32,7 +32,7 @@
 <script>
     function UserCheck() {
         $("#Status").html("Checking...");
-        $.post("@Url.Action("doesUsernameExist", "Authentication")",
+        $.post("@Url.Action("DoesUsernameExist", "Authentication")",
             {
                 username: $('#Username').val()
             },

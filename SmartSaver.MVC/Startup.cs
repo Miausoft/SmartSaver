@@ -10,6 +10,7 @@ using SmartSaver.Domain.Services.AuthenticationServices;
 using SmartSaver.Domain.Services.PasswordHash;
 using SmartSaver.Domain.Services.Regex;
 using SmartSaver.EntityFrameworkCore;
+using System;
 
 namespace SmartSaver.MVC
 {
@@ -29,6 +30,8 @@ namespace SmartSaver.MVC
             {
                 options.LoginPath = "/Authentication/Login";
                 options.Cookie.Name = "UserCookie";
+                options.AccessDeniedPath = "/Home/Index";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
             });
             services.AddMvc();
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AzureSqlServer")));
