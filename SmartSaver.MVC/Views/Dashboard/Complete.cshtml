@@ -1,0 +1,58 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model SmartSaver.EntityFrameworkCore.Models.Account 
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<div class="row mt-5">
+    <div class="col-md-6">
+        <form role="form" asp-controller="Dashboard" asp-action="Complete" method="POST">
+            <div class="form-group row">
+                <label class="col-4 col-form-label" for="Goal">Amount</label>
+                <div class="col-8">
+                    <div class="input-group">
+                        <input id="Goal" name="Goal" placeholder="@Model.Goal" type="text" class="form-control" aria-describedby="AmountHelpBlock">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <i class="fa fa-eur"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <span id="AmountHelpBlock" class="form-text text-muted">Amount or money you are willing to save.</span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="Revenue" class="col-4 col-form-label">Revenue</label>
+                <div class="col-8">
+                    <div class="input-group">
+                        <input id="Revenue" name="Revenue" placeholder="@Model.Revenue" type="text" class="form-control" aria-describedby="RevenueHelpBlock">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <i class="fa fa-eur"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <span id="RevenueHelpBlock" class="form-text text-muted">Your average monthly income.</span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="Revenue" class="col-4 col-form-label">Goal Day</label>
+                <div class="col-8">
+                    <div class="input-group">
+                        <input class="form-control" type="date" id="GoalEndDate" name="GoalEndDate">
+                    </div>
+                    <span id="DatePicker" class="form-text text-muted">When do you believe you will achieve your goal?</span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="offset-4 col-8">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-6">
+        <img src="https://i.pinimg.com/originals/79/4e/0f/794e0f42ed46acfee213fccc5cd6aa93.jpg" class="img-thumbnail"/>
+    </div>
+</div>

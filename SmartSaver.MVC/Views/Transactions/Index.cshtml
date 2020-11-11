@@ -42,7 +42,7 @@
                         <!-- Category -->
                         @foreach (var c in Model.Categories)
                         {
-                            @if (c.Id != 1)
+                            @if (!c.TypeOfIncome)
                             {
                                 <option value="@c.Id">
                                     @c.Title
@@ -78,6 +78,20 @@
                             <span class="input-group-text">€</span>
                         </div>
                     </div>
+
+                    <label>Spending category</label>
+                    <select class="form-control" id="CategoryId" name="CategoryId">
+                        <!-- Category -->
+                        @foreach (var c in Model.Categories)
+                        {
+                            @if (c.TypeOfIncome)
+                            {
+                                <option value="@c.Id">
+                                    @c.Title
+                                </option>
+                            }
+                        }
+                    </select>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-success" type="submit">ADD INCOME</button>
@@ -98,7 +112,7 @@
     <tbody>
     @foreach (var t in Model.Transactions)
     {
-        <tr>
+        <tr class="@(t.Category.TypeOfIncome ? "table-success" : "")">
             <td>@t.ActionTime.ToShortDateString()</td>
             <td>@Math.Round(t.Amount, 2) €</td>
             <td>@t.Category.Title</td>
