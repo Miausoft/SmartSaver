@@ -36,6 +36,10 @@ namespace SmartSaver.EntityFrameworkCore
             modelBuilder.Entity<Transaction>()
                 .Property(t => t.CategoryId)
                 .HasDefaultValue(1);
+
+            modelBuilder.Entity<Category>()
+                .Property(t => t.TypeOfIncome)
+                .IsRequired();
         }
     }
 }

@@ -29,9 +29,10 @@ namespace SmartSaver.MVC.Controllers
             var model = new TransactionViewModel()
             {
                 Transactions = _context.Transactions
-            .Include(p => p.Category) // Includes Category object.
-            .OrderByDescending(a => a.ActionTime) // Order transactions from newest to oldest.
-            .ToList(),
+                    .Include(p => p.Category)// Includes Category object.
+                    .Where(t => t.AccountId == GetAccountAuth().Id)
+                    .OrderByDescending(a => a.ActionTime) // Order transactions from newest to oldest.
+                    .ToList(),
 
                 Categories = _context.Categories.ToList()
             };
@@ -50,14 +51,23 @@ namespace SmartSaver.MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind("Amount,CategoryId")] Transaction transaction)
         {
+            
+            if (transaction.Amount == 0)
+            {
+                // TODO: with error message
+                return RedirectToAction(nameof(Index));
+            }
+
+            transaction.Category = _context.Categories.First(c => c.Id == transaction.CategoryId);
+
             // Set action time to entry datetime (DateTime.Now)
             transaction.ActionTime = DateTime.UtcNow;
 
             // Set AccountId to user account id.
-            transaction.AccountId = 1; // TODO: Changes this to real behavior
+            transaction.AccountId = GetAccountAuth().Id;
 
             // If there is a category, means amount is spending and should be negative.
-            if (transaction.CategoryId > 0)
+            if (!transaction.Category.TypeOfIncome)
             {
                 transaction.Amount *= -1;
             }
@@ -87,6 +97,18 @@ namespace SmartSaver.MVC.Controllers
             {
                 return View();
             }
+        }
+
+        /// <summary>
+        /// Returns account object for authorized user.
+        /// </summary>
+        /// <returns></returns>
+        private Account GetAccountAuth()
+        {
+            return _context.Users
+                .Include(u => u.Account)
+                .First(u => u.Username.Equals(User.Identity.Name))
+                .Account;
         }
     }
 }
