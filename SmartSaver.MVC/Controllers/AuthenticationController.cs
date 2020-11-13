@@ -31,7 +31,7 @@ namespace SmartSaver.MVC.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Dashboard");
+                return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace("Controller", ""));
             }
             return View();
         }
@@ -41,7 +41,7 @@ namespace SmartSaver.MVC.Controllers
         {
             if(User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Dashboard");
+                return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace("Controller", ""));
             }
             return View();
         }
@@ -62,10 +62,10 @@ namespace SmartSaver.MVC.Controllers
 
                     // TODO: check for registration result.
 
-                    return RedirectToAction("Login");
+                    return RedirectToAction(nameof(Login));
                 }
 
-                ModelState.AddModelError("Username", "Username is already taken.");
+                ModelState.AddModelError(nameof(model.Username), "Username is already taken.");
             }
 
             return View();
@@ -88,10 +88,10 @@ namespace SmartSaver.MVC.Controllers
                 var props = new AuthenticationProperties();
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, props).Wait();
 
-                return RedirectToAction("Index", "Dashboard");
+                return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace("Controller", ""));
             }
 
-            ModelState.AddModelError("Username", "Incorrect username or password.");
+            ModelState.AddModelError(nameof(model.Username), "Incorrect username or password.");
             return View();
         }
 
@@ -99,7 +99,7 @@ namespace SmartSaver.MVC.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(nameof(HomeController.Index), nameof(HomeController).Replace("Controller", ""));
         }
 
         public bool DoesUsernameExist(string username)

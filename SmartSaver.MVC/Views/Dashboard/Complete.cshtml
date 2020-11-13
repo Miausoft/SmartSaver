@@ -3,7 +3,9 @@
 *@
 @model SmartSaver.EntityFrameworkCore.Models.Account 
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
 
 <div class="row mt-5">
     <div class="col-md-6">
@@ -15,7 +17,7 @@
                         <input id="Goal" name="Goal" placeholder="@Model.Goal" type="text" class="form-control" aria-describedby="AmountHelpBlock">
                         <div class="input-group-append">
                             <div class="input-group-text">
-                                <i class="fa fa-eur"></i>
+                                <span>@System.Globalization.RegionInfo.CurrentRegion.CurrencySymbol</span>
                             </div>
                         </div>
                     </div>
@@ -29,7 +31,7 @@
                         <input id="Revenue" name="Revenue" placeholder="@Model.Revenue" type="text" class="form-control" aria-describedby="RevenueHelpBlock">
                         <div class="input-group-append">
                             <div class="input-group-text">
-                                <i class="fa fa-eur"></i>
+                                <span>@System.Globalization.RegionInfo.CurrentRegion.CurrencySymbol</span>
                             </div>
                         </div>
                     </div>
