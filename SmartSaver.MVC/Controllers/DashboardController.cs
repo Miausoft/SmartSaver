@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,35 +22,73 @@ namespace SmartSaver.MVC.Controllers
 
         public IActionResult Index()
         {
-            if (!AccountValid())
-                return RedirectToAction(nameof(Complete));
+            var account = GetAccountAuth();
+            if (!account.AccountValid())
+            {
+                return View(nameof(Complete));
+            }
 
-            return View();
+            return View(account);
         }
 
         public IActionResult Complete()
         {
             var account = GetAccountAuth();
-            return View(account);
+            if (!account.AccountValid())
+            {
+                return View(nameof(Complete));
+            }
+
+            return View(nameof(Index), account);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Complete([Bind("Goal,Revenue,GoalEndDate")] Account account)
+        public ActionResult Complete(Account account)
         {
-            Account current = _context.Users
-                .Include(u => u.Account)
-                .First(u => u.Username.Equals(User.Identity.Name))
-                .Account;
+            if (ModelState.IsValid)
+            {
+                if (account.DateValid())
+                {
+                    Account current = GetAccountAuth();
 
-            current.Goal = account.Goal;
-            current.Revenue = account.Revenue;
-            current.GoalStartDate = DateTime.Now;
-            current.GoalEndDate = account.GoalEndDate;
+                    current.Goal = account.Goal;
+                    current.Revenue = account.Revenue;
+                    current.GoalStartDate = DateTime.Now;
+                    current.GoalEndDate = account.GoalEndDate;
 
+                    _context.SaveChanges();
+
+                    return View(nameof(Index), account);
+                }
+                ModelState.AddModelError(nameof(account.GoalEndDate), "Invalid date");
+            }
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete()
+        {
+            await Task.Run(() =>
+            {
+                Thread.Sleep(1000);
+                Account acc = GetAccountAuth();
+                acc.GoalStartDate = DateTime.MinValue;
+                acc.GoalStartDate = DateTime.MinValue;
+                acc.Goal = 0;
+                _context.SaveChanges();
+            });
+            return RedirectToAction(nameof(HomeController.Index), nameof(HomeController).Replace("Controller", ""));
+        }
+
+        public void DeleteData(Account acc)
+        {
+            Thread.Sleep(1000);
+            acc.GoalStartDate = DateTime.MinValue;
+            acc.GoalStartDate = DateTime.MinValue;
+            acc.Goal = 0;
             _context.SaveChanges();
-
-            return RedirectToAction(nameof(Index));
         }
 
         private Account GetAccountAuth()
@@ -57,11 +97,6 @@ namespace SmartSaver.MVC.Controllers
                 .Include(u => u.Account)
                 .First(u => u.Username.Equals(User.Identity.Name))
                 .Account;
-        }
-
-        private bool AccountValid()
-        {
-            return GetAccountAuth().Goal > 0;
         }
     }
 }

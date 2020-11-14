@@ -35,6 +35,12 @@ namespace SmartSaver.MVC
                 options.AccessDeniedPath = "/Home/Index";
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
             });
+
+            services.AddRazorPages().AddMvcOptions(options =>
+            {
+                options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(_ => "The field is required.");
+            });
+
             services.AddMvc();
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AzureSqlServer")));
             services.AddScoped<IAuthenticationService, AuthenticationService>();

@@ -14,6 +14,8 @@ namespace SmartSaver.EntityFrameworkCore.Models
         /// 
         /// Amount he wants to save.
         /// </summary>
+        [RegularExpression(@"^(?:[1-9]\d*)?(?:[\.\,]\d+)?$", ErrorMessage = "Invalid imput")]
+        [Display(Name = "Amount")]
         public decimal Goal { get; set; }
 
         /// <summary>
@@ -23,6 +25,7 @@ namespace SmartSaver.EntityFrameworkCore.Models
         /// </summary>
         public DateTime GoalStartDate { get; set; }
 
+        [Display(Name = "Goal Day")]
         public DateTime GoalEndDate { get; set; }
 
         /// <summary>
@@ -31,7 +34,9 @@ namespace SmartSaver.EntityFrameworkCore.Models
         /// 
         /// Monthly income.
         /// </summary>
-        public double Revenue { get; set; }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+        [RegularExpression(@"^(?:[1-9]\d*)?(?:[\.\,]\d+)?$", ErrorMessage = "Invalid imput")]
+        [Display(Name = "Revenue")]
+        public double Revenue { get; set; }
 
         /// <summary>
         /// ** Provided during registration.
@@ -47,9 +52,14 @@ namespace SmartSaver.EntityFrameworkCore.Models
         /// </summary>
         public List<Transaction> Transactions { get; set; }
 
-        public bool IsValid()
+        public bool AccountValid()
         {
-            return Goal != 0;
+            return Goal > 0;
+        }
+
+        public bool DateValid()
+        {
+            return GoalEndDate > DateTime.Now;
         }
     }
 }

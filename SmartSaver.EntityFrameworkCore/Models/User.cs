@@ -13,7 +13,11 @@ namespace SmartSaver.EntityFrameworkCore.Models
         public Account Account { get; set; }
         public int AccountId { get; set; }
 
+        [Required]
         public string Username { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
         public string PhoneNumber { get; set; }
         public DateTime DateJoined { get; set; }

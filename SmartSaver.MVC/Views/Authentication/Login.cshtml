@@ -1,7 +1,13 @@
-﻿@model LoginViewModel
+﻿@model SmartSaver.EntityFrameworkCore.Models.User
 @{
     ViewData["Title"] = "Login";
 }
+
+<head>
+    <link rel="stylesheet" type="text/css" href="~/css/generalDesign.css" />
+    <title>@ViewBag.Title</title>
+</head>
+
 <br />
 <h1>User Login</h1>
 <br />
@@ -20,7 +26,7 @@
                 <input asp-for="Password" type="password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-primary shadow-none">Login</button>
+            <button type="submit" class="btn">Login</button>
         </form>
     </div>
 </div>

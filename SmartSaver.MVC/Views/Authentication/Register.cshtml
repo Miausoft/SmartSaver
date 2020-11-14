@@ -1,7 +1,13 @@
-﻿@model RegisterViewModel
+﻿@model AuthenticationViewModel
 @{
     ViewData["Title"] = "Register";
 }
+
+<head>
+    <link rel="stylesheet" type="text/css" href="~/css/generalDesign.css" />
+    <title>@ViewBag.Title</title>
+</head>
+
 <br />
 <h1>Create New Account</h1>
 <br />
@@ -25,7 +31,7 @@
                 <input asp-for="ConfirmPassword" type="password" class="form-control" />
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-primary shadow-none">Register</button>
+            <button type="submit" class="btn">Register</button>
         </form>
     </div>
 </div>

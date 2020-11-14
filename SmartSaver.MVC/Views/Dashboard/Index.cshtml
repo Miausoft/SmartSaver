@@ -1,3 +1,30 @@
-﻿@model IEnumerable<SmartSaver.MVC.Models.LoginViewModel>
+﻿@model SmartSaver.EntityFrameworkCore.Models.Account
+@{
+    ViewData["Title"] = "Dashboard";
+
+    var goal = Model.Goal.ToString("C2").Replace(",", ".");
+    var revenue = Model.Revenue.ToString("C2").Replace(",", ".");
+    var goalEndDate = Model.GoalEndDate.ToShortDateString();
+}
+
+<head>
+    <link rel="stylesheet" type="text/css" href="~/css/generalDesign.css" />
+    <title>@ViewBag.Title</title>
+</head>
+
 <h1>Dashboard</h1>
-@User.Identity.Name
+<form method="get">
+    <div>Jusu goal: @goal</div>
+    <div>Jusu revenue: @revenue</div>
+    <div>Jusu end date: @goalEndDate</div>
+    <button type="submit" class="btn" data-toggle="modal" data-target="#moreinfo" asp-controller="Dashboard" asp-action="Delete">Istrinti duomenis</button>
+    <div id="moreinfo" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body" style="margin: 0 auto">
+                    LOADING...
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -18,7 +19,6 @@ namespace SmartSaver.MVC.Controllers
     {
         private readonly ApplicationDbContext _db;
         private readonly Domain.Services.AuthenticationServices.IAuthenticationService _auth;
-        private User _user;
 
         public AuthenticationController(ApplicationDbContext db, Domain.Services.AuthenticationServices.IAuthenticationService auth)
         {
@@ -39,7 +39,7 @@ namespace SmartSaver.MVC.Controllers
         [AllowAnonymous]
         public IActionResult Login()
         {
-            if(User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated)
             {
                 return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace("Controller", ""));
             }
@@ -48,19 +48,17 @@ namespace SmartSaver.MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Register(RegisterViewModel model)
+        public IActionResult Register(AuthenticationViewModel model)
         {
             if (ModelState.IsValid)
             {
                 if (!DoesUsernameExist(model.Username))
                 {
-                    RegistrationResult registrationResult = _auth.Register(new User()
+                    _auth.Register(new User()
                     {
                         Username = model.Username,
                         Password = model.Password
                     });
-
-                    // TODO: check for registration result.
 
                     return RedirectToAction(nameof(Login));
                 }
@@ -73,15 +71,15 @@ namespace SmartSaver.MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(LoginViewModel model)
+        public IActionResult Login(User user)
         {
-            if (ModelState.IsValid && _auth.Login(model.Username, model.Password) != null)
+            if (ModelState.IsValid && _auth.Login(user.Username, user.Password) != null)
             {
-                _user = _auth.Login(model.Username, model.Password);
+                _auth.Login(user.Username, user.Password);
 
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, model.Username)
+                    new Claim(ClaimTypes.Name, user.Username)
                 };
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var principal = new ClaimsPrincipal(identity);
@@ -91,7 +89,7 @@ namespace SmartSaver.MVC.Controllers
                 return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace("Controller", ""));
             }
 
-            ModelState.AddModelError(nameof(model.Username), "Incorrect username or password.");
+            ModelState.AddModelError(nameof(user.Username), "Incorrect username or password.");
             return View();
         }
 
@@ -104,16 +102,8 @@ namespace SmartSaver.MVC.Controllers
 
         public bool DoesUsernameExist(string username)
         {
-            System.Threading.Thread.Sleep(200);
-
-            if (_db.Users.FirstOrDefault(u => u.Username.Equals(username)) != null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            Thread.Sleep(200);
+            return _db.Users.FirstOrDefault(u => u.Username.Equals(username)) != null;
         }
     }
 }
