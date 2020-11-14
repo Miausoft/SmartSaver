@@ -82,15 +82,6 @@ namespace SmartSaver.MVC.Controllers
             return RedirectToAction(nameof(HomeController.Index), nameof(HomeController).Replace("Controller", ""));
         }
 
-        public void DeleteData(Account acc)
-        {
-            Thread.Sleep(1000);
-            acc.GoalStartDate = DateTime.MinValue;
-            acc.GoalStartDate = DateTime.MinValue;
-            acc.Goal = 0;
-            _context.SaveChanges();
-        }
-
         private Account GetAccountAuth()
         {
             return _context.Users

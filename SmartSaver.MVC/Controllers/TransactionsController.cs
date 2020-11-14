@@ -51,7 +51,6 @@ namespace SmartSaver.MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind("Amount,CategoryId")] Transaction transaction)
         {
-
             if (transaction.Amount == 0)
             {
                 // TODO: with error message

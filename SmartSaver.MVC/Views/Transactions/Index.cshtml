@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "Transactions";
 
+    var currencySymbol = System.Globalization.RegionInfo.CurrentRegion.CurrencySymbol;
     var balance = Model.Transactions.Sum(t => t.Amount);
 }
 
@@ -33,7 +34,7 @@
                     <div class="input-group">
                         <input type="text" class="form-control" id="Amount" name="Amount"> <!-- Amount -->
                         <div class="input-group-append">
-                            <span class="input-group-text">@System.Globalization.RegionInfo.CurrentRegion.CurrencySymbol</span>
+                            <span class="input-group-text">@currencySymbol</span>
                         </div>
                     </div>
 
@@ -75,7 +76,7 @@
                     <div class="input-group">
                         <input type="text" class="form-control" id="Amount" name="Amount"> <!-- Amount -->
                         <div class="input-group-append">
-                            <span class="input-group-text">@System.Globalization.RegionInfo.CurrentRegion.CurrencySymbol</span>
+                            <span class="input-group-text">@currencySymbol</span>
                         </div>
                     </div>
 
