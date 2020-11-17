@@ -160,7 +160,7 @@ namespace SmartSaver
         /// </summary>
         private void EnableTabs()
         {
-            if (!_user.Account.IsValid())
+            if (!_user.Account.AccountValid())
             {
                 accountTab.IsEnabled = true;
                 accountTab.IsSelected = true;

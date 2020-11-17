@@ -14,18 +14,18 @@
 }
 
 
-    .btn:hover {
-        box-shadow: inset 300px 0 0 0 darkslategray;
-        cursor: pointer;
+.btn:hover {
+    box-shadow: inset 300px 0 0 0 darkslategray;
+    cursor: pointer;
         color: white;
-    }
+}
 
-    .btn:active,
-    .btn:focus,
-    .btn:focus:active {
-        box-shadow: inset 300px 0 0 0 darkslategray;
-        color: white;
-    }
+.btn:active,
+.btn:focus,
+.btn:focus:active {
+    box-shadow: inset 300px 0 0 0 darkslategray;
+    color: white;
+}
 
 input[type="date"]::before {
     color: #999999;
@@ -44,4 +44,9 @@ input[type="date"]:valid {
 input[type="date"]:focus::before,
 input[type="date"]:valid::before {
     content: none !important;
+}
+
+.form-group.required.control-label:before {
+    content: "*";
+    color: red;
 }

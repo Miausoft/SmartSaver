@@ -22,9 +22,9 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
             _context = context;
         }
 
-        public override User Login(string username, string password)
+        public override User Login(string email, string password)
         {
-            User user = base.Login(username, password);
+            User user = base.Login(email, password);
             if (user == null || !_hasher.Verify(password: password, passwordHash: user.Password))
             {
                 return null;
@@ -35,17 +35,22 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
 
         public override RegistrationResult Register(User user)
         {
-            if (!_passwordRegex.Match(user.Password))
+            if (!String.IsNullOrEmpty(user.Password))
             {
-                return RegistrationResult.BadPasswordFormat;
+
+                if (!_passwordRegex.Match(user.Password))
+                {
+                    return RegistrationResult.BadPasswordFormat;
+                }
+
+                if (_context.Users.FirstOrDefault(u => u.Username.Equals(user.Username)) != null)
+                {
+                    return RegistrationResult.UserAlreadyExist;
+                }
+
+                user.Password = _hasher.Hash(user.Password);
             }
 
-            if (_context.Users.FirstOrDefault(u => u.Username.Equals(user.Username)) != null)
-            {
-                return RegistrationResult.UserAlreadyExist;
-            }
-
-            user.Password = _hasher.Hash(user.Password);
             return base.Register(user);
         }
     }

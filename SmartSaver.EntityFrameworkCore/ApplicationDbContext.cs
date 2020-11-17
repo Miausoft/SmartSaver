@@ -40,6 +40,10 @@ namespace SmartSaver.EntityFrameworkCore
             modelBuilder.Entity<Category>()
                 .Property(t => t.TypeOfIncome)
                 .IsRequired();
+
+            modelBuilder.Entity<User>()
+                .Property(t => t.Password)
+                .IsRequired(false);
         }
     }
 }

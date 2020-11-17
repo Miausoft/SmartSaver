@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
@@ -15,6 +16,7 @@ using SmartSaver.MVC.Models;
 
 namespace SmartSaver.MVC.Controllers
 {
+    [AllowAnonymous]
     public class AuthenticationController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -26,23 +28,23 @@ namespace SmartSaver.MVC.Controllers
             _auth = auth;
         }
 
-        [AllowAnonymous]
         public IActionResult Register()
         {
             if (User.Identity.IsAuthenticated)
             {
                 return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace("Controller", ""));
             }
+
             return View();
         }
 
-        [AllowAnonymous]
         public IActionResult Login()
         {
             if (User.Identity.IsAuthenticated)
             {
                 return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace("Controller", ""));
             }
+
             return View();
         }
 
@@ -50,20 +52,9 @@ namespace SmartSaver.MVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Register(AuthenticationViewModel model)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && AddNewUser(model.Username, model.Email, model.Password))
             {
-                if (!DoesUsernameExist(model.Username))
-                {
-                    _auth.Register(new User()
-                    {
-                        Username = model.Username,
-                        Password = model.Password
-                    });
-
-                    return RedirectToAction(nameof(Login));
-                }
-
-                ModelState.AddModelError(nameof(model.Username), "Username is already taken.");
+                return RedirectToAction(nameof(Login));
             }
 
             return View();
@@ -71,25 +62,15 @@ namespace SmartSaver.MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(User user)
+        public IActionResult Login(User user, string returnUrl)
         {
-            if (ModelState.IsValid && _auth.Login(user.Username, user.Password) != null)
+            if (ModelState.IsValid && _auth.Login(user.Email, user.Password) != null)
             {
-                _auth.Login(user.Username, user.Password);
-
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, user.Username)
-                };
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var principal = new ClaimsPrincipal(identity);
-                var props = new AuthenticationProperties();
-                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, props).Wait();
-
-                return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace("Controller", ""));
+                UserAuthentication(user.Email);
+                return LocalRedirect(returnUrl ?? Url.Content("~/"));
             }
 
-            ModelState.AddModelError(nameof(user.Username), "Incorrect username or password.");
+            ModelState.AddModelError(nameof(user.Email), "Incorrect username or password.");
             return View();
         }
 
@@ -100,10 +81,63 @@ namespace SmartSaver.MVC.Controllers
             return RedirectToAction(nameof(HomeController.Index), nameof(HomeController).Replace("Controller", ""));
         }
 
+        [HttpPost]
+        public IActionResult ExternalLogin(string returnUrl, string provider)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace("Controller", ""));
+            }
+
+            var properties = new AuthenticationProperties { RedirectUri = Url.Action(nameof(ExternalResponse), new { ReturnUrl = returnUrl}) };
+            return Challenge(properties, provider);
+        }
+
+        public async Task<IActionResult> ExternalResponse (string returnUrl)
+        {
+            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            if (result.Succeeded)
+            {
+                var email = result.Principal.FindFirstValue(ClaimTypes.Email);
+                AddNewUser(email, email, null);
+                UserAuthentication(email);
+                return LocalRedirect(returnUrl ?? Url.Content("~/"));
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Error while trying to login");
+                return View(nameof(Login));
+            }
+        }
+
+        private void UserAuthentication(string email)
+        {
+            var claim = new List<Claim> { new Claim(ClaimTypes.Name, email) };
+            var identity = new ClaimsIdentity(claim, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal).Wait();
+        }
+
+        private bool AddNewUser(string username, string email, string password)
+        {
+            if (!DoesUsernameExist(username) && !DoesEmailExist(email))
+            {
+                _auth.Register(new User() { Username = username, Email = email, Password = password });
+                return true;
+            }
+
+            return false;
+        }
+
         public bool DoesUsernameExist(string username)
         {
-            Thread.Sleep(200);
             return _db.Users.FirstOrDefault(u => u.Username.Equals(username)) != null;
+        }
+
+        public bool DoesEmailExist(string email)
+        {
+            return _db.Users.FirstOrDefault(u => u.Email.Equals(email)) != null;
         }
     }
 }

@@ -24,6 +24,7 @@ namespace SmartSaver.MVC.Controllers
             {
                 return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace("Controller", ""));
             }
+
             return View();
         }
 

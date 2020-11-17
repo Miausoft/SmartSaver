@@ -58,7 +58,7 @@ namespace SmartSaver.WPF
                 {
                     Username = username, 
                     Password = newPassword1Textbox.Password, 
-                    PhoneNumber = phone_number
+                    //PhoneNumber = phone_number
                 });
 
                 switch (registrationResult)

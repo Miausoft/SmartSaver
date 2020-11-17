@@ -23,10 +23,10 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns>Account</returns>
-        public virtual User Login(string username, string password)
+        public virtual User Login(string email, string password)
         {
-            var user = Context.Users.FirstOrDefault(u => u.Username.Equals(username));
-            if (user == null)
+            var user = Context.Users.FirstOrDefault(u => u.Email.Equals(email));
+            if (user == null || user.Password == null)
             {
                 return null;
             }
