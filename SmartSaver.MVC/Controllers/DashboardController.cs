@@ -86,7 +86,7 @@ namespace SmartSaver.MVC.Controllers
         {
             return _context.Users
                 .Include(u => u.Account)
-                .First(u => u.Email.Equals(User.Identity.Name))
+                .First(u => u.Id.ToString().Equals(User.Identity.Name))
                 .Account;
         }
     }
