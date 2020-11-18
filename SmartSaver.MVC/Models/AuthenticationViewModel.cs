@@ -5,10 +5,13 @@ namespace SmartSaver.MVC.Models
 {
     public class AuthenticationViewModel
     {
-        [Required]
         [MinLength(5, ErrorMessage = "Username must be at least 5 characters long")]
-        [Display(Name = "New Username")]
+        [Display(Name = "Username")]
         public string Username { get; set; }
+
+        [Required, DataType(DataType.EmailAddress)]
+        [Display(Name = "Email address")]
+        public string Email { get; set; }
 
         [Required, DataType(DataType.Password)]
         [MinLength(5, ErrorMessage = "Password must be at least 5 characters long")]

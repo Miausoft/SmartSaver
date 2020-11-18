@@ -12,46 +12,79 @@
 <h1>Create New Account</h1>
 <br />
 
-<div class="row">
-    <div class="col-md-12">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Username"></label>
-                <input asp-for="Username" class="form-control" oninput="UserCheck()" />
-                <span asp-validation-for="Username" class="text-danger" id="Status"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password"></label>
-                <input asp-for="Password" type="password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ConfirmPassword"></label>
-                <input asp-for="ConfirmPassword" type="password" class="form-control" />
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-            </div>
-            <button type="submit" class="btn">Register</button>
-        </form>
+<body onload="UsernameCheck(); EmailCheck()">
+    <div class="row">
+        <div class="col-md-12">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Username"></label>
+                    <input asp-for="Username" class="form-control" oninput="UsernameCheck()" id="Username" />
+                    <span asp-validation-for="Username" class="text-danger" id="Status1"></span>
+                </div>
+                <div class="form-group required control-label">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" class="form-control" oninput="EmailCheck()" id="Email" />
+                    <span asp-validation-for="Email" class="text-danger" id="Status2"></span>
+                </div>
+                <div class="form-group required control-label">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" type="password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                    <small class="form-text text-muted">Make sure it's at least 5 characters including a number, lowercase and capital letter.</small>
+                </div>
+                <div class="form-group required control-label">
+                    <label asp-for="ConfirmPassword"></label>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn">Register</button>
+            </form>
+            <br />
+            <form method="post" asp-action="ExternalLogin" asp-controller="Authentication" asp-route-returnUrl="@Context.Request.Query["returnurl"]">
+                <button type="submit" name="provider" value="Google" class="btn">Google Register</button>
+                <button type="submit" name="provider" value="Facebook" class="btn">Facebook Register</button>
+            </form>
+        </div>
     </div>
-</div>
+</body>
 
 <script>
-    function UserCheck() {
-        $("#Status").html("Checking...");
-        $.post("@Url.Action("DoesUsernameExist", "Authentication")",
-            {
-                username: $('#Username').val()
-            },
-            function (data) {
-                if (data == false) {
-                    $("#Status").html('<font color="Green">Username is available.</font>');
-                    $("#Username").css("border-color", "Green");
-                }
-                else {
-                    $("#Status").html('<font color="Red">Username is already taken.</font>');
-                    $("#Username").css("border-color", "Red");
-                }
-            });
+    function UsernameCheck() {
+        if (document.getElementById("Username").value.length != 0) {
+            $.post("@Url.Action("DoesUsernameExist", "Authentication")",
+                {
+                    username: $('#Username').val()
+                },
+                function (data) {
+                    if (data == false) {
+                        $("#Status1").html('<font color="Green">Username is available.</font>');
+                        $("#Username").css("border-color", "Green");
+                    }
+                    else {
+                        $("#Status1").html('<font color="Red">Username is already taken.</font>');
+                        $("#Username").css("border-color", "Red");
+                    }
+                });
+        }
     }
+
+    function EmailCheck() {
+        if (document.getElementById("Email").value.length != 0) {
+            $.post("@Url.Action("DoesEmailExist", "Authentication")",
+                {
+                    email: $('#Email').val()
+                },
+                function (data) {
+                    if (data == false) {
+                        $("#Status2").html("");
+                    }
+                    else {
+                        $("#Status2").html('<font color="Red">Email is already asociated with another account.</font>');
+                        $("#Email").css("border-color", "Red");
+                    }
+                });
+        }
+    }
+
 </script>

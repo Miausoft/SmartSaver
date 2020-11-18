@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -28,13 +29,35 @@ namespace SmartSaver.MVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            services.Configure<CookiePolicyOptions>(options =>
             {
-                options.LoginPath = "/Authentication/Login";
-                options.Cookie.Name = "UserCookie";
-                options.AccessDeniedPath = "/Home/Index";
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+                options.ConsentCookie.IsEssential = true;
+                options.CheckConsentNeeded = context => false;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.Cookie.IsEssential = true;
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                    options.Cookie.SameSite = SameSiteMode.None;
+                    options.LoginPath = "/Authentication/Login";
+                    options.Cookie.Name = "UserCookie";
+                    options.AccessDeniedPath = "/Home/Index";
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+                })
+                .AddGoogle(options => 
+                {
+                    options.ClientId = Configuration["Google:ClientId"];
+                    options.ClientSecret = Configuration["Google:ClientSecret"];
+                })
+                .AddFacebook(options =>
+                {
+                    options.AppId = Configuration["Facebook:AppId"];
+                    options.AppSecret = Configuration["Facebook:AppSecret"];
+                });
 
             services.AddRazorPages().AddMvcOptions(options =>
             {
@@ -66,7 +89,8 @@ namespace SmartSaver.MVC
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Error");
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }

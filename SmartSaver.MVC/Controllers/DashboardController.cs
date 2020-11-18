@@ -44,7 +44,7 @@ namespace SmartSaver.MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Complete(Account account)
+        public IActionResult Complete(Account account)
         {
             if (ModelState.IsValid)
             {
@@ -75,7 +75,7 @@ namespace SmartSaver.MVC.Controllers
                 Thread.Sleep(1000);
                 Account acc = GetAccountAuth();
                 acc.GoalStartDate = DateTime.MinValue;
-                acc.GoalStartDate = DateTime.MinValue;
+                acc.GoalEndDate = DateTime.MinValue;
                 acc.Goal = 0;
                 _context.SaveChanges();
             });
@@ -86,7 +86,7 @@ namespace SmartSaver.MVC.Controllers
         {
             return _context.Users
                 .Include(u => u.Account)
-                .First(u => u.Username.Equals(User.Identity.Name))
+                .First(u => u.Email.Equals(User.Identity.Name))
                 .Account;
         }
     }
