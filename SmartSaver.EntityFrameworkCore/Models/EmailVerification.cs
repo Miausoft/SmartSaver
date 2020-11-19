@@ -7,6 +7,7 @@ namespace SmartSaver.EntityFrameworkCore.Models
     {
         [ForeignKey("UserId")]
         public User User { get; set; }
+
         [Key]
         public int UserId { get; set; }
         public bool EmailVerified { get; set; }
