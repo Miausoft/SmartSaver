@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using SmartSaver.EntityFrameworkCore.Models;
+using SmartSaver.Domain.Managers;
 
 namespace SmartSaver.MVC.Models
 {
@@ -13,12 +14,6 @@ namespace SmartSaver.MVC.Models
         public List<Balance> FirstChartData { get; set; }
         
         public List<Transaction> SpendingTransactions { get; set; }
-    }
-    
-    public class Balance
-    {
-        public decimal Amount { get; set; }
-        public DateTime ActionTime { get; set; }
     }
 
     public class CategorySpending

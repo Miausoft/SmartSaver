@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using SmartSaver.Domain.Entities;
+﻿using Microsoft.Extensions.DependencyInjection;
 using SmartSaver.Domain.Services.AuthenticationServices;
 using SmartSaver.Domain.Services.EmailServices;
 using SmartSaver.Domain.Services.PasswordHash;
 using SmartSaver.Domain.Services.Regex;
+using SmartSaver.Domain.Managers;
 
 namespace SmartSaver.Domain
 {
@@ -20,6 +15,7 @@ namespace SmartSaver.Domain
             services.AddSingleton<IMailer, Mailer>();
             services.AddSingleton<IPasswordHasherService, PasswordHasherService>();
             services.AddSingleton<IPasswordRegex, PasswordRegex>();
+            services.AddScoped<TransactionManager>();
 
             return services;
         }

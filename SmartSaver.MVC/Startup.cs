@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -7,13 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SmartSaver.Domain.Services.AuthenticationServices;
-using SmartSaver.Domain.Services.PasswordHash;
-using SmartSaver.Domain.Services.Regex;
 using SmartSaver.EntityFrameworkCore;
-using System;
+using SmartSaver.MVC.ServiceCollectionExtensions;
 using System.Collections.Generic;
 using System.Globalization;
+using SmartSaver.Domain;
 
 namespace SmartSaver.MVC
 {
@@ -36,28 +33,8 @@ namespace SmartSaver.MVC
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options =>
-                {
-                    options.Cookie.IsEssential = true;
-                    options.Cookie.HttpOnly = true;
-                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                    options.Cookie.SameSite = SameSiteMode.None;
-                    options.LoginPath = "/Authentication/Login";
-                    options.Cookie.Name = "UserCookie";
-                    options.AccessDeniedPath = "/Home/Index";
-                    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-                })
-                .AddGoogle(options => 
-                {
-                    options.ClientId = Configuration["Google:ClientId"];
-                    options.ClientSecret = Configuration["Google:ClientSecret"];
-                })
-                .AddFacebook(options =>
-                {
-                    options.AppId = Configuration["Facebook:AppId"];
-                    options.AppSecret = Configuration["Facebook:AppSecret"];
-                });
+            services.AddAuthenticationWithExternal(Configuration);
+            // TODO: Change configuration to
 
             services.AddRazorPages().AddMvcOptions(options =>
             {
@@ -66,9 +43,7 @@ namespace SmartSaver.MVC
 
             services.AddMvc();
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AzureSqlServer")));
-            services.AddScoped<IAuthenticationService, AuthenticationService>();
-            services.AddScoped<IPasswordHasherService, PasswordHasherService>();
-            services.AddScoped<IPasswordRegex, PasswordRegex>();
+            services.AddDomainLibrary();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
