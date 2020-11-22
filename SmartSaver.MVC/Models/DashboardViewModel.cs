@@ -12,7 +12,7 @@ namespace SmartSaver.MVC.Models
         public decimal SavedCurrentMonth { get; set; }
         public decimal ToSaveCurrentMonth { get; set; }
         public List<Balance> FirstChartData { get; set; }
-        
+        public List<Transaction> Transactions { get; set; }
         public List<Transaction> SpendingTransactions { get; set; }
     }
 

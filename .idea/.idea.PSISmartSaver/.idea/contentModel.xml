@@ -11,6 +11,7 @@
           <e p="SmtpSettings.cs" t="Include" />
         </e>
         <e p="Managers" t="Include">
+          <e p="ISuggestionRepo.cs" t="Include" />
           <e p="ITransactionManager.cs" t="Include" />
           <e p="TransactionManager.cs" t="Include" />
         </e>
@@ -85,6 +86,7 @@
         <e p="Models" t="Include">
           <e p="Account.cs" t="Include" />
           <e p="Category.cs" t="Include" />
+          <e p="Suggestion.cs" t="Include" />
           <e p="Transaction.cs" t="Include" />
           <e p="User.cs" t="Include" />
         </e>
@@ -160,6 +162,7 @@
         <e p="wwwroot" t="Include">
           <e p="css" t="Include">
             <e p="generalDesign.css" t="Include" />
+            <e p="ring.css" t="Include" />
             <e p="site.css" t="Include" />
           </e>
           <e p="favicon.ico" t="Include" />

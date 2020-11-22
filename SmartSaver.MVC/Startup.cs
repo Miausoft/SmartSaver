@@ -34,7 +34,6 @@ namespace SmartSaver.MVC
             });
 
             services.AddAuthenticationWithExternal(Configuration);
-            // TODO: Change configuration to
 
             services.AddRazorPages().AddMvcOptions(options =>
             {

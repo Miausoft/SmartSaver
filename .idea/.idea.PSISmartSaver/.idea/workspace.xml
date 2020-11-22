@@ -4,18 +4,66 @@
     <projectFile>SmartSaver.WPF/SmartSaver.WPF.csproj</projectFile>
     <projectFile>SmartSaver.MVC/SmartSaver.MVC.csproj</projectFile>
   </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:11" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:LogIn" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:feat" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="928814d3-be5d-43ce-8731-1cace175216e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/SmartSaver.Domain/Managers/ISuggestionRepo.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SmartSaver.EntityFrameworkCore/Models/Suggestion.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SmartSaver.MVC/wwwroot/css/ring.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.PSISmartSaver/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.PSISmartSaver/.idea/contentModel.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.PSISmartSaver/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.PSISmartSaver/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartSaver.MVC/Controllers/DashboardController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartSaver.MVC/Controllers/DashboardController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartSaver.MVC/Models/DashboardViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartSaver.MVC/Models/DashboardViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartSaver.MVC/ServiceCollectionExtensions/AuthenticationWithExternal.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartSaver.MVC/ServiceCollectionExtensions/AuthenticationWithExternal.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SmartSaver.MVC/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartSaver.MVC/Startup.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SmartSaver.MVC/Views/Dashboard/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/SmartSaver.MVC/Views/Dashboard/Index.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartSaver.MVC/Views/Shared/_Layout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/SmartSaver.MVC/Views/Shared/_Layout.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartSaver.MVC/Views/Transactions/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/SmartSaver.MVC/Views/Transactions/Index.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartSaver.MVC/wwwroot/css/site.css" beforeDir="false" afterPath="$PROJECT_DIR$/SmartSaver.MVC/wwwroot/css/site.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="SCSS File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -29,13 +77,24 @@
         <option value="$PROJECT_DIR$/SmartSaver.MVC/wwwroot/css/site.css" />
         <option value="$PROJECT_DIR$/SmartSaver.MVC/Views/Shared/_Layout.cshtml" />
         <option value="$PROJECT_DIR$/SmartSaver.MVC/Views/Transactions/Index.cshtml" />
-        <option value="$PROJECT_DIR$/SmartSaver.MVC/Views/Dashboard/Index.cshtml" />
+        <option value="$PROJECT_DIR$/SmartSaver.MVC/ServiceCollectionExtensions/AuthenticationWithExternal.cs" />
         <option value="$PROJECT_DIR$/SmartSaver.MVC/Startup.cs" />
+        <option value="$PROJECT_DIR$/SmartSaver.EntityFrameworkCore/Models/Suggestion.cs" />
+        <option value="$PROJECT_DIR$/SmartSaver.Domain/Managers/ISuggestionRepo.cs" />
+        <option value="$PROJECT_DIR$/SmartSaver.MVC/Models/DashboardViewModel.cs" />
+        <option value="$PROJECT_DIR$/SmartSaver.Domain/Managers/TransactionManager.cs" />
+        <option value="$PROJECT_DIR$/SmartSaver.Domain/Managers/ITransactionManager.cs" />
+        <option value="$PROJECT_DIR$/SmartSaver.MVC/Controllers/DashboardController.cs" />
+        <option value="$PROJECT_DIR$/SmartSaver.MVC/wwwroot/css/ring.scss" />
+        <option value="$PROJECT_DIR$/SmartSaver.MVC/wwwroot/css/ring.css" />
+        <option value="$PROJECT_DIR$/SmartSaver.MVC/Views/Dashboard/Index.cshtml" />
       </list>
     </option>
   </component>
   <component name="ProjectId" id="1keh1bs2jxhmVsVNLnJlrA3C0Fi" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -43,6 +102,8 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="list.type.of.created.stylesheet" value="SCSS" />
+    <property name="settings.editor.selected.configurable" value="watcher.settings" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RunManager" selected=".NET Launch Settings Profile.SmartSaver.MVC">
@@ -101,52 +162,53 @@
       <option name="presentableId" value="Default" />
       <updated>1606066758916</updated>
       <workItem from="1606066776393" duration="7130000" />
+      <workItem from="1606074990497" duration="6760000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-  <component name="UnityProjectConfiguration" hasMinimizedUI="null" />
+  <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1878" height="276" key="GridCell.Tab.0.bottom" timestamp="1606072318941">
+    <state width="1878" height="276" key="GridCell.Tab.0.bottom" timestamp="1606081891844">
       <screen x="0" y="0" width="1920" height="1038" />
     </state>
-    <state width="1878" height="276" key="GridCell.Tab.0.bottom/0.0.1920.1038@0.0.1920.1038" timestamp="1606072318941" />
-    <state width="1878" height="276" key="GridCell.Tab.0.center" timestamp="1606072318939">
+    <state width="1878" height="276" key="GridCell.Tab.0.bottom/0.0.1920.1038@0.0.1920.1038" timestamp="1606081891844" />
+    <state width="1878" height="276" key="GridCell.Tab.0.center" timestamp="1606081891843">
       <screen x="0" y="0" width="1920" height="1038" />
     </state>
-    <state width="1878" height="276" key="GridCell.Tab.0.center/0.0.1920.1038@0.0.1920.1038" timestamp="1606072318939" />
-    <state width="1878" height="276" key="GridCell.Tab.0.left" timestamp="1606072318938">
+    <state width="1878" height="276" key="GridCell.Tab.0.center/0.0.1920.1038@0.0.1920.1038" timestamp="1606081891843" />
+    <state width="1878" height="276" key="GridCell.Tab.0.left" timestamp="1606081891843">
       <screen x="0" y="0" width="1920" height="1038" />
     </state>
-    <state width="1878" height="276" key="GridCell.Tab.0.left/0.0.1920.1038@0.0.1920.1038" timestamp="1606072318938" />
-    <state width="1878" height="276" key="GridCell.Tab.0.right" timestamp="1606072318940">
+    <state width="1878" height="276" key="GridCell.Tab.0.left/0.0.1920.1038@0.0.1920.1038" timestamp="1606081891843" />
+    <state width="1878" height="276" key="GridCell.Tab.0.right" timestamp="1606081891843">
       <screen x="0" y="0" width="1920" height="1038" />
     </state>
-    <state width="1878" height="276" key="GridCell.Tab.0.right/0.0.1920.1038@0.0.1920.1038" timestamp="1606072318940" />
+    <state width="1878" height="276" key="GridCell.Tab.0.right/0.0.1920.1038@0.0.1920.1038" timestamp="1606081891843" />
+    <state x="464" y="153" key="SettingsEditor" timestamp="1606079843055">
+      <screen x="0" y="0" width="1920" height="1038" />
+    </state>
+    <state x="464" y="153" key="SettingsEditor/0.0.1920.1038@0.0.1920.1038" timestamp="1606079843055" />
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/SmartSaver.MVC/Views/Dashboard/Index.cshtml</url>
-          <properties documentPath="$PROJECT_DIR$/SmartSaver.MVC/Views/Dashboard/Index.cshtml" initialLine="0" isMultiMethodBreakpoint="true">
-            <option name="multiMethodBreakpoint" value="true" />
-            <startOffsets>
-              <option value="-1" />
-            </startOffsets>
-            <endOffsets>
-              <option value="-1" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

@@ -48,7 +48,9 @@ namespace SmartSaver.MVC.Controllers
                 
                 FirstChartData = _manager.GetBalanceHistory(acc.Id),
                 
-                SpendingTransactions = _manager.GetAccountSpendings(acc.Id)
+                SpendingTransactions = _manager.GetAccountSpendings(acc.Id),
+                
+                Transactions = _context.Accounts.Include(nameof(Transaction) + "s").First(a => a.Id == acc.Id).Transactions.ToList()
             };
 
             return View(dvm);

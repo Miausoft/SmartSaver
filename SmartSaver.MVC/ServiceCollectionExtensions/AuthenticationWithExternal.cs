@@ -8,7 +8,7 @@ namespace SmartSaver.MVC.ServiceCollectionExtensions
 {
     public static class AuthenticationWithExternal
     {
-        public static IServiceCollection AddAuthenticationWithExternal(this IServiceCollection services, IConfiguration Configuration)
+        public static IServiceCollection AddAuthenticationWithExternal(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
@@ -20,17 +20,17 @@ namespace SmartSaver.MVC.ServiceCollectionExtensions
                     options.LoginPath = "/Authentication/Login";
                     options.Cookie.Name = "UserCookie";
                     options.AccessDeniedPath = "/Home/Index";
-                    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
                 })
                 .AddGoogle(options => 
                 {
-                    options.ClientId = Configuration["Google:ClientId"];
-                    options.ClientSecret = Configuration["Google:ClientSecret"];
+                    options.ClientId = configuration["Google:ClientId"];
+                    options.ClientSecret = configuration["Google:ClientSecret"];
                 })
                 .AddFacebook(options =>
                 {
-                    options.AppId = Configuration["Facebook:AppId"];
-                    options.AppSecret = Configuration["Facebook:AppSecret"];
+                    options.AppId = configuration["Facebook:AppId"];
+                    options.AppSecret = configuration["Facebook:AppSecret"];
                 });
 
             return services;
