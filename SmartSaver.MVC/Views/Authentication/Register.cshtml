@@ -17,7 +17,7 @@
         <div class="col-md-12">
             <form method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
+                <div class="form-group required control-label">
                     <label asp-for="Username"></label>
                     <input asp-for="Username" class="form-control" oninput="UsernameCheck()" id="Username" />
                     <span asp-validation-for="Username" class="text-danger" id="Status1"></span>
@@ -31,7 +31,7 @@
                     <label asp-for="Password"></label>
                     <input asp-for="Password" type="password" class="form-control" />
                     <span asp-validation-for="Password" class="text-danger"></span>
-                    <small class="form-text text-muted">Make sure it's at least 5 characters including a number, lowercase and capital letter.</small>
+                    <small class="form-text text-muted font-italic">Make sure it's at least 5 characters including a number, lowercase and capital letter.</small>
                 </div>
                 <div class="form-group required control-label">
                     <label asp-for="ConfirmPassword"></label>
@@ -51,21 +51,30 @@
 
 <script>
     function UsernameCheck() {
-        if (document.getElementById("Username").value.length != 0) {
-            $.post("@Url.Action("DoesUsernameExist", "Authentication")",
-                {
-                    username: $('#Username').val()
-                },
-                function (data) {
-                    if (data == false) {
-                        $("#Status1").html('<font color="Green">Username is available.</font>');
-                        $("#Username").css("border-color", "Green");
-                    }
-                    else {
-                        $("#Status1").html('<font color="Red">Username is already taken.</font>');
-                        $("#Username").css("border-color", "Red");
-                    }
-                });
+        var length = document.getElementById("Username").value.length;
+        if (length != 0) {
+            $("#Status1").html('<font color="Green">Loading...</font>');
+            $("#Username").css("border-color", "Green");
+            if (length >= 5) {
+                $.post("@Url.Action("DoesUsernameExist", "Authentication")",
+                    {
+                        username: $('#Username').val()
+                    },
+                    function (data) {
+                        if (data == false) {
+                            $("#Status1").html('<font color="Green">Username is available.</font>');
+                            $("#Username").css("border-color", "Green");
+                        }
+                        else {
+                            $("#Status1").html('<font color="Red">Username is already taken.</font>');
+                            $("#Username").css("border-color", "Red");
+                        }
+                    });
+            }
+            else {
+                $("#Status1").html('<font color="Red">Username must be at least 5 characters long.</font>');
+                $("#Username").css("border-color", "Red");
+            }
         }
     }
 
@@ -86,5 +95,4 @@
                 });
         }
     }
-
 </script>

@@ -10,9 +10,9 @@ Trello: https://trello.com/b/amb6EPR8/smartsaver
 - [ ] Generics (in delegates, events and methods)
 - [ ] Delegates.
 - [ ] Events and their usage: standard and custom.
-- [ ] Exceptions and dealing with them in a meaningfull way.
+- [X] Exceptions and dealing with them in a meaningfull way.
 - [ ] Anonymous methods.
 - [X] Lambda expressions.
-- [ ] concurrent programming (threading or async/await (for your own written classes); common resource usage between threads).
-- [ ] Config file usage (both - app and user).
+- [X] concurrent programming (threading or async/await (for your own written classes); **_common resource usage between threads_**).
+- [X] Config file usage (both - app and user).
 - [X] Dependency Injection

@@ -5,6 +5,7 @@
     <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
     <OutputType>Exe</OutputType>
     <UserSecretsId>6df875c4-b2f5-4a5f-a4d1-e5f5545b7918</UserSecretsId>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

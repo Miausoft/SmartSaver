@@ -10,7 +10,9 @@ using Microsoft.Extensions.Hosting;
 using SmartSaver.Domain.Services.AuthenticationServices;
 using SmartSaver.Domain.Services.PasswordHash;
 using SmartSaver.Domain.Services.Regex;
+using SmartSaver.Domain.TokenValidation;
 using SmartSaver.EntityFrameworkCore;
+using SmartSaver.EntityFrameworkCore.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -43,10 +45,10 @@ namespace SmartSaver.MVC
                     options.Cookie.HttpOnly = true;
                     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                     options.Cookie.SameSite = SameSiteMode.None;
-                    options.LoginPath = "/Authentication/Login";
-                    options.Cookie.Name = "UserCookie";
-                    options.AccessDeniedPath = "/Home/Index";
-                    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+                    options.LoginPath = Configuration["Cookie:LoginPath"];
+                    options.Cookie.Name = Configuration["Cookie:Name"];
+                    options.AccessDeniedPath = Configuration["Cookie:AccessDeniedPath"];
+                    options.ExpireTimeSpan = TimeSpan.Parse(Configuration["Cookie:MinutesToExpiration"]);
                 })
                 .AddGoogle(options => 
                 {
@@ -69,6 +71,9 @@ namespace SmartSaver.MVC
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IPasswordHasherService, PasswordHasherService>();
             services.AddScoped<IPasswordRegex, PasswordRegex>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IEmailVerificationRepository, EmailVerificationRepository>();
+            services.AddScoped<ITokenValidation, TokenValidation>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
