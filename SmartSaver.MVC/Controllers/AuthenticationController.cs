@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using SmartSaver.Domain.Services.AuthenticationServices;
-using SmartSaver.EntityFrameworkCore;
+using SmartSaver.Domain.TokenValidation;
 using SmartSaver.EntityFrameworkCore.Models;
+using SmartSaver.EntityFrameworkCore.Repositories;
 using SmartSaver.MVC.Models;
 
 namespace SmartSaver.MVC.Controllers
@@ -23,15 +19,23 @@ namespace SmartSaver.MVC.Controllers
     [AllowAnonymous]
     public class AuthenticationController : Controller
     {
-        private readonly ApplicationDbContext _db;
         private readonly Domain.Services.AuthenticationServices.IAuthenticationService _auth;
         private readonly IConfiguration _configuration;
+        private readonly IUserRepository _userRepo;
+        private readonly IEmailVerificationRepository _emailRepo;
+        private readonly ITokenValidation tokenValidation;
 
-        public AuthenticationController(ApplicationDbContext db, Domain.Services.AuthenticationServices.IAuthenticationService auth, IConfiguration configuration)
+        public AuthenticationController(Domain.Services.AuthenticationServices.IAuthenticationService auth, 
+                                        IConfiguration configuration, 
+                                        IUserRepository userRepo,
+                                        IEmailVerificationRepository emailRepo,
+                                        ITokenValidation tokenValidation)
         {
-            _db = db;
             _auth = auth;
             _configuration = configuration;
+            _userRepo = userRepo;
+            _emailRepo = emailRepo;
+            this.tokenValidation = tokenValidation;
         }
 
         public IActionResult Register()
@@ -56,17 +60,11 @@ namespace SmartSaver.MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Register(AuthenticationViewModel model, EmailVerification data)
+        public IActionResult Register(AuthenticationViewModel model)
         {
             if (ModelState.IsValid && AddNewUser(model.Username, model.Email, model.Password))
             {
-                data.EmailVerified = false;
-                data.UserId = getId(model.Email);
-                data.Token = GenerateToken(data.UserId);
-                _db.EmailVerifications.Add(data);
-                _db.SaveChanges();
-
-                var confirmationLink = Url.Action("ConfirmEmail", "Authentication", new { token = data.Token }, Request.Scheme);
+                var confirmationLink = Url.Action("ConfirmEmail", "Authentication", new { token = _emailRepo.GetUserToken(_userRepo.GetId(model.Email).ToString()) }, Request.Scheme);
                 
                 //need to send condirmationLink
                 //return RedirectToAction(nameof(Login));
@@ -83,10 +81,9 @@ namespace SmartSaver.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                bool isVerified = IsVerified(user.Email);
-                if (_auth.Login(user.Email, user.Password) != null && isVerified)
+                if (_auth.Login(user.Email, user.Password) != null && _emailRepo.IsVerified(_userRepo.GetId(user.Email)))
                 {
-                    await UserAuthenticationAsync(getId(user.Email).ToString());
+                    await UserAuthenticationAsync(_userRepo.GetId(user.Email).ToString());
                     return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace("Controller", ""));
                 }
 
@@ -120,12 +117,11 @@ namespace SmartSaver.MVC.Controllers
         public async Task<IActionResult> ExternalResponse(string returnUrl)
         {
             var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
             if (result.Succeeded)
             {
                 var email = result.Principal.FindFirstValue(ClaimTypes.Email);
                 AddNewUser(email, email, null);
-                await UserAuthenticationAsync(getId(email).ToString());
+                await UserAuthenticationAsync(_userRepo.GetId(email).ToString());
                 return LocalRedirect(returnUrl ?? Url.Content("~/"));
             }
             else
@@ -145,86 +141,14 @@ namespace SmartSaver.MVC.Controllers
 
         private bool AddNewUser(string username, string email, string password)
         {
-            if (!DoesUsernameExist(username) && !DoesEmailExist(email))
+            if (!_userRepo.DoesUsernameExist(username) && !_userRepo.DoesEmailExist(email))
             {
                 _auth.Register(new User() { Username = username, Email = email, Password = password });
+                _emailRepo.Create(new EmailVerification { UserId = int.Parse(_userRepo.GetId(email)), EmailVerified = false, Token = tokenValidation.GenerateToken(_userRepo.GetId(email)) });
                 return true;
             }
 
             return false;
-        }
-
-        public bool DoesUsernameExist(string username)
-        {
-            return _db.Users.FirstOrDefault(u => u.Username.Equals(username)) != null;
-        }
-
-        public bool DoesEmailExist(string email)
-        {
-            return _db.Users.FirstOrDefault(u => u.Email.Equals(email)) != null;
-        }
-
-        public int getId(string email)
-        {
-            return _db.Users.Where(u => u.Email == email).Select(u => u.Id).FirstOrDefault();
-        }
-
-        public bool IsVerified(string email)
-        {
-            return _db.EmailVerifications.Include(a => a.User).Where(a => a.UserId.Equals(getId(email))).Select(a => a.EmailVerified).First();
-        }
-
-        public string GenerateToken(int userId)
-        {
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, userId.ToString())
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                Issuer = "SmartSaver",
-                Audience = "SmartSaver",
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["Token:MySecret"])), SecurityAlgorithms.HmacSha256Signature),
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            return tokenHandler.WriteToken(token);
-        }
-
-        public bool ValidateCurrentToken(string token)
-        {
-            try
-            {
-                new JwtSecurityTokenHandler().ValidateToken(token, new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidIssuer = "SmartSaver",
-                    ValidAudience = "SmartSaver",
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["Token:MySecret"]))
-                }, out SecurityToken validatedToken);
-            }
-            catch
-            {
-                return false;
-            }
-            return true;
-        }
-
-        public string GetClaim(string token, string claimType)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var securityToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
-            if (!securityToken.Claims.Any(claim => claim.Type == claimType))
-            {
-                return String.Empty;
-            }
-
-            return securityToken.Claims.FirstOrDefault(claim => claim.Type == claimType).Value;
         }
 
         [HttpGet]
@@ -236,27 +160,30 @@ namespace SmartSaver.MVC.Controllers
                 return RedirectToAction(nameof(Index), nameof(HomeController).Replace("Controller", ""));
             }
 
-            if (!ValidateCurrentToken(token))
+            if (!tokenValidation.ValidateToken(token))
             {
                 return RedirectToAction(nameof(Index), nameof(HomeController).Replace("Controller", ""));
             }
 
-            var claim = GetClaim(token, "nameid");
+            var claim = tokenValidation.GetClaim(token, "nameid");
             if (String.IsNullOrEmpty(claim))
             {
                 return RedirectToAction(nameof(Index), nameof(HomeController).Replace("Controller", ""));
             }
-            
-            var userToken = _db.EmailVerifications.Include(a => a.User).Where(a => a.UserId.ToString().Equals(claim)).Select(a => a.Token).FirstOrDefault();
+
+            var userToken = _emailRepo.GetUserToken(claim);
             if (token == userToken)
             {
-                _db.EmailVerifications.FirstOrDefault(a => a.UserId.ToString().Equals(claim)).EmailVerified = true;
-                _db.SaveChanges();
+                _emailRepo.Delete(claim);
                 await UserAuthenticationAsync(claim);
                 return RedirectToAction(nameof(DashboardController.Complete), nameof(DashboardController).Replace("Controller", ""));
             }
             
             return RedirectToAction(nameof(Index), nameof(HomeController).Replace("Controller", ""));
         }
+
+        public bool DoesUsernameExist(string username) => _userRepo.DoesUsernameExist(username);
+
+        public bool DoesEmailExist(string email) => _userRepo.DoesEmailExist(email);
     }
 }
