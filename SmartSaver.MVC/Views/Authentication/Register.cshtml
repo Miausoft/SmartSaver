@@ -53,6 +53,8 @@
     function UsernameCheck() {
         var length = document.getElementById("Username").value.length;
         if (length != 0) {
+            $("#Status1").html('<font color="Green">Loading...</font>');
+            $("#Username").css("border-color", "Green");
             if (length >= 5) {
                 $.post("@Url.Action("DoesUsernameExist", "Authentication")",
                     {

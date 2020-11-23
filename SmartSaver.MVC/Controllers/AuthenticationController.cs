@@ -23,7 +23,7 @@ namespace SmartSaver.MVC.Controllers
         private readonly IConfiguration _configuration;
         private readonly IUserRepository _userRepo;
         private readonly IEmailVerificationRepository _emailRepo;
-        private readonly ITokenValidation tokenValidation;
+        private readonly ITokenValidation _tokenValidation;
 
         public AuthenticationController(Domain.Services.AuthenticationServices.IAuthenticationService auth, 
                                         IConfiguration configuration, 
@@ -35,7 +35,7 @@ namespace SmartSaver.MVC.Controllers
             _configuration = configuration;
             _userRepo = userRepo;
             _emailRepo = emailRepo;
-            this.tokenValidation = tokenValidation;
+            _tokenValidation = tokenValidation;
         }
 
         public IActionResult Register()
@@ -79,20 +79,25 @@ namespace SmartSaver.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(User user, string returnUrl)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                if (_auth.Login(user.Email, user.Password) != null && _emailRepo.IsVerified(_userRepo.GetId(user.Email)))
-                {
-                    await UserAuthenticationAsync(_userRepo.GetId(user.Email).ToString());
-                    return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace("Controller", ""));
-                }
+                return View();
+            }
 
+            if (_auth.Login(user.Email, user.Password) == null)
+            {
+                ModelState.AddModelError(nameof(user.Email), "Incorrect username or password.");
+                return View();
+            }
+
+            if (!_emailRepo.IsVerified(_userRepo.GetId(user.Email)))
+            {
                 ModelState.AddModelError(nameof(user.Email), "Email is not confirmed.");
                 return View();
             }
 
-            ModelState.AddModelError(nameof(user.Email), "Incorrect username or password.");
-            return View();
+            await UserAuthenticationAsync(_userRepo.GetId(user.Email).ToString());
+            return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace("Controller", ""));
         }
 
         [HttpGet]
