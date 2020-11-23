@@ -149,7 +149,7 @@ namespace SmartSaver.MVC.Controllers
             if (!_userRepo.DoesUsernameExist(username) && !_userRepo.DoesEmailExist(email))
             {
                 _auth.Register(new User() { Username = username, Email = email, Password = password });
-                _emailRepo.Create(new EmailVerification { UserId = int.Parse(_userRepo.GetId(email)), EmailVerified = false, Token = tokenValidation.GenerateToken(_userRepo.GetId(email)) });
+                _emailRepo.Create(new EmailVerification { UserId = int.Parse(_userRepo.GetId(email)), EmailVerified = false, Token = _tokenValidation.GenerateToken(_userRepo.GetId(email)) });
                 return true;
             }
 
@@ -165,12 +165,12 @@ namespace SmartSaver.MVC.Controllers
                 return RedirectToAction(nameof(Index), nameof(HomeController).Replace("Controller", ""));
             }
 
-            if (!tokenValidation.ValidateToken(token))
+            if (!_tokenValidation.ValidateToken(token))
             {
                 return RedirectToAction(nameof(Index), nameof(HomeController).Replace("Controller", ""));
             }
 
-            var claim = tokenValidation.GetClaim(token, "nameid");
+            var claim = _tokenValidation.GetClaim(token, "nameid");
             if (String.IsNullOrEmpty(claim))
             {
                 return RedirectToAction(nameof(Index), nameof(HomeController).Replace("Controller", ""));
