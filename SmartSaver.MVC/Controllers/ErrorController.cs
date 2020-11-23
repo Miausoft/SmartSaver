@@ -1,22 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SmartSaver.MVC.Models;
 
 namespace SmartSaver.MVC.Controllers
 {
     public class ErrorController : Controller
     {
+        private readonly ILogger<ErrorController> _logger;
+
+        public ErrorController(ILogger<ErrorController> logger)
+        {
+            _logger = logger;
+        }
+
         [Route("Error/{statusCode}")]
         public IActionResult HttpStatusCodeHandler(ErrorViewModel model, int statusCode)
         {
+            var statusCodeResult = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+
             switch(statusCode)
             {
                 case 404:
+                    _logger.LogWarning($"404 Error Occured. Path = {statusCodeResult.OriginalPath}" +
+                        $"and QueryString = {statusCodeResult.OriginalQueryString}");
                     model.RequestId = "404";
                     break;
             }
@@ -27,11 +36,10 @@ namespace SmartSaver.MVC.Controllers
         [AllowAnonymous]
         public IActionResult Error(ErrorViewModel model)
         {
-            //the part where we will deal with the exception and log them to our db:
-            /*var exceptionDetails = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
-            exceptionDetails.Path;
-            exceptionDetails.Error.Message;
-            exceptionDetails.Error.StackTrace;*/
+            var exceptionDetails = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+
+           _logger.LogError($"The path {exceptionDetails.Path} threw an exception " +
+                $"{exceptionDetails.Error}");
 
             return View(nameof(Error), model);
         }
