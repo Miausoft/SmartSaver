@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using SmartSaver.Domain.Services.DocumentServices;
 using SmartSaver.EntityFrameworkCore;
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.MVC.Models;
@@ -108,6 +110,16 @@ namespace SmartSaver.MVC.Controllers
                 .Include(u => u.Account)
                 .First(u => u.Email.Equals(User.Identity.Name))
                 .Account;
+        }
+
+        [HttpGet] 
+        public ActionResult CreatePDF(TransactionViewModel transTime)
+        {
+            var trans = GetAccountAuth().Transactions;
+            PDFCreator pdfCreator = new PDFCreator();
+            byte[] abytes = pdfCreator.GeneratePDF(trans, DateTime.Parse(transTime.FromDate), DateTime.Parse(transTime.ToDate));
+
+            return File(abytes, "application/pdf"); // rederecting to created PDF
         }
     }
 }

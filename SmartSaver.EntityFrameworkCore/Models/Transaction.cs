@@ -20,7 +20,7 @@ namespace SmartSaver.EntityFrameworkCore.Models
         /// <summary>
         /// Can be used in listview binding.
         /// </summary>
-        [NotMapped]
+        /*[NotMapped]
         public string CategoryString
         {
             get
@@ -30,6 +30,6 @@ namespace SmartSaver.EntityFrameworkCore.Models
 
                 return Category.Title ?? "";
             }
-        }
+        }*/
     }
 }
