@@ -52,7 +52,7 @@ namespace SmartSaver.Domain.Services.DocumentServices
 
         private void ReportHeader()
         {
-            TextBlock fileHeader = delegate (string text, float fontSize) // Formatting based on TABLE HEADER
+            TextBlock fileHeader = delegate (string text, float fontSize) // Formatting based on FILE HEADER
             {
                 _fontStyle = FontFactory.GetFont("Tahoma", fontSize, 1);
                 _pdfPCell = new PdfPCell(new Phrase(text));
@@ -113,7 +113,7 @@ namespace SmartSaver.Domain.Services.DocumentServices
                 _pdfTable.CompleteRow();
                 serialNumber++;
             }
-            if(totalExpenseByCategory.Count == 0)
+            if(totalExpenseByCategory.Count == 0) // in case there are no transactions in that period
             {
                 tableBody("no data to display", 8f);
                 tableBody("no data to display", 8f);
