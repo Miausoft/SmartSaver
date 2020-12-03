@@ -115,7 +115,8 @@ namespace SmartSaver.MVC.Controllers
         [HttpGet] 
         public ActionResult CreatePDF(TransactionViewModel transTime)
         {
-            var trans = _context.Transactions.Where(a => a.AccountId.Equals(User.Identity.Name)).ToList();
+            int userAccountId = _context.Users.Where(a => a.Id.ToString().Equals(User.Identity.Name)).Select(a => a.AccountId).FirstOrDefault();
+            var trans = _context.Transactions.Where(a => a.AccountId.Equals(userAccountId)).ToList();
             PDFCreator pdfCreator = new PDFCreator();
             byte[] abytes = pdfCreator.GeneratePDF(trans, DateTime.Parse(transTime.FromDate), DateTime.Parse(transTime.ToDate));
 
