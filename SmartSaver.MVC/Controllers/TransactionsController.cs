@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using SmartSaver.Domain.Services.DocumentServices;
 using SmartSaver.EntityFrameworkCore;
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.MVC.Models;
@@ -108,6 +110,25 @@ namespace SmartSaver.MVC.Controllers
                 .Include(u => u.Account)
                 .First(u => u.Id.ToString().Equals(User.Identity.Name))
                 .Account;
+        }
+
+        [HttpGet] 
+        public ActionResult CreatePDF(TransactionViewModel model)
+        {
+            var fromDate = DateTime.Parse(model.FromDate);
+            var toDate = DateTime.Parse(model.ToDate);
+
+            if (fromDate > toDate)
+            {
+                ModelState.AddModelError(String.Empty, "Invalid date");
+                return RedirectToAction(nameof(Index));
+            }
+
+            int userAccountId = _context.Users.Where(a => a.Id.ToString().Equals(User.Identity.Name)).Select(a => a.AccountId).FirstOrDefault();
+            var transactions = _context.Transactions.Where(a => a.AccountId.Equals(userAccountId)).ToList();
+            byte[] bytes = new PDFCreator().GeneratePDF(transactions, fromDate, toDate);
+
+            return File(bytes, "application/pdf");
         }
     }
 }
