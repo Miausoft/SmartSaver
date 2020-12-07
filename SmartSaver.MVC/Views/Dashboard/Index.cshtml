@@ -1,31 +1,93 @@
-﻿@model SmartSaver.EntityFrameworkCore.Models.Account
+@using SmartSaver.EntityFrameworkCore.Models
+@using SmartSaver.MVC.Models
+@model DashboardViewModel
 @{
-    ViewData["Title"] = "Dashboard";
-
-    var goal = Model.Goal.ToString("C2").Replace(",", ".");
-    var revenue = Model.Revenue.ToString("C2").Replace(",", ".");
-    var goalEndDate = Model.GoalEndDate.ToShortDateString();
+    decimal procSaved = Math.Round(Model.SavedCurrentMonth * 100 / Model.ToSaveCurrentMonth, 1);
+    
+    var categories = Model.SpendingTransactions.GroupBy(t => t.Category.Title)
+        .Select(g => new CategorySpending()
+        {
+            Amount = g.Select(p => p.Amount).Sum(),
+            Title = g.First().Category.Title
+        }).ToList();
 }
 
-<head>
-    <link rel="stylesheet" type="text/css" href="~/css/generalDesign.css" />
-    <title>@ViewBag.Title</title>
-</head>
-<p style="text-align: center"> @SmartSaver.Domain.Services.TipManager.Tips.DayBasedTip() </p>
-<p style="text-align: center; font-size: 10px"> tip of the day </p>
-<h1>Dashboard</h1>
-<form method="get">
-    <div>Jusu goal: @goal</div>
-    <div>Jusu revenue: @revenue</div>
-    <div>Jusu end date: @goalEndDate</div>
-    <button type="submit" class="btn" data-toggle="modal" data-target="#moreinfo" asp-controller="Dashboard" asp-action="Delete">Istrinti duomenis</button>
-    <div id="moreinfo" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body" style="margin: 0 auto">
-                    LOADING...
+<h2 class="mt-5">Dashboard</h2>
+<p>
+    A place where we visualize your spendings!
+</p>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                Monthly goal progress
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Monthly goal is to save @Math.Round(Model.ToSaveCurrentMonth, 2).ToString("C")</h5>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: @procSaved%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
             </div>
         </div>
     </div>
-</form>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                Spendings chart
+            </div>
+            <div class="card-body">
+                <canvas id="mychart" height="80"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                Spending categories (This month)
+            </div>
+            <div class="card-body">
+                <canvas id="categoryChart" style="width:200px;height:180px"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+    let chart = document.getElementById("mychart")
+    let categoryChart = document.getElementById("categoryChart")
+    console.log(chart);
+    
+    let myChart = new Chart(chart, {
+        type: 'line',
+        data: {
+            labels: @Html.Raw(Json.Serialize(Model.FirstChartData.Select(t => t.ActionTime.ToShortDateString()))),
+            datasets: [{
+                label: 'Balance',
+                backgroundColor: '#C3E6CB',
+                borderColor: '#2CA746',
+                data: @Html.Raw(Json.Serialize(Model.FirstChartData.Select(t => t.Amount)))
+            }],
+        },
+    });
+    
+    let doughnutChart = new Chart(categoryChart, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                backgroundColor: ['rgb(82,244,13)', 'rgb(255,59,81)', 'rgb(155,155,222)', 'rgb(91,38,67)'],
+                data: @Html.Raw(Json.Serialize(categories.Select(t => t.Amount)))
+            }],
+        
+            labels: @Html.Raw(Json.Serialize(categories.Select(t => t.Title)))
+        }
+    })
+</script>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,6 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartSaver.EntityFrameworkCore;
 using SmartSaver.EntityFrameworkCore.Models;
+using SmartSaver.MVC.Models;
+using SmartSaver.Domain.Services.TransactionsCounterService;
+using SmartSaver.Domain.Services.SavingMethodSuggestion;
 
 namespace SmartSaver.MVC.Controllers
 {
@@ -19,7 +23,7 @@ namespace SmartSaver.MVC.Controllers
         {
             _context = context;
         }
-
+        
         public IActionResult Index()
         {
             var account = GetAccountAuth();
@@ -28,7 +32,23 @@ namespace SmartSaver.MVC.Controllers
                 return View(nameof(Complete));
             }
 
-            return View(account);
+            Account acc = GetAccountAuth();
+
+            DashboardViewModel dvm = new DashboardViewModel()
+            {
+                SavedCurrentMonth = TransactionsCounter
+                    .AmountSavedCurrentMonth(_context.Transactions
+                    .Where(t => t.AccountId == acc.Id)),
+                
+                ToSaveCurrentMonth = MoneyCounter
+                    .AmountToSaveAMonth(acc.Goal, acc.GoalStartDate, acc.GoalEndDate),
+                
+                FirstChartData = GetBalanceHistory(),
+                
+                SpendingTransactions = GetSpendingsGroupedByCategory()
+            };
+
+            return View(dvm);
         }
 
         public IActionResult Complete()
@@ -39,7 +59,7 @@ namespace SmartSaver.MVC.Controllers
                 return View(nameof(Complete));
             }
 
-            return View(nameof(Index), account);
+            return RedirectToAction(nameof(Index), account);
         }
 
         [HttpPost]
@@ -59,7 +79,7 @@ namespace SmartSaver.MVC.Controllers
 
                     _context.SaveChanges();
 
-                    return View(nameof(Index), account);
+                    return View(nameof(Index));
                 }
                 ModelState.AddModelError(nameof(account.GoalEndDate), "Invalid date");
             }
@@ -86,8 +106,57 @@ namespace SmartSaver.MVC.Controllers
         {
             return _context.Users
                 .Include(u => u.Account)
-                .First(u => u.Email.Equals(User.Identity.Name))
+                .First(u => u.Id.ToString().Equals(User.Identity.Name))
                 .Account;
+        }
+
+        private bool AccountValid()
+        {
+            return GetAccountAuth().Goal > 0;
+        }
+
+        private DateTime CurrentMonthFirstDayDate()
+        {
+            var date = new DateTime();
+            var thisMonth = date.Month;
+            var thisYear = date.Year;
+
+            return new DateTime(thisYear, thisMonth, 1);
+        }
+        
+        private List<Balance> GetBalanceHistory()
+        {
+            var chartData = new List<Balance>();
+            
+            var transactions = _context.Transactions.Include(nameof(Category))
+                .Where(t => t.ActionTime > CurrentMonthFirstDayDate() && t.AccountId == GetAccountAuth().Id);
+            
+            decimal balance = 0;
+            foreach (var t in transactions)
+            {
+                balance += t.Amount;
+                chartData.Add(new Balance()
+                {
+                    Amount = balance,
+                    ActionTime = t.ActionTime
+                });
+            }
+
+            return chartData;
+        }
+
+        private List<Transaction> GetSpendingsGroupedByCategory()
+        {
+
+            var id = GetAccountAuth().Id;
+            var date = CurrentMonthFirstDayDate();
+
+            var transactions = _context.Transactions
+                .Include(nameof(Category))
+                .Where(t => t.ActionTime > date &&
+                            t.AccountId == id
+                            && t.Category.TypeOfIncome == false).ToList();
+            return transactions;
         }
     }
 }
