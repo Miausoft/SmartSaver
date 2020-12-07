@@ -113,14 +113,22 @@ namespace SmartSaver.MVC.Controllers
         }
 
         [HttpGet] 
-        public ActionResult CreatePDF(TransactionViewModel transTime)
+        public ActionResult CreatePDF(TransactionViewModel model)
         {
-            int userAccountId = _context.Users.Where(a => a.Id.ToString().Equals(User.Identity.Name)).Select(a => a.AccountId).FirstOrDefault();
-            var trans = _context.Transactions.Where(a => a.AccountId.Equals(userAccountId)).ToList();
-            PDFCreator pdfCreator = new PDFCreator();
-            byte[] abytes = pdfCreator.GeneratePDF(trans, DateTime.Parse(transTime.FromDate), DateTime.Parse(transTime.ToDate));
+            var fromDate = DateTime.Parse(model.FromDate);
+            var toDate = DateTime.Parse(model.ToDate);
 
-            return File(abytes, "application/pdf"); // rederecting to created PDF
+            if (fromDate > toDate)
+            {
+                ModelState.AddModelError(String.Empty, "Invalid date");
+                return RedirectToAction(nameof(Index));
+            }
+
+            int userAccountId = _context.Users.Where(a => a.Id.ToString().Equals(User.Identity.Name)).Select(a => a.AccountId).FirstOrDefault();
+            var transactions = _context.Transactions.Where(a => a.AccountId.Equals(userAccountId)).ToList();
+            byte[] bytes = new PDFCreator().GeneratePDF(transactions, fromDate, toDate);
+
+            return File(bytes, "application/pdf");
         }
     }
 }
