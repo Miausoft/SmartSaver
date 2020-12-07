@@ -14,7 +14,7 @@ namespace SmartSaver.Domain.Services.DocumentServices
 
         public const int _totalColumn = 3;
         PdfPCell _pdfPCell;
-        readonly PdfPTable _pdfTable = new PdfPTable(_totalColumn)
+        readonly PdfPTable _pdfPTable = new PdfPTable(_totalColumn)
         {
             WidthPercentage = 100,
             HorizontalAlignment = Element.ALIGN_CENTER,
@@ -31,8 +31,8 @@ namespace SmartSaver.Domain.Services.DocumentServices
             ReportHeader(FileHeader(), from, to);
             ReportBody(TransactionsCounter.TotalExpenseByCategory(transaction, from, to));
 
-            _pdfTable.SetWidths(new float[] { 20, 150, 100 });
-            _document.Add(_pdfTable);
+            _pdfPTable.SetWidths(new float[] { 20, 150, 100 });
+            _document.Add(_pdfPTable);
 
             _document.Close();
 
@@ -44,7 +44,7 @@ namespace SmartSaver.Domain.Services.DocumentServices
             fileHeader("Statement", "Tahoma", 20f, 1);
             fileHeader("spendings sorted by category", "Tahoma", 9f, 1);
             fileHeader($"from: {from.ToShortDateString()} to: {to.ToShortDateString()}", "Tahoma", 10f, 1);
-            _pdfTable.CompleteRow();
+            _pdfPTable.CompleteRow();
         }
 
         private void ReportBody(IDictionary<int, decimal> totalExpenseByCategory)
@@ -58,7 +58,7 @@ namespace SmartSaver.Domain.Services.DocumentServices
             tableHead("ID", "Tahoma", 8f, 1);
             tableHead("Category", "Tahoma", 8f, 1);
             tableHead("Amount", "Tahoma", 8f, 1);
-            _pdfTable.CompleteRow();
+            _pdfPTable.CompleteRow();
         }
 
         private void FillTableBody(TextBlock tableBody, IDictionary<int, decimal> totalExpenseByCategory)
@@ -69,7 +69,7 @@ namespace SmartSaver.Domain.Services.DocumentServices
                 tableBody(serialNumber.ToString(), "Tahoma", 8f, 0);
                 tableBody(expense.Key.ToString(), "Tahoma", 8f, 0);
                 tableBody(expense.Value.ToString(), "Tahoma", 8f, 0);
-                _pdfTable.CompleteRow();
+                _pdfPTable.CompleteRow();
                 serialNumber++;
             }
         }
@@ -86,8 +86,8 @@ namespace SmartSaver.Domain.Services.DocumentServices
                     BackgroundColor = BaseColor.WHITE,
                     ExtraParagraphSpace = 0
                 };
-                _pdfTable.AddCell(_pdfPCell);
-                _pdfTable.CompleteRow();
+                _pdfPTable.AddCell(_pdfPCell);
+                _pdfPTable.CompleteRow();
             };
         }
 
@@ -102,7 +102,7 @@ namespace SmartSaver.Domain.Services.DocumentServices
                     BackgroundColor = BaseColor.LIGHT_GRAY,
                     ExtraParagraphSpace = 0
                 };
-                _pdfTable.AddCell(_pdfPCell);
+                _pdfPTable.AddCell(_pdfPCell);
             };
         }
 
@@ -117,7 +117,7 @@ namespace SmartSaver.Domain.Services.DocumentServices
                     BackgroundColor = BaseColor.WHITE,
                     ExtraParagraphSpace = 0
                 };
-                _pdfTable.AddCell(_pdfPCell);
+                _pdfPTable.AddCell(_pdfPCell);
             };
         }
     }
