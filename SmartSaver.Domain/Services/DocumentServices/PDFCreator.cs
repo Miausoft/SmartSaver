@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System.IO;
@@ -11,116 +10,115 @@ namespace SmartSaver.Domain.Services.DocumentServices
 {
     public class PDFCreator
     {
-        public delegate void TextBlock(string text, float fontSize);
+        public delegate void TextBlock(string text, string font, float fontSize, int style);
 
-        #region Declaration
-        int _totalColumn = 3;
-        Document _document;
-        Font _fontStyle;
-        PdfPTable _pdfTable = new PdfPTable(3);
+        public const int _totalColumn = 3;
         PdfPCell _pdfPCell;
-        MemoryStream _memoryStream = new MemoryStream();
-        IEnumerable<Transaction> transactions;
-        IDictionary<int, decimal> totalExpenseByCategory;
-        String pickedDates;
-        #endregion
+        readonly PdfPTable _pdfTable = new PdfPTable(_totalColumn)
+        {
+            WidthPercentage = 100,
+            HorizontalAlignment = Element.ALIGN_CENTER,
+            HeaderRows = 2
+        };
 
         public byte[] GeneratePDF(IEnumerable<Transaction> transaction, DateTime from, DateTime to)
         {
-            #region
-            _document = new Document(PageSize.A4, 0f, 0f, 0f, 0f);
-            _document.SetPageSize(PageSize.A4);
-            _document.SetMargins(20f, 20f, 20f, 20f);
-            _pdfTable.WidthPercentage = 100;
-            _pdfTable.HorizontalAlignment = Element.ALIGN_CENTER;
-            _fontStyle = FontFactory.GetFont("Tahoma", 8f, 1);
+            Document _document = new Document(PageSize.A4, 20, 20, 20, 20);
+            MemoryStream _memoryStream = new MemoryStream();
             PdfWriter.GetInstance(_document, _memoryStream);
             _document.Open();
-            _pdfTable.SetWidths(new float[] { 20f, 150f, 100f });
-            transactions = transaction;
-            pickedDates = "from: " + from.Date.ToString() + "  to: " + to.Date.ToString();
-            totalExpenseByCategory = TransactionsCounter.TotalExpenseByCategory(transaction, from, to);
-            #endregion
 
-            this.ReportHeader();
-            this.ReportBody();
-            _pdfTable.HeaderRows = 2;
+            ReportHeader(FileHeader(), from, to);
+            ReportBody(TransactionsCounter.TotalExpenseByCategory(transaction, from, to));
+
+            _pdfTable.SetWidths(new float[] { 20, 150, 100 });
             _document.Add(_pdfTable);
+
             _document.Close();
+
             return _memoryStream.ToArray();
         }
 
-        private void ReportHeader()
+        private void ReportHeader(TextBlock fileHeader, DateTime from, DateTime to)
         {
-            TextBlock fileHeader = delegate (string text, float fontSize) // Formatting based on FILE HEADER
-            {
-                _fontStyle = FontFactory.GetFont("Tahoma", fontSize, 1);
-                _pdfPCell = new PdfPCell(new Phrase(text));
-                _pdfPCell.Colspan = _totalColumn;
-                _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                _pdfPCell.Border = 0;
-                _pdfPCell.BackgroundColor = BaseColor.WHITE;
-                _pdfPCell.ExtraParagraphSpace = 0;
-                _pdfTable.AddCell(_pdfPCell);
-                _pdfTable.CompleteRow();
-            };
-
-            fileHeader("Statement", 20f);
-            fileHeader("spendings sorted by category", 9f);
-            fileHeader(pickedDates, 10f);
+            fileHeader("Statement", "Tahoma", 20f, 1);
+            fileHeader("spendings sorted by category", "Tahoma", 9f, 1);
+            fileHeader($"from: {from.ToShortDateString()} to: {to.ToShortDateString()}", "Tahoma", 10f, 1);
             _pdfTable.CompleteRow();
         }
 
-        private void ReportBody()
+        private void ReportBody(IDictionary<int, decimal> totalExpenseByCategory)
         {
-            #region Block creation methods
-            TextBlock tableHead = delegate(string text, float fontSize) // Formatting based on TABLE HEADER
-            {
-                _fontStyle = FontFactory.GetFont("Tahoma", fontSize, 1);
-                _pdfPCell = new PdfPCell(new Phrase(text));
-                _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                _pdfPCell.BackgroundColor = BaseColor.LIGHT_GRAY;
-                _pdfPCell.ExtraParagraphSpace = 0;
-                _pdfTable.AddCell(_pdfPCell);
-            };
-
-            TextBlock tableBody = delegate (string text, float fontSize) // Formatting based on TABLE BODY
-            {
-                _fontStyle = FontFactory.GetFont("Tahoma", fontSize, 0);
-                _pdfPCell = new PdfPCell(new Phrase(text, _fontStyle));
-                _pdfPCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                _pdfPCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                _pdfPCell.BackgroundColor = BaseColor.WHITE;
-                _pdfTable.AddCell(_pdfPCell);
-            };
-            #endregion
-
-            #region Table header
-            tableHead("ID", 8f);
-            tableHead("Category", 8f);
-            tableHead("Amount", 8f);
+            FillTableHeader(TableHeader());
+            FillTableBody(TableBody(), totalExpenseByCategory);
+        }
+        
+        private void FillTableHeader(TextBlock tableHead)
+        {
+            tableHead("ID", "Tahoma", 8f, 1);
+            tableHead("Category", "Tahoma", 8f, 1);
+            tableHead("Amount", "Tahoma", 8f, 1);
             _pdfTable.CompleteRow();
-            #endregion
+        }
 
-            #region Table body
+        private void FillTableBody(TextBlock tableBody, IDictionary<int, decimal> totalExpenseByCategory)
+        {
             int serialNumber = 1;
-            foreach(var expense in totalExpenseByCategory) // changed with: foreach(var item in totalIncomeByCategory)
+            foreach (var expense in totalExpenseByCategory)
             {
-                tableBody(serialNumber.ToString(), 8f);
-                tableBody(expense.Key.ToString(), 8f);
-                tableBody(expense.Value.ToString(), 8f);
+                tableBody(serialNumber.ToString(), "Tahoma", 8f, 0);
+                tableBody(expense.Key.ToString(), "Tahoma", 8f, 0);
+                tableBody(expense.Value.ToString(), "Tahoma", 8f, 0);
                 _pdfTable.CompleteRow();
                 serialNumber++;
             }
-            if(totalExpenseByCategory.Count == 0) // in case there are no transactions in that period
+        }
+
+        private TextBlock FileHeader()
+        {
+            return delegate (string text, string font, float fontSize, int style)
             {
-                tableBody("no data to display", 8f);
-                tableBody("no data to display", 8f);
-                tableBody("no data to display", 8f);
+                _pdfPCell = new PdfPCell(new Phrase(text, FontFactory.GetFont(font, fontSize, style)))
+                {
+                    Colspan = _totalColumn,
+                    HorizontalAlignment = Element.ALIGN_CENTER,
+                    Border = 0,
+                    BackgroundColor = BaseColor.WHITE,
+                    ExtraParagraphSpace = 0
+                };
+                _pdfTable.AddCell(_pdfPCell);
                 _pdfTable.CompleteRow();
-            }
-            #endregion
+            };
+        }
+
+        private TextBlock TableHeader()
+        {
+            return delegate (string text, string font, float fontSize, int style)
+            {
+                _pdfPCell = new PdfPCell(new Phrase(text, FontFactory.GetFont(font, fontSize, style)))
+                {
+                    HorizontalAlignment = Element.ALIGN_CENTER,
+                    VerticalAlignment = Element.ALIGN_MIDDLE,
+                    BackgroundColor = BaseColor.LIGHT_GRAY,
+                    ExtraParagraphSpace = 0
+                };
+                _pdfTable.AddCell(_pdfPCell);
+            };
+        }
+
+        private TextBlock TableBody()
+        {
+            return delegate (string text, string font, float fontSize, int style)
+            {
+                _pdfPCell = new PdfPCell(new Phrase(text, FontFactory.GetFont(font, fontSize, style)))
+                {
+                    HorizontalAlignment = Element.ALIGN_CENTER,
+                    VerticalAlignment = Element.ALIGN_MIDDLE,
+                    BackgroundColor = BaseColor.WHITE,
+                    ExtraParagraphSpace = 0
+                };
+                _pdfTable.AddCell(_pdfPCell);
+            };
         }
     }
 }
