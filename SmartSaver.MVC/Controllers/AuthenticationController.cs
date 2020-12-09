@@ -73,7 +73,7 @@ namespace SmartSaver.MVC.Controllers
             if (ModelState.IsValid && AddNewUser(model.Username, model.Email, model.Password))
             {
                 var confirmationLink = Url.Action("ConfirmEmail", "Authentication", new { token = _emailRepo.GetUserToken(_userRepo.GetId<string>(model.Email)) }, Request.Scheme);
-                _mailer.SendEmailAsync(new MailMessage(_configuration["Email:UserName"], _configuration["Email:UserName"], Subject, Body + confirmationLink));
+                _mailer.SendEmailAsync(new MailMessage(_configuration["Email:Address"], _configuration["Email:Address"], Subject, Body + confirmationLink));
                 return RedirectToAction(nameof(Login));
             }
 
