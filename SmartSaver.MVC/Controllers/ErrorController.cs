@@ -1,17 +1,16 @@
-﻿using System;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using SmartSaver.MVC.Models;
 
 namespace SmartSaver.MVC.Controllers
 {
     public class ErrorController : Controller
     {
-        private readonly ILogger<ErrorController> _logger;
+        private readonly ILogger _logger;
 
-        public ErrorController(ILogger<ErrorController> logger)
+        public ErrorController(ILogger logger)
         {
             _logger = logger;
         }
@@ -24,7 +23,7 @@ namespace SmartSaver.MVC.Controllers
             switch(statusCode)
             {
                 case 404:
-                    _logger.LogWarning($"404 Error Occured. Path = {statusCodeResult.OriginalPath}" +
+                    _logger.Warning($"404 Error Occured. Path = {statusCodeResult.OriginalPath}" +
                         $"and QueryString = {statusCodeResult.OriginalQueryString}");
                     model.RequestId = "404";
                     break;
@@ -36,12 +35,13 @@ namespace SmartSaver.MVC.Controllers
         [AllowAnonymous]
         public IActionResult Error(ErrorViewModel model)
         {
+            model.RequestId = "500";
             var exceptionDetails = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
 
-           _logger.LogError($"The path {exceptionDetails.Path} threw an exception " +
+           _logger.Error($"The path {exceptionDetails.Path} threw an exception " +
                 $"{exceptionDetails.Error}");
 
-            return View(nameof(Error), model);
+            return View(nameof(Error));
         }
     }
 }
