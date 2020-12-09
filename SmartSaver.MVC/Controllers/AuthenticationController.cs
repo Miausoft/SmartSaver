@@ -151,14 +151,19 @@ namespace SmartSaver.MVC.Controllers
 
         private bool AddNewUser(string username, string email, string password)
         {
-            if (!_userRepo.DoesUsernameExist(username) && !_userRepo.DoesEmailExist(email))
+            if (_userRepo.DoesUsernameExist(username) || _userRepo.DoesEmailExist(email))
             {
-                _auth.Register(new User() { Username = username, Email = email, Password = password });
-                _emailRepo.Create(new EmailVerification { UserId = _userRepo.GetId<int>(email), EmailVerified = false, Token = _tokenValidation.GenerateToken(_userRepo.GetId<string>(email)) });
-                return true;
+                return false;
             }
 
-            return false;
+            _auth.Register(new User() { Username = username, Email = email, Password = password });
+
+            if (password != null)
+            {
+                _emailRepo.Create(new EmailVerification { UserId = _userRepo.GetId<int>(email), EmailVerified = false, Token = _tokenValidation.GenerateToken(_userRepo.GetId<string>(email)) });
+            }
+
+            return true;
         }
 
         [HttpGet]

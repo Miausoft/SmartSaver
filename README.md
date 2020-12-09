@@ -6,12 +6,12 @@ Trello: https://trello.com/b/amb6EPR8/smartsaver
 
 ### Requirements
 
-- [ ] Lazy initialization.
-- [ ] Generics (in delegates, events and methods)
-- [ ] Delegates.
-- [ ] Events and their usage: standard and custom.
+- [ ] **_Lazy initialization._**
+- [X] Generics (in delegates, **_events and methods_**)
+- [X] Delegates.
+- [X] Events and their usage: **_standard_** and custom.
 - [X] Exceptions and dealing with them in a meaningfull way.
-- [ ] Anonymous methods.
+- [X] Anonymous methods.
 - [X] Lambda expressions.
 - [X] concurrent programming (threading or async/await (for your own written classes); **_common resource usage between threads_**).
 - [X] Config file usage (both - app and user).
