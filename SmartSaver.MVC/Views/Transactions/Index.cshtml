@@ -69,7 +69,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addIncomeModalLabel">Add income &#129297;</h5>
+                <h5 class="modal-title" id="addIncomeModalLabel">Add Income &#129297;</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -78,7 +78,7 @@
                 <div class="modal-body">
                     <label>Amount</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="Amount" name="Amount"> <!-- Amount -->
+                        <input type="text" class="form-control" id="Amount" name="Amount"> <!-- Date -->
                         <div class="input-group-append">
                             <span class="input-group-text">@currencySymbol</span>
                         </div>
@@ -106,6 +106,42 @@
     </div>
 </div>
 
+<!-- Modal [Generate PDF] -->
+<div class="modal fade" id="generatePdf" tabindex="-1" role="dialog" aria-labelledby="generatePdfLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="generatePdfLabel">Generate a summary of your spendings 🖨️</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form autocomplete="off" role="form" asp-controller="Transactions" asp-action="CreatePDF" method="get">
+                <div class="modal-body">
+                    <div class="col-sm-10">
+                        <small class="form-text text-muted">FROM DATE</small>
+                        <div class="date-input">
+                            <input type="date" asp-for="FromDate" required oninvalid="this.setCustomValidity('The field is required')" class="form-control">
+                        </div>
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="col-sm-10">
+                        <small class="form-text text-muted">TO DATE</small>
+                        <div class="date-input">
+                            <input type="date" asp-for="ToDate" required oninvalid="this.setCustomValidity('The field is required')" class="form-control">
+                        </div>
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-info" type="submit">GENERATE PDF</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
 <table class="table table-hover table-bordered mb-0">
     <thead class="thead-dark">
         <tr>
@@ -128,3 +164,6 @@
         </tr>
     </tbody>
 </table>
+<nav>
+    <button style="border-radius: 0" type="button" class="btn btn-sm btn-info shadow-none" data-toggle="modal" data-target="#generatePdf">Generate Resume (PDF) 🖨️</button>
+</nav>

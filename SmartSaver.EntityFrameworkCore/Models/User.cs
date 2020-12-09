@@ -12,6 +12,7 @@ namespace SmartSaver.EntityFrameworkCore.Models
         [ForeignKey("AccountId")]
         public Account Account { get; set; }
         public int AccountId { get; set; }
+
         public string Username { get; set; }
 
         [Required]
