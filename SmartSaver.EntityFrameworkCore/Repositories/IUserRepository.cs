@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SmartSaver.EntityFrameworkCore.Repositories
+﻿namespace SmartSaver.EntityFrameworkCore.Repositories
 {
     public interface IUserRepository
     {
