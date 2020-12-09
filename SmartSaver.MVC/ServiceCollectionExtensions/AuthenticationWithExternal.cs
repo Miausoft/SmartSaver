@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using System;
+using Microsoft.AspNetCore.Builder;
 
 namespace SmartSaver.MVC.ServiceCollectionExtensions
 {
@@ -10,6 +11,13 @@ namespace SmartSaver.MVC.ServiceCollectionExtensions
     {
         public static IServiceCollection AddAuthenticationWithExternal(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.ConsentCookie.IsEssential = true;
+                options.CheckConsentNeeded = context => false;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
@@ -17,12 +25,12 @@ namespace SmartSaver.MVC.ServiceCollectionExtensions
                     options.Cookie.HttpOnly = true;
                     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                     options.Cookie.SameSite = SameSiteMode.None;
-                    options.LoginPath = "/Authentication/Login";
-                    options.Cookie.Name = "UserCookie";
-                    options.AccessDeniedPath = "/Home/Index";
-                    options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+                    options.LoginPath = configuration["Cookie:LoginPath"];
+                    options.Cookie.Name = configuration["Cookie:Name"];
+                    options.AccessDeniedPath = configuration["Cookie:AccessDeniedPath"];
+                    options.ExpireTimeSpan = TimeSpan.Parse(configuration["Cookie:MinutesToExpiration"]);
                 })
-                .AddGoogle(options => 
+                .AddGoogle(options =>
                 {
                     options.ClientId = configuration["Google:ClientId"];
                     options.ClientSecret = configuration["Google:ClientSecret"];
