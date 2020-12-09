@@ -14,7 +14,7 @@ namespace SmartSaver.Domain.Services.EmailServices
             _configuration = configuration;
             _smtp = new SmtpClient(_configuration["Email:Host"], int.Parse(_configuration["Email:Port"]))
             {
-                Credentials = new NetworkCredential() { UserName = _configuration["Email:UserName"], Password = _configuration["Email:Password"] }
+                Credentials = new NetworkCredential() { UserName = _configuration["Email:Address"], Password = _configuration["Email:Password"] }
             };
             _smtp.EnableSsl = true;
         }
