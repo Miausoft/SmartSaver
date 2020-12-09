@@ -56,7 +56,7 @@
             $("#Status1").html('<font color="Green">Loading...</font>');
             $("#Username").css("border-color", "Green");
             if (length >= 5) {
-                $.post("@Url.Action("DoesUsernameExist", "Authentication")",
+                $.get("@Url.Action("DoesUsernameExist", "Authentication")",
                     {
                         username: $('#Username').val()
                     },
@@ -80,7 +80,7 @@
 
     function EmailCheck() {
         if (document.getElementById("Email").value.length != 0) {
-            $.post("@Url.Action("DoesEmailExist", "Authentication")",
+            $.get("@Url.Action("DoesEmailExist", "Authentication")",
                 {
                     email: $('#Email').val()
                 },

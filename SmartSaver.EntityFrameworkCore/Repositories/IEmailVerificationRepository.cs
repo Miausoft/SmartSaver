@@ -1,5 +1,4 @@
-﻿using System;
-using SmartSaver.EntityFrameworkCore.Models;
+﻿using SmartSaver.EntityFrameworkCore.Models;
 
 
 namespace SmartSaver.EntityFrameworkCore.Repositories

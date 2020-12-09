@@ -22,9 +22,9 @@ namespace SmartSaver.EntityFrameworkCore.Repositories
             return _db.Users.FirstOrDefault(u => u.Email.Equals(email)) != null;
         }
 
-        public string GetId(string email)
+        public T GetId<T>(string email)
         {
-            return _db.Users.Where(u => u.Email == email).Select(u => u.Id).FirstOrDefault().ToString();
+            return (T)Convert.ChangeType(_db.Users.Where(u => u.Email == email).Select(u => u.Id).FirstOrDefault(), typeof(T));
         }
     }
 }

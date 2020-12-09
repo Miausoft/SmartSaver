@@ -1,80 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Configuration;
-using System.Collections.Specialized;
-using System.Threading.Tasks;
-using MailKit.Net.Smtp;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
-using MimeKit;
-using SmartSaver.Domain.Entities;
+﻿using Microsoft.Extensions.Configuration;
+using System.Net;
+using System.Net.Mail;
 
 namespace SmartSaver.Domain.Services.EmailServices
 {
     public class Mailer : IMailer
     {
-        private readonly SmtpSettings _smtpSettings;
+        private readonly IConfiguration _configuration;
+        private readonly SmtpClient _smtp;
 
-        public Mailer(IOptions<SmtpSettings> options)
+        public Mailer(IConfiguration configuration)
         {
-            _smtpSettings = options.Value;
-        }
-
-        public async Task SendEmailAsync(string email, string subject, string body)
-        {
-            try
+            _configuration = configuration;
+            _smtp = new SmtpClient(_configuration["Email:Host"], int.Parse(_configuration["Email:Port"]))
             {
-                var message = CreateMessage(email, subject, body);
-
-                using (var client = new SmtpClient())
-                {
-                    client.ServerCertificateValidationCallback = (s, c, h, e) => true;
-                    await client.ConnectAsync(_smtpSettings.Server, _smtpSettings.Port, true);
-                    await client.AuthenticateAsync(_smtpSettings.Username, _smtpSettings.Password);
-                    await client.SendAsync(message);
-                    await client.DisconnectAsync(true);
-                }
-            }
-            catch (Exception e)
-            {
-                throw new InvalidOperationException(e.Message);
-            }
-        }
-
-        public void SendEmail(string email, string subject, string body)
-        {
-            try
-            {
-                var message = CreateMessage(email, subject, body);
-
-                using (var client = new SmtpClient())
-                {
-                    client.ServerCertificateValidationCallback = (s, c, h, e) => true;
-                    client.Connect(_smtpSettings.Server, _smtpSettings.Port, false);
-                    client.Authenticate(_smtpSettings.Username, _smtpSettings.Password);
-                    client.Send(message);
-                    client.Disconnect(true);
-                }
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
-        }
-
-        private MimeMessage CreateMessage(string email, string subject, string body)
-        {
-            var message = new MimeMessage();
-            message.From.Add(new MailboxAddress(_smtpSettings.SenderName, _smtpSettings.SenderEmail));
-            message.To.Add(new MailboxAddress("Customer", email));
-            message.Subject = subject;
-            message.Body = new TextPart("html")
-            {
-                Text = body
+                Credentials = new NetworkCredential() { UserName = _configuration["Email:Address"], Password = _configuration["Email:Password"] }
             };
+            _smtp.EnableSsl = true;
+        }
 
-            return message;
+        public virtual MailStatus SendEmailAsync(MailMessage message)
+        {
+            try
+            {
+                _smtp.SendAsync(message, "");
+            }
+            catch
+            {
+                return MailStatus.Error;
+            }
+
+            return MailStatus.Success;
         }
     }
 }
