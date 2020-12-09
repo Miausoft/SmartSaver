@@ -1,22 +1,15 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SmartSaver.Domain.Services.AuthenticationServices;
-using SmartSaver.Domain.Services.EmailServices;
-using SmartSaver.Domain.Services.PasswordHash;
-using SmartSaver.Domain.Services.Regex;
-using SmartSaver.Domain.TokenValidation;
 using SmartSaver.EntityFrameworkCore;
-using SmartSaver.EntityFrameworkCore.Repositories;
-using System;
+using SmartSaver.MVC.ServiceCollectionExtensions;
 using System.Collections.Generic;
 using System.Globalization;
+using SmartSaver.Domain;
 
 namespace SmartSaver.MVC
 {
@@ -27,40 +20,12 @@ namespace SmartSaver.MVC
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                options.ConsentCookie.IsEssential = true;
-                options.CheckConsentNeeded = context => false;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options =>
-                {
-                    options.Cookie.IsEssential = true;
-                    options.Cookie.HttpOnly = true;
-                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                    options.Cookie.SameSite = SameSiteMode.None;
-                    options.LoginPath = Configuration["Cookie:LoginPath"];
-                    options.Cookie.Name = Configuration["Cookie:Name"];
-                    options.AccessDeniedPath = Configuration["Cookie:AccessDeniedPath"];
-                    options.ExpireTimeSpan = TimeSpan.Parse(Configuration["Cookie:MinutesToExpiration"]);
-                })
-                .AddGoogle(options => 
-                {
-                    options.ClientId = Configuration["Google:ClientId"];
-                    options.ClientSecret = Configuration["Google:ClientSecret"];
-                })
-                .AddFacebook(options =>
-                {
-                    options.AppId = Configuration["Facebook:AppId"];
-                    options.AppSecret = Configuration["Facebook:AppSecret"];
-                });
+            services.AddAuthenticationWithExternal(Configuration);
 
             services.AddRazorPages().AddMvcOptions(options =>
             {
@@ -68,14 +33,10 @@ namespace SmartSaver.MVC
             });
 
             services.AddMvc();
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AzureSqlServer")));  
-            services.AddTransient<IAuthenticationService, AuthenticationService>();
-            services.AddTransient<IPasswordHasherService, PasswordHasherService>();
-            services.AddTransient<IPasswordRegex, PasswordRegex>();
-            services.AddTransient<ITokenValidation, TokenValidation>();
-            services.AddTransient<IMailer, Mailer>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IEmailVerificationRepository, EmailVerificationRepository>();
+          
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AzureSqlServer")));
+          
+            services.AddDomainLibrary();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -68,7 +68,8 @@ body {
 }
 
 .jumbotron {
-    background-image: url("../img/background.png");
+    text-align: center;
+    background: rgb(48, 165, 134);
     background-size: cover;
     margin: 0;
     border-radius: 0;

@@ -8,11 +8,15 @@
     var balance = Model.Transactions.Sum(t => t.Amount);
 }
 
-<h2 class="mt-5">Transaction history</h2>
-<p>
-    Update your income and spendings information within few minutes! <br>
-    <a href="#">Sync with Revolut Open Banking API</a>
-</p>
+@section Jumbotron {
+    <div class="jumbotron jumbotron-fluid mb-5">
+      <div class="container">
+          <h5 class="text-light" style="text-transform: uppercase; letter-spacing: 4px"><b>Balance</b></h5>
+          <span class="badge badge-pill badge-success">1000eur</span>
+      </div>
+    </div>
+}
+
 <div class="btn-group btn-block" role="group" aria-label="Basic example">
     <button style="border-radius: 0" type="button" class="btn btn-sm btn-danger shadow-none" data-toggle="modal" data-target="#addSpendingModal">Add Spending &#128556;</button>
     <button style="border-radius: 0" type="button" class="btn btn-sm btn-success shadow-none" data-toggle="modal" data-target="#addIncomeModal">Add Income &#129297;</button>

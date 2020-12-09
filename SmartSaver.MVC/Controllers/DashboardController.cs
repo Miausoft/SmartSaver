@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,6 +10,7 @@ using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.MVC.Models;
 using SmartSaver.Domain.Services.TransactionsCounterService;
 using SmartSaver.Domain.Services.SavingMethodSuggestion;
+using SmartSaver.Domain.Managers;
 
 namespace SmartSaver.MVC.Controllers
 {
@@ -18,12 +18,15 @@ namespace SmartSaver.MVC.Controllers
     public class DashboardController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly TransactionManager _manager;
 
-        public DashboardController(ApplicationDbContext context)
+        public DashboardController(ApplicationDbContext context, TransactionManager manager)
         {
             _context = context;
+            _manager = manager;
         }
         
+        [HttpGet]
         public IActionResult Index()
         {
             var account = GetAccountAuth();
@@ -32,25 +35,26 @@ namespace SmartSaver.MVC.Controllers
                 return View(nameof(Complete));
             }
 
-            Account acc = GetAccountAuth();
-
             DashboardViewModel dvm = new DashboardViewModel()
             {
                 SavedCurrentMonth = TransactionsCounter
                     .AmountSavedCurrentMonth(_context.Transactions
-                    .Where(t => t.AccountId == acc.Id)),
+                    .Where(t => t.AccountId == account.Id)),
                 
                 ToSaveCurrentMonth = MoneyCounter
-                    .AmountToSaveAMonth(acc.Goal, acc.GoalStartDate, acc.GoalEndDate),
+                    .AmountToSaveAMonth(account.Goal, account.GoalStartDate, account.GoalEndDate),
                 
-                FirstChartData = GetBalanceHistory(),
+                FirstChartData = _manager.GetBalanceHistory(account.Id),
                 
-                SpendingTransactions = GetSpendingsGroupedByCategory()
+                SpendingTransactions = _manager.GetAccountSpendings(account.Id),
+                
+                Transactions = _context.Accounts.Include(nameof(Transaction) + "s").First(a => a.Id == account.Id).Transactions.ToList()
             };
 
             return View(dvm);
         }
 
+        [HttpGet]
         public IActionResult Complete()
         {
             var account = GetAccountAuth();
@@ -79,7 +83,7 @@ namespace SmartSaver.MVC.Controllers
 
                     _context.SaveChanges();
 
-                    return View(nameof(Index));
+                    return RedirectToAction(nameof(Index), account);
                 }
                 ModelState.AddModelError(nameof(account.GoalEndDate), "Invalid date");
             }
@@ -108,55 +112,6 @@ namespace SmartSaver.MVC.Controllers
                 .Include(u => u.Account)
                 .First(u => u.Id.ToString().Equals(User.Identity.Name))
                 .Account;
-        }
-
-        private bool AccountValid()
-        {
-            return GetAccountAuth().Goal > 0;
-        }
-
-        private DateTime CurrentMonthFirstDayDate()
-        {
-            var date = new DateTime();
-            var thisMonth = date.Month;
-            var thisYear = date.Year;
-
-            return new DateTime(thisYear, thisMonth, 1);
-        }
-        
-        private List<Balance> GetBalanceHistory()
-        {
-            var chartData = new List<Balance>();
-            
-            var transactions = _context.Transactions.Include(nameof(Category))
-                .Where(t => t.ActionTime > CurrentMonthFirstDayDate() && t.AccountId == GetAccountAuth().Id);
-            
-            decimal balance = 0;
-            foreach (var t in transactions)
-            {
-                balance += t.Amount;
-                chartData.Add(new Balance()
-                {
-                    Amount = balance,
-                    ActionTime = t.ActionTime
-                });
-            }
-
-            return chartData;
-        }
-
-        private List<Transaction> GetSpendingsGroupedByCategory()
-        {
-
-            var id = GetAccountAuth().Id;
-            var date = CurrentMonthFirstDayDate();
-
-            var transactions = _context.Transactions
-                .Include(nameof(Category))
-                .Where(t => t.ActionTime > date &&
-                            t.AccountId == id
-                            && t.Category.TypeOfIncome == false).ToList();
-            return transactions;
         }
     }
 }
