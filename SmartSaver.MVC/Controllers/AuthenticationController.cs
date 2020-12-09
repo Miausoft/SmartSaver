@@ -28,14 +28,14 @@ namespace SmartSaver.MVC.Controllers
         private readonly IConfiguration _configuration;
         private readonly IUserRepository _userRepo;
         private readonly IEmailVerificationRepository _emailRepo;
-        private readonly ITokenValidation _tokenValidation;
+        private readonly ITokenValidationService _tokenValidation;
         private readonly IMailer _mailer;
 
         public AuthenticationController(Domain.Services.AuthenticationServices.IAuthenticationService auth, 
                                         IConfiguration configuration, 
                                         IUserRepository userRepo,
                                         IEmailVerificationRepository emailRepo,
-                                        ITokenValidation tokenValidation,
+                                        ITokenValidationService tokenValidation,
                                         IMailer mailer)
         {
             _auth = auth;

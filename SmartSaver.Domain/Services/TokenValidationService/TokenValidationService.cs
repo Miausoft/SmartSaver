@@ -8,10 +8,10 @@ using System.Text;
 
 namespace SmartSaver.Domain.TokenValidation
 {
-    public class TokenValidation : ITokenValidation
+    public class TokenValidationService : ITokenValidationService
     {
         private readonly IConfiguration _configuration;
-        public TokenValidation(IConfiguration configuration)
+        public TokenValidationService(IConfiguration configuration)
         {
             _configuration = configuration;
         }

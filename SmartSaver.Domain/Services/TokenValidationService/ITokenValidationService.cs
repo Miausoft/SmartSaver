@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SmartSaver.Domain.TokenValidation
 {
-    public interface ITokenValidation
+    public interface ITokenValidationService
     {
         public string GenerateToken(string userId);
         public bool ValidateToken(string token);
