@@ -35,22 +35,20 @@ namespace SmartSaver.MVC.Controllers
                 return View(nameof(Complete));
             }
 
-            Account acc = GetAccountAuth();
-
             DashboardViewModel dvm = new DashboardViewModel()
             {
                 SavedCurrentMonth = TransactionsCounter
                     .AmountSavedCurrentMonth(_context.Transactions
-                    .Where(t => t.AccountId == acc.Id)),
+                    .Where(t => t.AccountId == account.Id)),
                 
                 ToSaveCurrentMonth = MoneyCounter
-                    .AmountToSaveAMonth(acc.Goal, acc.GoalStartDate, acc.GoalEndDate),
+                    .AmountToSaveAMonth(account.Goal, account.GoalStartDate, account.GoalEndDate),
                 
-                FirstChartData = _manager.GetBalanceHistory(acc.Id),
+                FirstChartData = _manager.GetBalanceHistory(account.Id),
                 
-                SpendingTransactions = _manager.GetAccountSpendings(acc.Id),
+                SpendingTransactions = _manager.GetAccountSpendings(account.Id),
                 
-                Transactions = _context.Accounts.Include(nameof(Transaction) + "s").First(a => a.Id == acc.Id).Transactions.ToList()
+                Transactions = _context.Accounts.Include(nameof(Transaction) + "s").First(a => a.Id == account.Id).Transactions.ToList()
             };
 
             return View(dvm);
