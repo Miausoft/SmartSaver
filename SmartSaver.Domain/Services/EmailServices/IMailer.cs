@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net.Mail;
 
 namespace SmartSaver.Domain.Services.EmailServices
 {
+    public enum MailStatus
+    {
+        Success,
+        Error
+    }
+
     public interface IMailer
     {
-        Task SendEmailAsync(string email, string subject, string body);
-        void SendEmail(string email, string subject, string body);
+        MailStatus SendEmailAsync(MailMessage message);
     }
 }

@@ -6,6 +6,6 @@ namespace SmartSaver.EntityFrameworkCore.Repositories
     {
         public bool DoesUsernameExist(string username);
         public bool DoesEmailExist(string email);
-        public string GetId(string email);
+        public T GetId<T>(string email);
     }
 }

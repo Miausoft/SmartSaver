@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using SmartSaver.Domain.Services.AuthenticationServices;
+using SmartSaver.Domain.Services.EmailServices;
 using SmartSaver.Domain.TokenValidation;
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.EntityFrameworkCore.Repositories;
@@ -19,23 +21,29 @@ namespace SmartSaver.MVC.Controllers
     [AllowAnonymous]
     public class AuthenticationController : Controller
     {
+        private const string Subject = "Sveikiname prisijungus prie SmartSaver!";
+        private const string Body = "Norėdami patvirtinti savo paštą, prašome paspausti šią nuorodą: ";
+
         private readonly Domain.Services.AuthenticationServices.IAuthenticationService _auth;
         private readonly IConfiguration _configuration;
         private readonly IUserRepository _userRepo;
         private readonly IEmailVerificationRepository _emailRepo;
         private readonly ITokenValidation _tokenValidation;
+        private readonly IMailer _mailer;
 
         public AuthenticationController(Domain.Services.AuthenticationServices.IAuthenticationService auth, 
                                         IConfiguration configuration, 
                                         IUserRepository userRepo,
                                         IEmailVerificationRepository emailRepo,
-                                        ITokenValidation tokenValidation)
+                                        ITokenValidation tokenValidation,
+                                        IMailer mailer)
         {
             _auth = auth;
             _configuration = configuration;
             _userRepo = userRepo;
             _emailRepo = emailRepo;
             _tokenValidation = tokenValidation;
+            _mailer = mailer;
         }
 
         public IActionResult Register()
@@ -64,12 +72,9 @@ namespace SmartSaver.MVC.Controllers
         {
             if (ModelState.IsValid && AddNewUser(model.Username, model.Email, model.Password))
             {
-                var confirmationLink = Url.Action("ConfirmEmail", "Authentication", new { token = _emailRepo.GetUserToken(_userRepo.GetId(model.Email).ToString()) }, Request.Scheme);
-                
-                //need to send condirmationLink
-                //return RedirectToAction(nameof(Login));
-                
-                return Json(confirmationLink);
+                var confirmationLink = Url.Action("ConfirmEmail", "Authentication", new { token = _emailRepo.GetUserToken(_userRepo.GetId<string>(model.Email)) }, Request.Scheme);
+                _mailer.SendEmailAsync(new MailMessage(_configuration["Email:UserName"], _configuration["Email:UserName"], Subject, Body + confirmationLink));
+                return RedirectToAction(nameof(Login));
             }
 
             return View();
@@ -90,13 +95,13 @@ namespace SmartSaver.MVC.Controllers
                 return View();
             }
 
-            if (!_emailRepo.IsVerified(_userRepo.GetId(user.Email)))
+            if (!_emailRepo.IsVerified(_userRepo.GetId<int>(user.Email)))
             {
                 ModelState.AddModelError(nameof(user.Email), "Email is not confirmed.");
                 return View();
             }
 
-            await UserAuthenticationAsync(_userRepo.GetId(user.Email).ToString());
+            await UserAuthenticationAsync(_userRepo.GetId<string>(user.Email));
             return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace("Controller", ""));
         }
 
@@ -126,7 +131,7 @@ namespace SmartSaver.MVC.Controllers
             {
                 var email = result.Principal.FindFirstValue(ClaimTypes.Email);
                 AddNewUser(email, email, null);
-                await UserAuthenticationAsync(_userRepo.GetId(email).ToString());
+                await UserAuthenticationAsync(_userRepo.GetId<string>(email).ToString());
                 return LocalRedirect(returnUrl ?? Url.Content("~/"));
             }
             else
@@ -149,7 +154,7 @@ namespace SmartSaver.MVC.Controllers
             if (!_userRepo.DoesUsernameExist(username) && !_userRepo.DoesEmailExist(email))
             {
                 _auth.Register(new User() { Username = username, Email = email, Password = password });
-                _emailRepo.Create(new EmailVerification { UserId = int.Parse(_userRepo.GetId(email)), EmailVerified = false, Token = _tokenValidation.GenerateToken(_userRepo.GetId(email)) });
+                _emailRepo.Create(new EmailVerification { UserId = _userRepo.GetId<int>(email), EmailVerified = false, Token = _tokenValidation.GenerateToken(_userRepo.GetId<string>(email)) });
                 return true;
             }
 

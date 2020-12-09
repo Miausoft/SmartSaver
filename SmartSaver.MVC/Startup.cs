@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SmartSaver.Domain.Services.AuthenticationServices;
+using SmartSaver.Domain.Services.EmailServices;
 using SmartSaver.Domain.Services.PasswordHash;
 using SmartSaver.Domain.Services.Regex;
 using SmartSaver.Domain.TokenValidation;
@@ -67,13 +68,14 @@ namespace SmartSaver.MVC
             });
 
             services.AddMvc();
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AzureSqlServer")));
-            services.AddScoped<IAuthenticationService, AuthenticationService>();
-            services.AddScoped<IPasswordHasherService, PasswordHasherService>();
-            services.AddScoped<IPasswordRegex, PasswordRegex>();
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AzureSqlServer")));  
+            services.AddTransient<IAuthenticationService, AuthenticationService>();
+            services.AddTransient<IPasswordHasherService, PasswordHasherService>();
+            services.AddTransient<IPasswordRegex, PasswordRegex>();
+            services.AddTransient<ITokenValidation, TokenValidation>();
+            services.AddTransient<IMailer, Mailer>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IEmailVerificationRepository, EmailVerificationRepository>();
-            services.AddScoped<ITokenValidation, TokenValidation>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
