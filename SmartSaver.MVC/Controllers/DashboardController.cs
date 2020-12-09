@@ -85,7 +85,7 @@ namespace SmartSaver.MVC.Controllers
 
                     _context.SaveChanges();
 
-                    return View(nameof(Index));
+                    return RedirectToAction(nameof(Index), account);
                 }
                 ModelState.AddModelError(nameof(account.GoalEndDate), "Invalid date");
             }
