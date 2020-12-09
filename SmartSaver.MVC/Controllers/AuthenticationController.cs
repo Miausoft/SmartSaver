@@ -95,7 +95,7 @@ namespace SmartSaver.MVC.Controllers
                 return View();
             }
 
-            if (!_emailRepo.IsVerified(_userRepo.GetId<int>(user.Email)))
+            if (!_emailRepo.IsVerified(_userRepo.GetId<string>(user.Email)))
             {
                 ModelState.AddModelError(nameof(user.Email), "Email is not confirmed.");
                 return View();
