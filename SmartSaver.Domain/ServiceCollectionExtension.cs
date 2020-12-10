@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using SmartSaver.Domain.Managers;
 using SmartSaver.Domain.Services.AuthenticationServices;
 using SmartSaver.Domain.Services.EmailServices;
 using SmartSaver.Domain.Services.PasswordHash;
@@ -17,10 +16,11 @@ namespace SmartSaver.Domain
             services.AddScoped<IPasswordHasherService, PasswordHasherService>();
             services.AddScoped<IPasswordRegex, PasswordRegex>();
             services.AddScoped<IMailer, Mailer>();
-            services.AddScoped<TransactionManager>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IEmailVerificationRepository, EmailVerificationRepository>();
             services.AddScoped<ITokenValidationService, TokenValidationService>();
+            services.AddScoped<IAccountRepo, AccountRepo>();
+            services.AddScoped<ITransactionRepo, TransactionRepo>();
 
             return services;
         }

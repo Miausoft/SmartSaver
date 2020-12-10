@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +8,7 @@ using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.MVC.Models;
 using SmartSaver.Domain.Services.TransactionsCounterService;
 using SmartSaver.Domain.Services.SavingMethodSuggestion;
-using SmartSaver.Domain.Managers;
+using SmartSaver.EntityFrameworkCore.Repositories;
 
 namespace SmartSaver.MVC.Controllers
 {
@@ -18,19 +16,21 @@ namespace SmartSaver.MVC.Controllers
     public class DashboardController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly TransactionManager _manager;
+        private readonly ITransactionRepo _transactionRepo;
+        private readonly IAccountRepo _accountRepo;
 
-        public DashboardController(ApplicationDbContext context, TransactionManager manager)
+        public DashboardController(ApplicationDbContext context, ITransactionRepo transactionRepo, IAccountRepo accountRepo)
         {
             _context = context;
-            _manager = manager;
+            _transactionRepo = transactionRepo;
+            _accountRepo = accountRepo;
         }
         
         [HttpGet]
         public IActionResult Index()
         {
-            var account = GetAccountAuth();
-            if (!account.AccountValid())
+            var account = _accountRepo.GetAccountByUsername(User.Identity.Name);
+            if (!_accountRepo.IsAccountValid(account))
             {
                 return View(nameof(Complete));
             }
@@ -44,9 +44,9 @@ namespace SmartSaver.MVC.Controllers
                 ToSaveCurrentMonth = MoneyCounter
                     .AmountToSaveAMonth(account.Goal, account.GoalStartDate, account.GoalEndDate),
                 
-                FirstChartData = _manager.GetBalanceHistory(account.Id),
+                FirstChartData = _transactionRepo.GetBalanceHistory(account.Id),
                 
-                SpendingTransactions = _manager.GetAccountSpendings(account.Id),
+                SpendingTransactions = _transactionRepo.GetAccountSpendings(account.Id),
                 
                 Transactions = _context.Accounts.Include(nameof(Transaction) + "s").First(a => a.Id == account.Id).Transactions.ToList()
             };
@@ -57,8 +57,8 @@ namespace SmartSaver.MVC.Controllers
         [HttpGet]
         public IActionResult Complete()
         {
-            var account = GetAccountAuth();
-            if (!account.AccountValid())
+            var account = _accountRepo.GetAccountByUsername(User.Identity.Name);
+            if (!_accountRepo.IsAccountValid(account))
             {
                 return View(nameof(Complete));
             }
@@ -74,7 +74,7 @@ namespace SmartSaver.MVC.Controllers
             {
                 if (account.DateValid())
                 {
-                    Account current = GetAccountAuth();
+                    Account current = _accountRepo.GetAccountByUsername(User.Identity.Name);
 
                     current.Goal = account.Goal;
                     current.Revenue = account.Revenue;
@@ -89,29 +89,6 @@ namespace SmartSaver.MVC.Controllers
             }
 
             return View();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Delete()
-        {
-            await Task.Run(() =>
-            {
-                Thread.Sleep(1000);
-                Account acc = GetAccountAuth();
-                acc.GoalStartDate = DateTime.MinValue;
-                acc.GoalEndDate = DateTime.MinValue;
-                acc.Goal = 0;
-                _context.SaveChanges();
-            });
-            return RedirectToAction(nameof(HomeController.Index), nameof(HomeController).Replace("Controller", ""));
-        }
-
-        private Account GetAccountAuth()
-        {
-            return _context.Users
-                .Include(u => u.Account)
-                .First(u => u.Id.ToString().Equals(User.Identity.Name))
-                .Account;
         }
     }
 }

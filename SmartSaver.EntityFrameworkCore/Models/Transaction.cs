@@ -16,20 +16,5 @@ namespace SmartSaver.EntityFrameworkCore.Models
 
         public int CategoryId { get; set; }
         public Category Category { get; set; }
-
-        /// <summary>
-        /// Can be used in listview binding.
-        /// </summary>
-        [NotMapped]
-        public string CategoryString
-        {
-            get
-            {
-                if (Amount > 0) 
-                    return "-";
-
-                return Category.Title ?? "";
-            }
-        }
     }
 }

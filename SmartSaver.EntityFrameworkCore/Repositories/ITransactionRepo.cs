@@ -1,13 +1,9 @@
-using System;
-using SmartSaver.EntityFrameworkCore;
-using SmartSaver.EntityFrameworkCore.Models;
-using System.Linq;
+﻿using SmartSaver.EntityFrameworkCore.Models;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
 
-namespace SmartSaver.Domain.Managers 
+namespace SmartSaver.EntityFrameworkCore.Repositories
 {
-    public interface ITransactionManager 
+    public interface ITransactionRepo
     {
         /// <summary>
         /// Method that returns all account transactions from spending category.
@@ -22,6 +18,5 @@ namespace SmartSaver.Domain.Managers
         /// <param name="accId"></param>
         /// <returns>List of balance changes</returns>
         List<Balance> GetBalanceHistory(int accId);
-
     }
 }
