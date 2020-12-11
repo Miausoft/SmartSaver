@@ -1,4 +1,6 @@
-﻿
+﻿@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+
+
 .btn:hover {
     background-color: #30735d;
     cursor: pointer;
@@ -38,7 +40,7 @@ input[type="date"]:valid::before {
 
 .auth-block {
     margin: 30px auto;
-    min-height: 93.6vh
+    min-height: 93.6vh;
 }
 
 .card {
@@ -120,10 +122,13 @@ input[type="date"]:valid::before {
     color: red !important
 }
 
-.btn-google {
+.btn-auth {
     color: #545454;
     background-color: #ffffff;
-    box-shadow: 0 1px 2px 1px #ddd
+    box-shadow: 0 1px 2px 1px #ddd;
+    display: flex;
+    justify-content: center;
+    font-weight: 400;
 }
 
 .or-container {
