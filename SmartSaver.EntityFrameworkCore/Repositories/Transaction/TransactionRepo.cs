@@ -91,7 +91,7 @@ namespace SmartSaver.EntityFrameworkCore.Repositories
             {
                 transaction.Amount *= -1;
             }
-
+            
             _context.Transactions.Add(transaction);
             await _context.SaveChangesAsync();
 
@@ -101,6 +101,14 @@ namespace SmartSaver.EntityFrameworkCore.Repositories
         public Transaction GetById(int transactionId)
         {
             return _context.Transactions.First(t => t.Id == transactionId);
+        }
+
+        public async Task<int> DeleteByIdAsync(int transactionId)
+        {
+            Transaction transaction = _context.Transactions.First(t => t.Id == transactionId);
+            _context.Transactions.Remove(transaction);
+            var result = await _context.SaveChangesAsync();
+            return result;
         }
     }
 

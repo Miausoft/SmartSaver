@@ -37,7 +37,7 @@ namespace SmartSaver.WebApi.Controllers
             return Ok(response);
         }
 
-        [HttpPost("transactions")]
+        [HttpPost("transaction")]
         public async Task<ActionResult> Create(TransactionRestModel trm)
         {
             var result = await _transactions.CreateTransactionForAccount(new Transaction()
@@ -57,6 +57,19 @@ namespace SmartSaver.WebApi.Controllers
 
                 _ => Ok(trm)
             };
+        }
+
+        [HttpDelete("transaction/{transactionId}")]
+        public async Task<ActionResult> Delete(int transactionId)
+        {
+            int rowsAffected = await _transactions.DeleteByIdAsync(transactionId);
+
+            if (rowsAffected < 1)
+            {
+                return Ok("No rows affected.");
+            }
+
+            return Ok($"{rowsAffected} rows affected.");
         }
     }
 

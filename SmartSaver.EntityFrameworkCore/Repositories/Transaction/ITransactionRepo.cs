@@ -39,5 +39,6 @@ namespace SmartSaver.EntityFrameworkCore.Repositories
         IEnumerable<Transaction> GetByAccountForDateRange(int accId, DateTime startData, DateTime endDate);
 
         Transaction GetById(int transactionId);
+        Task<int> DeleteByIdAsync(int transactionId);
     }
 }
