@@ -10,6 +10,8 @@ using SmartSaver.Domain.Services.DocumentServices;
 using SmartSaver.EntityFrameworkCore;
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.MVC.Models;
+using SmartSaver.EntityFrameworkCore.Repositories;
+using System.Threading.Tasks;
 
 namespace SmartSaver.MVC.Controllers
 {
@@ -18,28 +20,29 @@ namespace SmartSaver.MVC.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<TransactionsController> _logger;
+        private readonly IAccountRepo _accountRepo;
+        private readonly ITransactionRepo _transactionRepo;
 
-        public TransactionsController(ApplicationDbContext context, ILogger<TransactionsController> logger)
+        public TransactionsController(
+            ApplicationDbContext context, 
+            ILogger<TransactionsController> logger, 
+            IAccountRepo accountRepo, 
+            ITransactionRepo transactionRepo)
         {
             _context = context;
             _logger = logger;
+            _accountRepo = accountRepo;
+            _transactionRepo = transactionRepo;
         }
 
         // GET: TransactionsController
         public ActionResult Index()
         {
-            var model = new TransactionViewModel()
+            return View(new TransactionViewModel()
             {
-                Transactions = _context.Transactions
-                    .Include(p => p.Category)// Includes Category object.
-                    .Where(t => t.AccountId == GetAccountAuth().Id)
-                    .OrderByDescending(a => a.ActionTime) // Order transactions from newest to oldest.
-                    .ToList(),
-
+                Transactions = _transactionRepo.GetByAccountId(int.Parse(User.Identity.Name)),
                 Categories = _context.Categories.ToList()
-            };
-
-            return View(model);
+            });
         }
 
         // GET: TransactionsController/Create
@@ -51,30 +54,12 @@ namespace SmartSaver.MVC.Controllers
         // POST: TransactionsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind("Amount,CategoryId")] Transaction transaction)
+        public async Task<ActionResult> Create([Bind("Amount,CategoryId")] Transaction transaction)
         {
-            if (transaction.Amount == 0)
-            {
-                // TODO: with error message
-                return RedirectToAction(nameof(Index));
-            }
-
-            transaction.Category = _context.Categories.First(c => c.Id == transaction.CategoryId);
-
-            // Set action time to entry datetime (DateTime.Now)
-            transaction.ActionTime = DateTime.UtcNow;
-
-            // Set AccountId to user account id.
-            transaction.AccountId = GetAccountAuth().Id;
-
-            // If there is a category, means amount is spending and should be negative.
-            if (!transaction.Category.TypeOfIncome)
-            {
-                transaction.Amount *= -1;
-            }
-
-            _context.Transactions.Add(transaction);
-            _context.SaveChanges();
+            await _transactionRepo.CreateTransactionForAccount(
+                transaction, 
+                _accountRepo.GetAccountById(User.Identity.Name).Id
+            );
 
             return RedirectToAction(nameof(Index));
         }
@@ -98,18 +83,6 @@ namespace SmartSaver.MVC.Controllers
             {
                 return View();
             }
-        }
-
-        /// <summary>
-        /// Returns account object for authorized user.
-        /// </summary>
-        /// <returns></returns>
-        private Account GetAccountAuth()
-        {
-            return _context.Users
-                .Include(u => u.Account)
-                .First(u => u.Id.ToString().Equals(User.Identity.Name))
-                .Account;
         }
 
         [HttpGet] 

@@ -19,7 +19,10 @@ namespace SmartSaver.MVC.Controllers
         private readonly ITransactionRepo _transactionRepo;
         private readonly IAccountRepo _accountRepo;
 
-        public DashboardController(ApplicationDbContext context, ITransactionRepo transactionRepo, IAccountRepo accountRepo)
+        public DashboardController(
+            ApplicationDbContext context, 
+            ITransactionRepo transactionRepo, 
+            IAccountRepo accountRepo)
         {
             _context = context;
             _transactionRepo = transactionRepo;
@@ -29,7 +32,7 @@ namespace SmartSaver.MVC.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var account = _accountRepo.GetAccountByUsername(User.Identity.Name);
+            var account = _accountRepo.GetAccountById(User.Identity.Name);
             if (!_accountRepo.IsAccountValid(account))
             {
                 return View(nameof(Complete));
@@ -46,7 +49,7 @@ namespace SmartSaver.MVC.Controllers
                 
                 FirstChartData = _transactionRepo.GetBalanceHistory(account.Id),
                 
-                SpendingTransactions = _transactionRepo.GetAccountSpendings(account.Id),
+                SpendingTransactions = _transactionRepo.GetThisMonthAccountSpendings(account.Id),
                 
                 Transactions = _context.Accounts.Include(nameof(Transaction) + "s").First(a => a.Id == account.Id).Transactions.ToList()
             };
@@ -57,7 +60,7 @@ namespace SmartSaver.MVC.Controllers
         [HttpGet]
         public IActionResult Complete()
         {
-            var account = _accountRepo.GetAccountByUsername(User.Identity.Name);
+            var account = _accountRepo.GetAccountById(User.Identity.Name);
             if (!_accountRepo.IsAccountValid(account))
             {
                 return View(nameof(Complete));
@@ -74,7 +77,7 @@ namespace SmartSaver.MVC.Controllers
             {
                 if (account.DateValid())
                 {
-                    Account current = _accountRepo.GetAccountByUsername(User.Identity.Name);
+                    Account current = _accountRepo.GetAccountById(User.Identity.Name);
 
                     current.Goal = account.Goal;
                     current.Revenue = account.Revenue;

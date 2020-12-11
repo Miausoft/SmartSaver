@@ -9,7 +9,7 @@ namespace SmartSaver.EntityFrameworkCore.Repositories
         /// </summary>
         /// <param name="username">Username of a user</param>
         /// <returns>Account object</returns>
-        Account GetAccountByUsername(string username);
+        Account GetAccountById(string username);
 
         /// <summary>
         /// Checks if account already had filled his information with

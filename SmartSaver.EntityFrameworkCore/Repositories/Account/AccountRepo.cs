@@ -16,11 +16,11 @@ namespace SmartSaver.EntityFrameworkCore.Repositories
             _context = context;
         }
 
-        public Account GetAccountByUsername(string username)
+        public Account GetAccountById(string id)
         {
             return _context.Users
                 .Include(u => u.Account)
-                .First(u => u.Id.ToString().Equals(username))
+                .First(u => u.Id.ToString().Equals(id))
                 .Account;
         }
 

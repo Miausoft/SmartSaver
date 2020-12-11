@@ -143,7 +143,9 @@ namespace SmartSaver.MVC.Controllers
 
         private async Task UserAuthenticationAsync(string userId)
         {
-            var claim = new List<Claim> { new Claim(ClaimTypes.Name, userId) };
+            var claim = new List<Claim> { 
+                new Claim(ClaimTypes.Name, userId)
+            };
             var identity = new ClaimsIdentity(claim, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
