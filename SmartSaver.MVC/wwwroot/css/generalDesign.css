@@ -1,29 +1,6 @@
-﻿.btn {
-    font-weight: 400;
-    text-align: center;
-    vertical-align: middle;
-    color: #343a40;
-    border-color: #343a40;
-    background-color: transparent;
-    border-color: darkslategray;
-    box-shadow: darkslategray;
-    font-size: 1rem;
-    line-height: 1.5;
-    border-radius: 0.25rem;
-    transition: ease-out 0.7s;
-}
-
-
-.btn:hover {
-    box-shadow: inset 300px 0 0 0 darkslategray;
+﻿.btn:hover {
+    background-color: #30735d;
     cursor: pointer;
-        color: white;
-}
-
-.btn:active,
-.btn:focus,
-.btn:focus:active {
-    box-shadow: inset 300px 0 0 0 darkslategray;
     color: white;
 }
 
@@ -49,4 +26,134 @@ input[type="date"]:valid::before {
 .form-group.required.control-label:before {
     content: "*";
     color: red;
+}
+
+.center {
+    margin: auto;
+    width: 50%;
+    box-shadow: 0 0 5px 0 rgba(43, 43, 43, .1), 0 11px 6px -7px rgba(43, 43, 43, .1);
+    padding: 10px;
+}
+
+.auth-block {
+    margin: 30px auto;
+    min-height: 93.6vh;
+}
+
+.card {
+    border-radius: 5px;
+    -webkit-box-shadow: 0 0 5px 0 rgba(43, 43, 43, .1), 0 11px 6px -7px rgba(43, 43, 43, .1);
+    box-shadow: 0 0 5px 0 rgba(43, 43, 43, .1), 0 11px 6px -7px rgba(43, 43, 43, .1);
+    border: none;
+    margin-bottom: 30px;
+    -webkit-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+    background-color: #fff;
+    max-width: 500px; 
+    padding: 20px 20px 20px 20px;
+}
+
+.card .card-block {
+    padding: 1.25rem
+}
+
+.f-80 {
+    font-size: 80px
+}
+
+.form-group {
+    margin-bottom: 1.25em
+}
+
+.form-material .form-control {
+    display: inline-block;
+    height: 43px;
+    width: 100%;
+    border: none;
+    border-radius: 0;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 9px;
+    background-color: transparent;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-bottom: 1px solid #ccc
+}
+
+.btn-md {
+    padding: 10px 16px;
+    font-size: 15px;
+    line-height: 23px
+}
+
+.btn-primary {
+    background-color: #1f4a3c;
+    border-color: #1f4a3c;
+    color: #fff;
+    cursor: pointer;
+    -webkit-transition: all ease-in .3s;
+    transition: all ease-in .3s
+}
+
+.btn {
+    border-radius: 2px;
+    text-transform: capitalize;
+    font-size: 15px;
+    padding: 10px 19px;
+    cursor: pointer
+}
+
+.m-b-20 {
+    margin-bottom: 20px
+}
+
+.btn-md {
+    padding: 10px 16px;
+    font-size: 15px;
+    line-height: 23px
+}
+
+.heading {
+    font-size: 21px
+}
+
+#infoMessage p {
+    color: red !important
+}
+
+.btn-auth {
+    color: #545454;
+    background-color: #ffffff;
+    box-shadow: 0 1px 2px 1px #ddd;
+    display: flex;
+    justify-content: center;
+    font-weight: 400;
+}
+
+.or-container {
+    align-items: center;
+    color: #ccc;
+    display: flex;
+    margin: 25px 0
+}
+
+.line-separator {
+    background-color: #ccc;
+    flex-grow: 5;
+    height: 1px
+}
+
+.or-label {
+    flex-grow: 1;
+    margin: 0 15px;
+    text-align: center
+}
+
+.pb-15 {
+    padding-bottom: 150px;
+}
+
+.background-auth {
+    background-size: cover;
+    background-image: url(../images/holdingdollar.jpg);
 }

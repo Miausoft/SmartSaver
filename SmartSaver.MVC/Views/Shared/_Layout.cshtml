@@ -11,10 +11,10 @@
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-sm navbar-light" style="background-color: rgb(177, 226, 213)">
+    <nav class="navbar navbar-expand-sm navbar-light" style="background-color: rgb(30, 51, 45)">
         <div class="container">
-            <img src="/images/cat_animal_5835.png" width="30" height="30" alt="">
-            <a class="navbar-brand font-weight-bold" asp-area="" asp-controller="Home" asp-action="Index">smartsaver</a>
+            <img src="/images/caticowhite.png" width="30" height="30" alt="">
+            <a class="navbar-brand font-weight-bold text-light" asp-area="" asp-controller="Home" asp-action="Index">smartsaver</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -24,26 +24,26 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Transactions" asp-action="Index">Account history</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Transactions" asp-action="Index">Account history</a>
                         </li>
                     }
                     else
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="Login">Login</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Authentication" asp-action="Login">Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="Register">Register</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Authentication" asp-action="Register">Register</a>
                         </li>
                     }
                 </ul>
             </div>
             @if (User.Identity.IsAuthenticated)
             {
-                <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="Logout">Sign out</a>
+                <a class="nav-link text-light" asp-area="" asp-controller="Authentication" asp-action="Logout">Sign out</a>
             }
         </div>
     </nav>
@@ -58,8 +58,8 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
+    <footer class="border-top footer text-muted" style="background-color: #0e1714;">
+        <div class="container" style="color:white;">
             &copy; 2020 - SmartSaver by MIAUsoft
         </div>
     </footer>
