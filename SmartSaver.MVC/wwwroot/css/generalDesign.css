@@ -1,7 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
-
-
-.btn:hover {
+﻿.btn:hover {
     background-color: #30735d;
     cursor: pointer;
     color: white;
@@ -51,7 +48,9 @@ input[type="date"]:valid::before {
     margin-bottom: 30px;
     -webkit-transition: all .3s ease-in-out;
     transition: all .3s ease-in-out;
-    background-color: #fff
+    background-color: #fff;
+    max-width: 500px; 
+    padding: 20px 20px 20px 20px;
 }
 
 .card .card-block {
@@ -152,4 +151,9 @@ input[type="date"]:valid::before {
 
 .pb-15 {
     padding-bottom: 150px;
+}
+
+.background-auth {
+    background-size: cover;
+    background-image: url(../images/holdingdollar.jpg);
 }

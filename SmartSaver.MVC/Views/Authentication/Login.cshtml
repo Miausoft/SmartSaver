@@ -5,13 +5,12 @@
 
 <head>
     <link rel="stylesheet" type="text/css" href="~/css/generalDesign.css" />
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <title>@ViewBag.Title</title>
 </head>
 
-<body class="pb-15" style="background-size:cover; background-image: url(https://images.unsplash.com/photo-1475650522725-015d35677789?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1050&q=80)">
+<body class="pb-15 background-auth">
     <section class="auth-block pt-5">
-        <div class="card center" style="max-width: 500px; padding: 20px 20px 20px 20px;">
+        <div class="card center">
             <div class="card-block">
                 <div class="col-md-12">
                     <form method="post" asp-action="Login" asp-controller="Authentication" asp-route-returnUrl="@Context.Request.Query["returnurl"]">
