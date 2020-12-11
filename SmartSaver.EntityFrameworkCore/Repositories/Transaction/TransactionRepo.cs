@@ -83,8 +83,6 @@ namespace SmartSaver.EntityFrameworkCore.Repositories
                 return CreateTransactionResponse.BadAmountError;
             }
 
-            if (transaction.Amount < 0 && )
-
             transaction.Category = _context.Categories.First(c => c.Id == transaction.CategoryId);
             transaction.ActionTime = DateTime.UtcNow;
             transaction.AccountId = accountId;
