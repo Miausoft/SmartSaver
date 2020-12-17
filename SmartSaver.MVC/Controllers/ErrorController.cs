@@ -41,7 +41,7 @@ namespace SmartSaver.MVC.Controllers
            _logger.Error($"The path {exceptionDetails.Path} threw an exception " +
                 $"{exceptionDetails.Error}");
 
-            return View(nameof(Error));
+            return View(nameof(Error), model);
         }
     }
 }
