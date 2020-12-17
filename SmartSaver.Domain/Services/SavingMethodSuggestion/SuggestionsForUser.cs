@@ -11,7 +11,7 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
         public static string CompareExpenses(Account acc)
         {
             decimal amountSavedCurrentMonth = TransactionsCounter.AmountSavedCurrentMonth(acc.Transactions);
-            decimal amountToSaveAMonth = MoneyCounter.AmountToSaveAMonth(acc.Goal, acc.GoalStartDate, acc.GoalEndDate);
+            decimal amountToSaveAMonth = MoneyCounter.AmountToSaveAMonth(acc);
             decimal freeMoneyToSpend = MoneyCounter.AmountLeftToSpend(acc);
             string suggestion = "Šį mėnesį sutaupėte: " + amountSavedCurrentMonth.ToString("C") + "\n";
 

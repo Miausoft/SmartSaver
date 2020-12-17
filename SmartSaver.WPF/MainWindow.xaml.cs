@@ -216,7 +216,7 @@ namespace SmartSaver
             {
                 mainSuggestions.Text = SuggestionsForUser.CompareExpenses(acc);
                 savedSum.Text = "Taupymo laikotarpiu sutaupyta: " + TransactionsCounter.SavedSum(acc.Transactions, acc.GoalStartDate, acc.GoalEndDate).ToString("C");
-                amountToSave.Text = "Šį mėnesį turėtumėte sutaupyti: " + Math.Round(MoneyCounter.AmountToSaveAMonth(acc.Goal, acc.GoalStartDate, acc.GoalEndDate), 2).ToString("C");
+                amountToSave.Text = "Šį mėnesį turėtumėte sutaupyti: " + Math.Round(MoneyCounter.AmountToSaveAMonth(acc), 2).ToString("C");
                 moneyToSpend.Text = SuggestionsForUser.FreeMoneyToSpend(acc);
                 estimatedTime.Text = SuggestionsForUser.EstimatedTime(acc);
                 timeInDays.Text = "Iki tikslo pabaigos jums liko " + DateCounter.DaysLeft(acc.GoalEndDate) + " dienos";

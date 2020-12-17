@@ -31,21 +31,21 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
         /// <summary>
         /// returns remaining days until the end of a month
         /// </summary>
-        public static int DaysUntilMonthEnd(DateTime goalStartDate, DateTime goalEndDate)
+        public static int DaysUntilMonthEnd(DateTime now, DateTime goalStartDate, DateTime goalEndDate)
         {
-            if (DateTime.Now.Year == goalEndDate.Year && DateTime.Now.Month == goalEndDate.Month)
+            if (now.Year == goalEndDate.Year && now.Month == goalEndDate.Month)
             {
-                return goalEndDate.Day;
+                return goalEndDate.Day - 1;
             }
 
-            else if (DateTime.Now.Year == goalStartDate.Year && DateTime.Now.Month == goalStartDate.Month)
+            else if (now.Year == goalStartDate.Year && now.Month == goalStartDate.Month)
             {
-                return DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) - goalStartDate.Day + 1;
+                return DateTime.DaysInMonth(now.Year, now.Month) - goalStartDate.Day + 1;
             }
 
             else
             {
-                return DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+                return DateTime.DaysInMonth(now.Year, now.Month);
             }
         }
 
