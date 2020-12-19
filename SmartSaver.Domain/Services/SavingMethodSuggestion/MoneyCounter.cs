@@ -8,6 +8,7 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
     {
         /// <summary>
         /// a dynamic number to represent amount of money account have to save current month
+        /// the method can return a negative number meaning that in previous months it was saved more than it was necessary.
         /// </summary>
         public static decimal AmountToSaveAMonth(Account acc)
         {
