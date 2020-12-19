@@ -10,10 +10,10 @@
 
 @section Jumbotron {
     <div class="jumbotron jumbotron-fluid mb-5">
-      <div class="container">
-          <h5 class="text-light" style="text-transform: uppercase; letter-spacing: 4px"><b>Balance</b></h5>
-          <span class="badge badge-pill badge-success">1000eur</span>
-      </div>
+        <div class="container">
+            <h5 class="text-light" style="text-transform: uppercase; letter-spacing: 4px"><b>Balance</b></h5>
+            <span class="badge badge-pill badge-success">1000eur</span>
+        </div>
     </div>
 }
 
@@ -32,39 +32,49 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form autocomplete="off" role="form" asp-controller="Transactions" asp-action="Create" method="POST">
+            <form id="form" autocomplete="off" role="form" asp-controller="Transactions" asp-action="Create" method="POST">
                 <div class="modal-body">
-                    <label>Amount</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="Amount" name="Amount"> <!-- Amount -->
-                        <div class="input-group-append">
-                            <span class="input-group-text">@currencySymbol</span>
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="Spending" name="Amount" />
+                            <div class="input-group-append">
+                                <span class="input-group-text form-group">@currencySymbol</span>
+                            </div>
+                        </div>
+                        <span class="text-danger" id="SpendingStatus"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Spending category</label>
+                        <select class="form-control" id="CategoryId" name="CategoryId">
+                            <!-- Category -->
+                            @foreach (var c in Model.Categories)
+                            {
+                                @if (!c.TypeOfIncome)
+                                {
+                                    <option value="@c.Id">
+                                        @c.Title
+                                    </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Choose date</label>
+                        <div class="date-input input-group">
+                            <input type="date" class="form-control">
                         </div>
                     </div>
-
-                    <label>Spending category</label>
-                    <select class="form-control" id="CategoryId" name="CategoryId">
-                        <!-- Category -->
-                        @foreach (var c in Model.Categories)
-                        {
-                            @if (!c.TypeOfIncome)
-                            {
-                                <option value="@c.Id">
-                                    @c.Title
-                                </option>
-                            }
-                        }
-                    </select>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-success" type="submit">ADD SPENDING</button>
+                    <button id ="SpendingButton" class="btn btn-success" type="submit" ond>ADD SPENDING</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<!-- Modal [Add Spending] -->
+<!-- Modal [Add Income] -->
 <div class="modal fade" id="addIncomeModal" tabindex="-1" role="dialog" aria-labelledby="addIncomeModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -76,30 +86,40 @@
             </div>
             <form autocomplete="off" role="form" asp-controller="Transactions" asp-action="Create" method="POST">
                 <div class="modal-body">
-                    <label>Amount</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="Amount" name="Amount"> <!-- Date -->
-                        <div class="input-group-append">
-                            <span class="input-group-text">@currencySymbol</span>
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="Income" name="Amount" />
+                            <div class="input-group-append">
+                                <span class="input-group-text form-group">@currencySymbol</span>
+                            </div>
+                        </div>
+                        <span class="text-danger" id="IncomeStatus"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Spending category</label>
+                        <select class="form-control" id="CategoryId" name="CategoryId">
+                            <!-- Category -->
+                            @foreach (var c in Model.Categories)
+                            {
+                                @if (c.TypeOfIncome)
+                                {
+                                    <option value="@c.Id">
+                                        @c.Title
+                                    </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Choose date</label>
+                        <div class="date-input input-group">
+                            <input type="date" class="form-control">
                         </div>
                     </div>
-
-                    <label>Spending category</label>
-                    <select class="form-control" id="CategoryId" name="CategoryId">
-                        <!-- Category -->
-                        @foreach (var c in Model.Categories)
-                        {
-                            @if (c.TypeOfIncome)
-                            {
-                                <option value="@c.Id">
-                                    @c.Title
-                                </option>
-                            }
-                        }
-                    </select>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-success" type="submit">ADD INCOME</button>
+                    <button id ="IncomeButton" class="btn btn-success" type="submit">ADD INCOME</button>
                 </div>
             </form>
         </div>
@@ -167,3 +187,42 @@
 <nav>
     <button style="border-radius: 0" type="button" class="btn btn-sm btn-info shadow-none" data-toggle="modal" data-target="#generatePdf">Generate Resume (PDF) 🖨️</button>
 </nav>
+
+
+<script>
+    const spendingStatus = document.getElementById('SpendingStatus');
+    const incomeStatus = document.getElementById('IncomeStatus');
+    const spending = document.getElementById('Spending');
+    const income = document.getElementById('Income');
+
+    document.getElementById("SpendingButton").onclick = function () {
+        if (!checkInputs(spending.value.trim(), spendingStatus)) {
+            return false;
+        }
+    }
+
+    document.getElementById("IncomeButton").onclick = function () {
+        if (!checkInputs(income.value.trim(), incomeStatus)) {
+            return false;
+        }
+    }
+
+    function checkInputs(input, value, status) {
+        if (value === '') {
+            setError(status, "Amount cannot be blank");
+        } else if (!isNumber(value)) {
+            setError(status, "Please provide numbers only without any signs");
+        }
+        else {
+            return true;
+        }
+    }
+
+    function setError(status, message) {
+        $(status).html('<font color="Red">' + message + '</font>');
+    }
+
+    function isNumber(amount) {
+        return /^[0-9]*[.,]?[0-9]+$/.test(amount);
+    }
+</script>
