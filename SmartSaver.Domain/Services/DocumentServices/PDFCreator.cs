@@ -43,7 +43,9 @@ namespace SmartSaver.Domain.Services.DocumentServices
         {
             fileHeader("Statement", "Tahoma", 20f, 1);
             fileHeader("spendings sorted by category", "Tahoma", 9f, 1);
-            fileHeader($"from: {from.ToShortDateString()} to: {to.ToShortDateString()}", "Tahoma", 10f, 1);
+            fileHeader($"From: {from.ToShortDateString()}\n" +
+                $"To: {to.ToShortDateString()}" +
+                $"\n ", "Tahoma", 10f, 1);
             _pdfPTable.CompleteRow();
         }
 
@@ -67,8 +69,8 @@ namespace SmartSaver.Domain.Services.DocumentServices
             foreach (var expense in totalExpenseByCategory)
             {
                 tableBody(serialNumber.ToString(), "Tahoma", 8f, 0);
-                tableBody(expense.Key.ToString(), "Tahoma", 8f, 0);
-                tableBody(expense.Value.ToString(), "Tahoma", 8f, 0);
+                tableBody(expense.Key, "Tahoma", 8f, 0);
+                tableBody(expense.Value.ToString("C2"), "Tahoma", 8f, 0);
                 _pdfPTable.CompleteRow();
                 serialNumber++;
             }
