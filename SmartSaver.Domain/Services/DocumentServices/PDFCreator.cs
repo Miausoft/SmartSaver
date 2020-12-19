@@ -21,7 +21,7 @@ namespace SmartSaver.Domain.Services.DocumentServices
             HeaderRows = 2
         };
 
-        public byte[] GeneratePDF(IEnumerable<Transaction> transaction, DateTime from, DateTime to)
+        public byte[] GeneratePDF(IEnumerable<Transaction> transaction, IEnumerable<Category> category, DateTime from, DateTime to)
         {
             Document _document = new Document(PageSize.A4, 20, 20, 20, 20);
             MemoryStream _memoryStream = new MemoryStream();
@@ -29,7 +29,7 @@ namespace SmartSaver.Domain.Services.DocumentServices
             _document.Open();
 
             ReportHeader(FileHeader(), from, to);
-            ReportBody(TransactionsCounter.TotalExpenseByCategory(transaction, from, to));
+            ReportBody(TransactionsCounter.TotalExpenseByCategory(transaction, category, from, to));
 
             _pdfPTable.SetWidths(new float[] { 20, 150, 100 });
             _document.Add(_pdfPTable);
@@ -47,7 +47,7 @@ namespace SmartSaver.Domain.Services.DocumentServices
             _pdfPTable.CompleteRow();
         }
 
-        private void ReportBody(IDictionary<int, decimal> totalExpenseByCategory)
+        private void ReportBody(IDictionary<string, decimal> totalExpenseByCategory)
         {
             FillTableHeader(TableHeader());
             FillTableBody(TableBody(), totalExpenseByCategory);
@@ -61,7 +61,7 @@ namespace SmartSaver.Domain.Services.DocumentServices
             _pdfPTable.CompleteRow();
         }
 
-        private void FillTableBody(TextBlock tableBody, IDictionary<int, decimal> totalExpenseByCategory)
+        private void FillTableBody(TextBlock tableBody, IDictionary<string, decimal> totalExpenseByCategory)
         {
             int serialNumber = 1;
             foreach (var expense in totalExpenseByCategory)

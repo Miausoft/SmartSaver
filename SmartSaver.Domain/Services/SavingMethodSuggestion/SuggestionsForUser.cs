@@ -3,12 +3,13 @@ using SmartSaver.EntityFrameworkCore.Models;
 using System;
 using System.Linq;
 using SmartSaver.Domain.Services.TransactionsCounterService;
+using System.Collections.Generic;
 
 namespace SmartSaver.Domain.Services.SavingMethodSuggestion
 {
     public static class SuggestionsForUser
     {
-        public static string CompareExpenses(Account acc)
+        public static string CompareExpenses(Account acc, IEnumerable<Category> categories)
         {
             decimal amountSavedCurrentMonth = TransactionsCounter.AmountSavedCurrentMonth(acc.Transactions);
             decimal amountToSaveAMonth = MoneyCounter.AmountToSaveAMonth(acc);
@@ -19,7 +20,7 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
             {
                 if(freeMoneyToSpend < 0)
                 {
-                    suggestion += "Tačiau " + HowToIncreaseSavings(acc);
+                    suggestion += "Tačiau " + HowToIncreaseSavings(acc, categories);
                 }
 
                 else if (freeMoneyToSpend >= 0)
@@ -34,7 +35,7 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
 
                 if (freeMoneyToSpend < 0)
                 {
-                    suggestion += "Tačiau to nepakanka, kadangi " + HowToIncreaseSavings(acc);
+                    suggestion += "Tačiau to nepakanka, kadangi " + HowToIncreaseSavings(acc, categories);
                 }
 
                 else if (freeMoneyToSpend >= 0)
@@ -54,33 +55,33 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
 
                 else if (freeMoneyToSpend < 0)
                 {
-                    suggestion += "Taip pat " + HowToIncreaseSavings(acc);
+                    suggestion += "Taip pat " + HowToIncreaseSavings(acc, categories);
                 }
             }
 
             return suggestion;
         }
 
-        private static string HowToIncreaseSavings(Account acc)
+        private static string HowToIncreaseSavings(Account acc, IEnumerable<Category> categories)
         {
             DateTime firstDayOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1);
             string suggestion = "";
 
-            if (TransactionsCounter.TotalExpenseByCategory(acc.Transactions, firstDayOfMonth, lastDayOfMonth).Any())
+            if (TransactionsCounter.TotalExpenseByCategory(acc.Transactions, categories, firstDayOfMonth, lastDayOfMonth).Any())
             {
                 suggestion = "vis dar atsiliekate nuo savo taupymo režimo."; //ka siuo atveju jam pasiulyti vel? reitku kazka vel compare
                 suggestion += " Šį mėnesį daugiausiai buvo išleista " +
-                (TransactionsCounter.TotalExpenseByCategory(acc.Transactions, firstDayOfMonth, lastDayOfMonth).Aggregate((l, r) => l.Value > r.Value ? r : l).Key-1) +
+                (TransactionsCounter.TotalExpenseByCategory(acc.Transactions, categories, firstDayOfMonth, lastDayOfMonth).Aggregate((l, r) => l.Value > r.Value ? r : l).Key) +
                     " kategorijai, kurios suma " +
-                    Math.Round(-TransactionsCounter.TotalExpenseByCategory(acc.Transactions, firstDayOfMonth, lastDayOfMonth).Values.Min(), 2).ToString("C") +
+                    Math.Round(-TransactionsCounter.TotalExpenseByCategory(acc.Transactions, categories, firstDayOfMonth, lastDayOfMonth).Values.Min(), 2).ToString("C") +
                     "\n";
                 suggestion += "Kad tai daugiau nepasikartotų, siūlome:\n";
                 suggestion += "a) sumažinti išlaidas šioje kategorijoje.\n";
                 suggestion += "b) visiškai atsisakome išlaidų mažiausiai išleistoje kategorijoje, tai būtų " +
-                    (TransactionsCounter.TotalExpenseByCategory(acc.Transactions, firstDayOfMonth, lastDayOfMonth).Aggregate((l, r) => l.Value > r.Value ? l : r).Key-1) +
+                    (TransactionsCounter.TotalExpenseByCategory(acc.Transactions, categories, firstDayOfMonth, lastDayOfMonth).Aggregate((l, r) => l.Value > r.Value ? l : r).Key) +
                     " kategorija, kurios suma viso labo " +
-                    Math.Round(-TransactionsCounter.TotalExpenseByCategory(acc.Transactions, firstDayOfMonth, lastDayOfMonth).Values.Max(), 2).ToString("C") +
+                    Math.Round(-TransactionsCounter.TotalExpenseByCategory(acc.Transactions, categories, firstDayOfMonth, lastDayOfMonth).Values.Max(), 2).ToString("C") +
                     "\n";
                 //suggestion = suggestion + "c) atsisakysime išlaidų kategorijoje, kuriai pinigų anksčiau niekur neleidote (bus įgyvendinta vėliau)";
             }
