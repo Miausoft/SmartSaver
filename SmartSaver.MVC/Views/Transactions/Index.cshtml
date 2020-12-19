@@ -32,7 +32,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="form" autocomplete="off" role="form" asp-controller="Transactions" asp-action="Create" method="POST">
+            <form asp-controller="Transactions" asp-action="Create" method="POST">
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Amount</label>
@@ -42,7 +42,7 @@
                                 <span class="input-group-text form-group">@currencySymbol</span>
                             </div>
                         </div>
-                        <span class="text-danger" id="SpendingStatus"></span>
+                        <span id="SpendingStatus"></span>
                     </div>
                     <div class="form-group">
                         <label>Spending category</label>
@@ -67,7 +67,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id ="SpendingButton" class="btn btn-success" type="submit" ond>ADD SPENDING</button>
+                    <button id ="SpendingButton" class="btn btn-success" type="submit">ADD SPENDING</button>
                 </div>
             </form>
         </div>
@@ -84,7 +84,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form autocomplete="off" role="form" asp-controller="Transactions" asp-action="Create" method="POST">
+            <form asp-controller="Transactions" asp-action="Create" method="POST">
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Amount</label>
@@ -94,7 +94,7 @@
                                 <span class="input-group-text form-group">@currencySymbol</span>
                             </div>
                         </div>
-                        <span class="text-danger" id="IncomeStatus"></span>
+                        <span id="IncomeStatus"></span>
                     </div>
                     <div class="form-group">
                         <label>Spending category</label>
@@ -207,7 +207,7 @@
         }
     }
 
-    function checkInputs(input, value, status) {
+    function checkInputs(value, status) {
         if (value === '') {
             setError(status, "Amount cannot be blank");
         } else if (!isNumber(value)) {
