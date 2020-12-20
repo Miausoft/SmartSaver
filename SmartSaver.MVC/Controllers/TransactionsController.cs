@@ -120,7 +120,6 @@ namespace SmartSaver.MVC.Controllers
 
             if (fromDate > toDate)
             {
-                ModelState.AddModelError(String.Empty, "Invalid date");
                 return RedirectToAction(nameof(Index));
             }
 

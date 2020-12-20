@@ -138,23 +138,23 @@
             </div>
             <form autocomplete="off" role="form" asp-controller="Transactions" asp-action="CreatePDF" method="get">
                 <div class="modal-body">
-                    <div class="col-sm-10">
+                    <div class="form-group">
                         <small class="form-text text-muted">FROM DATE</small>
                         <div class="date-input">
-                            <input type="date" asp-for="FromDate" required oninvalid="this.setCustomValidity('The field is required')" class="form-control">
+                            <input id="FromDate" type="date" asp-for="FromDate" class="form-control">
                         </div>
-                        <span class="text-danger"></span>
+                        <span id="FromStatus"></span>
                     </div>
-                    <div class="col-sm-10">
+                    <div class="form-group">
                         <small class="form-text text-muted">TO DATE</small>
                         <div class="date-input">
-                            <input type="date" asp-for="ToDate" required oninvalid="this.setCustomValidity('The field is required')" class="form-control">
+                            <input id="ToDate" type="date" asp-for="ToDate" class="form-control">
                         </div>
-                        <span class="text-danger"></span>
+                        <span id="ToStatus"></span>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-info" type="submit">GENERATE PDF</button>
+                    <button id="PdfButton" class="btn btn-info" type="submit">GENERATE PDF</button>
                 </div>
             </form>
         </div>
@@ -194,6 +194,10 @@
     const incomeStatus = document.getElementById('IncomeStatus');
     const spending = document.getElementById('Spending');
     const income = document.getElementById('Income');
+    const fromDate = document.getElementById('FromDate');
+    const toDate = document.getElementById('ToDate');
+    const fromStatus = document.getElementById('FromStatus');
+    const toStatus = document.getElementById('ToStatus');
 
     document.getElementById("SpendingButton").onclick = function () {
         if (!checkInputs(spending.value.trim(), spendingStatus)) {
@@ -207,13 +211,31 @@
         }
     }
 
+    document.getElementById("PdfButton").onclick = function () {
+        if (!checkDate(fromDate.value, toDate.value, fromStatus, toStatus)) {
+            return false;
+        }
+    }
+
     function checkInputs(value, status) {
         if (value === '') {
             setError(status, "Amount cannot be blank");
         } else if (!isNumber(value)) {
             setError(status, "Please provide numbers only without any signs");
+        } else {
+            return true;
         }
-        else {
+    }
+
+    function checkDate(from, to, fromStatus, toStatus) {
+        if (from === '') {
+            setError(fromStatus, "Please pick a date");
+        } if (to === '') {
+            setError(toStatus, "Please pick a date");
+        } else if (from > to) {
+            setError(toStatus, "Invalid date selection");
+        } else {
+            setError(toStatus, "");
             return true;
         }
     }
