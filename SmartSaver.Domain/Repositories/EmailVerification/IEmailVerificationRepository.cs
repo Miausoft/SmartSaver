@@ -7,7 +7,7 @@ namespace SmartSaver.Domain.Repositories
     {
         public bool IsVerified(string userId);
         public string GetUserToken(string userId);
-        public EmailVerification Create(EmailVerification emailVerification);
+        public EmailVerificationDto Create(EmailVerificationDto emailVerification);
         public void Delete(string userId);
     }
 }

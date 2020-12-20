@@ -21,7 +21,7 @@ namespace SmartSaver.Domain.Services.DocumentServices
             HeaderRows = 2
         };
 
-        public byte[] GeneratePDF(IEnumerable<Transaction> transaction, DateTime from, DateTime to)
+        public byte[] GeneratePDF(IEnumerable<TransactionDto> transaction, DateTime from, DateTime to)
         {
             Document _document = new Document(PageSize.A4, 20, 20, 20, 20);
             MemoryStream _memoryStream = new MemoryStream();

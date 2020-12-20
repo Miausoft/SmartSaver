@@ -8,7 +8,7 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
 {
     public static class SuggestionsForUser
     {
-        public static string CompareExpenses(Account acc)
+        public static string CompareExpenses(AccountDto acc)
         {
             decimal amountSavedCurrentMonth = TransactionsCounter.AmountSavedCurrentMonth(acc.Transactions);
             decimal amountToSaveAMonth = MoneyCounter.AmountToSaveAMonth(acc.Goal, acc.GoalStartDate, acc.GoalEndDate);
@@ -61,7 +61,7 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
             return suggestion;
         }
 
-        private static string HowToIncreaseSavings(Account acc)
+        private static string HowToIncreaseSavings(AccountDto acc)
         {
             DateTime firstDayOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1);
@@ -93,7 +93,7 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
             return suggestion;
         }
 
-        public static string EstimatedTime(Account acc)
+        public static string EstimatedTime(AccountDto acc)
         {
             decimal savedSum = TransactionsCounter.SavedSum(acc.Transactions, acc.GoalStartDate, acc.GoalEndDate);
 
@@ -105,7 +105,7 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
             else return acc.Goal.ToString("C") + " sutaupysite iki\n" + DateTime.Now.AddDays((double)Math.Ceiling((acc.Goal - savedSum) / MoneyCounter.Average(DateCounter.DaysPassed(acc.GoalStartDate), savedSum))).ToShortDateString();
         }
 
-       public static string FreeMoneyToSpend(Account acc)
+       public static string FreeMoneyToSpend(AccountDto acc)
         {
             string suggestion = "Pinigų suma, kurią galite skirti papildomoms išlaidoms: ";
 

@@ -51,7 +51,7 @@ namespace SmartSaver.MVC.Controllers
                 
                 SpendingTransactions = _transactionRepo.GetThisMonthAccountSpendings(account.Id),
                 
-                Transactions = _context.Accounts.Include(nameof(Transaction) + "s").First(a => a.Id == account.Id).Transactions.ToList()
+                Transactions = _context.Accounts.Include(nameof(TransactionDto) + "s").First(a => a.Id == account.Id).Transactions.ToList()
             };
 
             return View(dvm);
@@ -71,13 +71,13 @@ namespace SmartSaver.MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Complete(Account account)
+        public IActionResult Complete(AccountDto account)
         {
             if (ModelState.IsValid)
             {
                 if (account.DateValid())
                 {
-                    Account current = _accountRepo.GetAccountById(User.Identity.Name);
+                    AccountDto current = _accountRepo.GetAccountById(User.Identity.Name);
 
                     current.Goal = account.Goal;
                     current.Revenue = account.Revenue;

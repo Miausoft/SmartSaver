@@ -19,7 +19,7 @@ namespace SmartSaver.Domain.Repositories
         /// </summary>
         /// <param name="accId"></param>
         /// <returns>Spendings</returns>
-        List<Transaction> GetThisMonthAccountSpendings(int accId);
+        List<TransactionDto> GetThisMonthAccountSpendings(int accId);
 
         /// <summary>
         /// Method that returns balance history (how balance changed) for an account.
@@ -33,12 +33,12 @@ namespace SmartSaver.Domain.Repositories
         /// </summary>
         /// <param name="accId">Account id</param>
         /// <returns>List of transactions</returns>
-        List<Transaction> GetByAccountId(int accId);
+        List<TransactionDto> GetByAccountId(int accId);
 
-        Task<CreateTransactionResponse> CreateTransactionForAccount(Transaction transaction, int accountId);
-        IEnumerable<Transaction> GetByAccountForDateRange(int accId, DateTime startData, DateTime endDate);
+        Task<CreateTransactionResponse> CreateTransactionForAccount(TransactionDto transaction, int accountId);
+        IEnumerable<TransactionDto> GetByAccountForDateRange(int accId, DateTime startData, DateTime endDate);
 
-        Transaction GetById(int transactionId);
+        TransactionDto GetById(int transactionId);
         Task<int> DeleteByIdAsync(int transactionId);
     }
 }

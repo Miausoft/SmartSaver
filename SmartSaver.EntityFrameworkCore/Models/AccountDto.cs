@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SmartSaver.EntityFrameworkCore.Models
 {
-    public class Account
+    public class AccountDto
     {
         [Key]
         public int Id { get; set; }
@@ -50,7 +50,7 @@ namespace SmartSaver.EntityFrameworkCore.Models
         /// List of purchases and incomes to user balance.
         /// in v1 this information is held in separate .csv file.
         /// </summary>
-        public List<Transaction> Transactions { get; set; }
+        public List<TransactionDto> Transactions { get; set; }
 
         public bool AccountValid()
         {

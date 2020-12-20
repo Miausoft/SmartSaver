@@ -19,22 +19,22 @@ namespace SmartSaver.Domain.Repositories
 
         private ApplicationDbContext _context;
 
-        public IEnumerable<Category> GetMultiple()
+        public IEnumerable<CategoryDto> GetMultiple()
         {
             return _context.Categories;
         }
 
-        public IEnumerable<Category> GetMultiple(Expression<Func<Category, bool>> predicate)
+        public IEnumerable<CategoryDto> GetMultiple(Expression<Func<CategoryDto, bool>> predicate)
         {
             return _context.Categories.Where(predicate);
         }
 
-        public Category GetSingle(Expression<Func<Category, bool>> predicate)
+        public CategoryDto GetSingle(Expression<Func<CategoryDto, bool>> predicate)
         {
             return _context.Categories.First(predicate);
         }
 
-        public async Task<int> CreateAsync(Category category)
+        public async Task<int> CreateAsync(CategoryDto category)
         {
             _context.Categories.Add(category);
 

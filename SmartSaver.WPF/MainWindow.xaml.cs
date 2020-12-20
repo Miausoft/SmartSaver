@@ -20,7 +20,7 @@ namespace SmartSaver
     {
         private readonly IAuthenticationService _auth;
         private readonly ApplicationDbContext _context;
-        private User _user;
+        private UserDto _user;
 
         private WindowObjectCollection<TabItem> _windowObjectColl;
 
@@ -98,7 +98,7 @@ namespace SmartSaver
                 selectedIndex = 1;
             }
 
-            Transaction transaction = new Transaction()
+            TransactionDto transaction = new TransactionDto()
             {
                 ActionTime = DateTime.UtcNow,
                 Amount = amount,
@@ -147,7 +147,7 @@ namespace SmartSaver
         
         private void UpdateHistoryTable()
         {
-            List<Transaction> transactions =
+            List<TransactionDto> transactions =
                 _context.Transactions.Where(t => t.AccountId.Equals(_user.Account.Id)).OrderByDescending(t => t.ActionTime).ToList();
 
             HistoryTable.ItemsSource = transactions;
@@ -204,13 +204,13 @@ namespace SmartSaver
 
         private void SortByCategoryButton_Click(object sender, RoutedEventArgs e)
         {
-            List<Transaction> transactions =
+            List<TransactionDto> transactions =
                 _context.Transactions.Where(t => t.AccountId.Equals(_user.Account.Id)).OrderByDescending(t => t.Category).ToList();
 
             HistoryTable.ItemsSource = transactions;
         }
 
-        private void GenerateSuggestions(Account acc)
+        private void GenerateSuggestions(AccountDto acc)
         {
             if (acc.GoalEndDate > DateTime.Now)
             {

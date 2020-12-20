@@ -14,7 +14,7 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
 
     public interface IAuthenticationService
     {
-        User Login(string userAttribute, string password);
-        RegistrationResult Register(User user);
+        UserDto Login(string userAttribute, string password);
+        RegistrationResult Register(UserDto user);
     }
 }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartSaver.EntityFrameworkCore.Models
 {
-    public class Transaction
+    public class TransactionDto
     {
         [Key]
         public int Id { get; set; }
@@ -12,9 +12,9 @@ namespace SmartSaver.EntityFrameworkCore.Models
         public decimal Amount { get; set; }
 
         public int AccountId { get; set; }
-        public Account Account { get; set; }
+        public AccountDto Account { get; set; }
 
         public int CategoryId { get; set; }
-        public Category Category { get; set; }
+        public CategoryDto Category { get; set; }
     }
 }

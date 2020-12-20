@@ -6,40 +6,46 @@ using System.Linq;
 using System.Threading.Tasks;
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.Domain.Repositories;
-using SmartSaver.WebApi.CustomExceptions;
+using SmartSaver.Domain.CustomExceptions;
+using SmartSaver.Domain.ActionFilters;
+using SmartSaver.WebApi.RequestModels;
+using SmartSaver.WebApi.ResponseModels;
+using AutoMapper;
 
 namespace SmartSaver.WebApi.Controllers
 {
     public class CategoryController : Controller
     {
-        public CategoryController(ICategoryRepo categories)
+        public CategoryController(ICategoryRepo categories, IMapper mapper)
         {
             _categories = categories;
+            _mapper = mapper;
         }
 
         private ICategoryRepo _categories;
+        private IMapper _mapper;
 
         [HttpGet("categories")]
-        public IEnumerable<Category> Index()
+        public IEnumerable<CategoryResponseModel> Index()
         {
-            return _categories.GetMultiple();
+            return _mapper.Map<IEnumerable<CategoryResponseModel>>(
+                _categories.GetMultiple()
+            );
         }
 
         [HttpGet("category/{categoryId}")]
-        public Category Get(int categoryId)
+        public CategoryResponseModel Get(int categoryId)
         {
-            return _categories.GetSingle(c => c.Id == categoryId);
+            return _mapper.Map<CategoryResponseModel>(
+                _categories.GetSingle(c => c.Id == categoryId)
+            );
         }
 
         [HttpPost("categories")]
-        public async Task<ActionResult> Create([Bind("Title, TypeOfIncome")] Category category)
+        [CheckForInvalidModel]
+        public async Task<ActionResult> Create(CategoryRequestModel category)
         {
-            if (!ModelState.IsValid)
-            {
-                throw new InvalidModelException();
-            }
-
-            int createdId = await _categories.CreateAsync(category);
+            int createdId = await _categories.CreateAsync(_mapper.Map<CategoryDto>(category));
             return Created($"category/{createdId}", category);
         }
     }

@@ -19,19 +19,19 @@ namespace SmartSaver.WebApi.Controllers
         }
 
         [HttpGet("transaction/{transactionId}")]
-        public ActionResult<Transaction> Index(int transactionId)
+        public ActionResult<TransactionDto> Index(int transactionId)
         {
             return _transactions.GetById(transactionId);
         }
 
         [HttpGet("transactions/{accountId}")]
-        public ActionResult<IEnumerable<Transaction>> Get(int accountId)
+        public ActionResult<IEnumerable<TransactionDto>> Get(int accountId)
         {
             return _transactions.GetByAccountId(accountId);
         }
 
         [HttpGet("transactions/{accountId}/{start}/{end}")]
-        public ActionResult<IEnumerable<Transaction>> Get(int accountId, DateTime start, DateTime end)
+        public ActionResult<IEnumerable<TransactionDto>> Get(int accountId, DateTime start, DateTime end)
         {
             var response = _transactions.GetByAccountForDateRange(accountId, start, end);
             return Ok(response);
@@ -40,7 +40,7 @@ namespace SmartSaver.WebApi.Controllers
         [HttpPost("transactions")]
         public async Task<ActionResult> Create(TransactionRestModel trm)
         {
-            var result = await _transactions.CreateTransactionForAccount(new Transaction()
+            var result = await _transactions.CreateTransactionForAccount(new TransactionDto()
             {
                 Amount = trm.Amount,
                 AccountId = trm.AccountId,

@@ -16,12 +16,12 @@ namespace SmartSaver.Domain.Repositories
 
     public interface IUserRepository
     {
-        public IEnumerable<User> Get();
-        public IEnumerable<User> Get(Expression<Func<User, bool>> expression);
+        public IEnumerable<UserDto> Get();
+        public IEnumerable<UserDto> Get(Expression<Func<UserDto, bool>> expression);
         public bool DoesUsernameExist(string username);
         public bool DoesEmailExist(string email);
         public T GetId<T>(string email);
-        User GetSingle(Expression<Func<User, bool>> expression);
-        Task<CreateUserResponse> CreateAsync(User user);
+        UserDto GetSingle(Expression<Func<UserDto, bool>> expression);
+        Task<CreateUserResponse> CreateAsync(UserDto user);
     }
 }

@@ -9,7 +9,7 @@ namespace SmartSaver.Domain.Repositories
         /// </summary>
         /// <param name="username">Username of a user</param>
         /// <returns>Account object</returns>
-        Account GetAccountById(string username);
+        AccountDto GetAccountById(string username);
 
         /// <summary>
         /// Checks if account already had filled his information with
@@ -17,6 +17,6 @@ namespace SmartSaver.Domain.Repositories
         /// </summary>
         /// <param name="account">Reference to an account object</param>
         /// <returns>Boolean</returns>
-        bool IsAccountValid(Account account);
+        bool IsAccountValid(AccountDto account);
     }
 }

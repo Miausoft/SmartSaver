@@ -4,13 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartSaver.EntityFrameworkCore.Models
 {
-    public class User
+    public class UserDto
     {
         [Key]
         public int Id { get; set; }
 
         [ForeignKey("AccountId")]
-        public Account Account { get; set; }
+        public AccountDto Account { get; set; }
         public int AccountId { get; set; }
 
         public string Username { get; set; }

@@ -16,7 +16,7 @@ namespace SmartSaver.Domain.Repositories
             _context = context;
         }
 
-        public Account GetAccountById(string id)
+        public AccountDto GetAccountById(string id)
         {
             return _context.Users
                 .Include(u => u.Account)
@@ -24,7 +24,7 @@ namespace SmartSaver.Domain.Repositories
                 .Account;
         }
 
-        public bool IsAccountValid(Account account)
+        public bool IsAccountValid(AccountDto account)
         {
             return account.Goal > 0;
         }

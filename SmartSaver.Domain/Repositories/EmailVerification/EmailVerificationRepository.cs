@@ -29,7 +29,7 @@ namespace SmartSaver.Domain.Repositories
             return _db.EmailVerifications.Include(a => a.User).Where(a => a.UserId.ToString().Equals(userId)).Select(a => a.Token).FirstOrDefault();
         }
 
-        public EmailVerification Create(EmailVerification emailVerification)
+        public EmailVerificationDto Create(EmailVerificationDto emailVerification)
         {
             _db.EmailVerifications.Add(emailVerification);
             _db.SaveChanges();

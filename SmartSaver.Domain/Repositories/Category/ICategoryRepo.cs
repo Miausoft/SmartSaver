@@ -15,9 +15,9 @@ namespace SmartSaver.Domain.Repositories
 
     public interface ICategoryRepo
     {
-        IEnumerable<Category> GetMultiple();
-        IEnumerable<Category> GetMultiple(Expression<Func<Category, bool>> predicate);
-        Category GetSingle(Expression<Func<Category, bool>> predicate);
-        Task<int> CreateAsync(Category category);
+        IEnumerable<CategoryDto> GetMultiple();
+        IEnumerable<CategoryDto> GetMultiple(Expression<Func<CategoryDto, bool>> predicate);
+        CategoryDto GetSingle(Expression<Func<CategoryDto, bool>> predicate);
+        Task<int> CreateAsync(CategoryDto category);
     }
 }
