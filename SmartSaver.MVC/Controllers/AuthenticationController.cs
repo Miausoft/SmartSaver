@@ -9,11 +9,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using SmartSaver.Domain.Services.AuthenticationServices;
 using SmartSaver.Domain.Services.EmailServices;
 using SmartSaver.Domain.TokenValidation;
 using SmartSaver.EntityFrameworkCore.Models;
-using SmartSaver.EntityFrameworkCore.Repositories;
+using SmartSaver.Domain.Repositories;
 using SmartSaver.MVC.Models;
 
 namespace SmartSaver.MVC.Controllers

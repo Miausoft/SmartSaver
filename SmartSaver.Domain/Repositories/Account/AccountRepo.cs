@@ -5,7 +5,7 @@ using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace SmartSaver.EntityFrameworkCore.Repositories
+namespace SmartSaver.Domain.Repositories
 {
     public class AccountRepo : IAccountRepo
     {

@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SmartSaver.EntityFrameworkCore;
 using SmartSaver.EntityFrameworkCore.Models;
 using System.Linq;
 
-namespace SmartSaver.EntityFrameworkCore.Repositories
+namespace SmartSaver.Domain.Repositories
 {
     public class EmailVerificationRepository : IEmailVerificationRepository
     {

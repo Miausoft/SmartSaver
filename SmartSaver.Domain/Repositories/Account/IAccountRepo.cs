@@ -1,6 +1,6 @@
 ﻿using SmartSaver.EntityFrameworkCore.Models;
 
-namespace SmartSaver.EntityFrameworkCore.Repositories
+namespace SmartSaver.Domain.Repositories
 {
     public interface IAccountRepo
     {

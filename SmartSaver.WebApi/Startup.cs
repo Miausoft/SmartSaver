@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SmartSaver.EntityFrameworkCore.Repositories;
+using SmartSaver.Domain.Repositories;
 using SmartSaver.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -40,11 +40,15 @@ namespace SmartSaver.WebApi
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AzureSqlServer")));
             services.AddScoped<ITransactionRepo, TransactionRepo>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ICategoryRepo, CategoryRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseMiddleware<ExceptionMiddleware>();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

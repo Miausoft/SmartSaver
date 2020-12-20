@@ -4,13 +4,12 @@ using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SmartSaver.Domain.Services.DocumentServices;
 using SmartSaver.EntityFrameworkCore;
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.MVC.Models;
-using SmartSaver.EntityFrameworkCore.Repositories;
+using SmartSaver.Domain.Repositories;
 using System.Threading.Tasks;
 
 namespace SmartSaver.MVC.Controllers

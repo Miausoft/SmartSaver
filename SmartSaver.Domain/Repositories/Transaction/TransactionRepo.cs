@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SmartSaver.EntityFrameworkCore.Repositories
+namespace SmartSaver.Domain.Repositories
 {
     public class TransactionRepo : ITransactionRepo
     {

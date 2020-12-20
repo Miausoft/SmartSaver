@@ -8,7 +8,7 @@ using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.MVC.Models;
 using SmartSaver.Domain.Services.TransactionsCounterService;
 using SmartSaver.Domain.Services.SavingMethodSuggestion;
-using SmartSaver.EntityFrameworkCore.Repositories;
+using SmartSaver.Domain.Repositories;
 
 namespace SmartSaver.MVC.Controllers
 {

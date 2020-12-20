@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SmartSaver.EntityFrameworkCore.Models;
-using SmartSaver.EntityFrameworkCore.Repositories;
+using SmartSaver.Domain.Repositories;
 
 namespace SmartSaver.WebApi.Controllers
 {
@@ -37,7 +37,7 @@ namespace SmartSaver.WebApi.Controllers
             return Ok(response);
         }
 
-        [HttpPost("transaction")]
+        [HttpPost("transactions")]
         public async Task<ActionResult> Create(TransactionRestModel trm)
         {
             var result = await _transactions.CreateTransactionForAccount(new Transaction()

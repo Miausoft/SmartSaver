@@ -4,7 +4,7 @@ using SmartSaver.Domain.Services.EmailServices;
 using SmartSaver.Domain.Services.PasswordHash;
 using SmartSaver.Domain.Services.Regex;
 using SmartSaver.Domain.TokenValidation;
-using SmartSaver.EntityFrameworkCore.Repositories;
+using SmartSaver.Domain.Repositories;
 
 namespace SmartSaver.Domain
 {
