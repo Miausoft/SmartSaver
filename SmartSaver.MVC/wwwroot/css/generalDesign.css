@@ -13,7 +13,6 @@
     transition: ease-out 0.7s;
 }
 
-
 .btn:hover {
     box-shadow: inset 300px 0 0 0 darkslategray;
     cursor: pointer;
@@ -49,4 +48,29 @@ input[type="date"]:valid::before {
 .form-group.required.control-label:before {
     content: "*";
     color: red;
+}
+
+.header-verify {
+    color: #000;
+    line-height: 2;
+    margin-bottom: 24px;
+    font-size: 22px;
+    text-align: center;
+}
+
+.container-verify {
+    padding-top: 20vh;
+    margin: auto;
+    max-width: 430px;
+}
+
+.p-verify {
+    line-height: 1.5;
+    font-size: 14px;
+    margin-bottom: 18px;
+}
+
+.a-verify {
+    font-size: 14px;
+    color: #5551ff;
 }
