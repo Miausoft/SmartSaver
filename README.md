@@ -1,18 +1,15 @@
 # SmartSaver
 Trello: https://trello.com/b/amb6EPR8/smartsaver
 
-### Database design
+### Database schema
 ![Database diagram](https://www.part.lt/img/ff763b3ce4f6be3af921540fbaca1c92508.png)
 
-### Requirements
+### ER Diagram
+![ER Diagram](https://user-images.githubusercontent.com/65735690/101800354-dcd17a80-3b15-11eb-94c3-18b37e04fe3e.png)
 
-- [ ] **_Lazy initialization._**
-- [X] Generics (in delegates, **_events and methods_**)
-- [X] Delegates.
-- [X] Events and their usage: **_standard_** and custom.
-- [X] Exceptions and dealing with them in a meaningfull way.
-- [X] Anonymous methods.
-- [X] Lambda expressions.
-- [X] concurrent programming (threading or async/await (for your own written classes); **_common resource usage between threads_**).
-- [X] Config file usage (both - app and user).
-- [X] Dependency Injection
+### Requirements
+- [X] Prepair ER diagram and create the database (MS SQL, but not mandatory - only important to be able to integrate to your solution).
+- [ ] Transfer/update data using DataTable and DataAdapter.
+- [ ] Select/insert/update/delete usage.
+- [ ] LINQ usage: Join, Group, Skip and Take, Agregate function.
+- [X] Entity Framework usage.
