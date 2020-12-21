@@ -21,9 +21,6 @@ namespace SmartSaver.MVC.Controllers
     [AllowAnonymous]
     public class AuthenticationController : Controller
     {
-        private const string Subject = "Sveikiname prisijungus prie SmartSaver!";
-        private const string Body = "Norėdami patvirtinti savo paštą, prašome paspausti šią nuorodą: ";
-
         private readonly Domain.Services.AuthenticationServices.IAuthenticationService _auth;
         private readonly IConfiguration _configuration;
         private readonly IUserRepository _userRepo;
