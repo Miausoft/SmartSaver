@@ -118,7 +118,7 @@ namespace SmartSaver.MVC.Controllers
             }
 
             await UserAuthenticationAsync(_userRepo.GetId<string>(user.Email));
-            return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace("Controller", ""));
+            return LocalRedirect(returnUrl ?? Url.Content("~/"));
         }
 
         [HttpGet]
