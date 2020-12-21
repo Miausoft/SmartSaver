@@ -87,7 +87,15 @@ namespace SmartSaver.MVC.Controllers
             }
 
             var confirmationLink = Url.Action("ConfirmEmail", "Authentication", new { token = _emailRepo.GetUserToken(_userRepo.GetId<string>(email)) }, Request.Scheme);
-            _mailer.SendEmailAsync(new MailMessage(_configuration["Email:Address"], _configuration["Email:Address"], Subject, Body + confirmationLink));
+            
+            _mailer.SendEmailAsync(
+                new MailMessage(
+                    _configuration["Email:Address"],
+                    _configuration["Email:Address"], 
+                    "Verify your email address",
+                     System.IO.File.ReadAllText(_configuration["TemplatePaths:Email"]).Replace("@ViewBag.VerifyLink", confirmationLink))
+                { IsBodyHtml = true }); 
+            
             user.Email = email;
             return View(nameof(Verify), user);
         }
@@ -109,7 +117,7 @@ namespace SmartSaver.MVC.Controllers
 
             if (!_emailRepo.IsVerified(_userRepo.GetId<string>(user.Email)))
             {
-                return View("Verify", user);
+                return View(nameof(Verify), user);
             }
 
             await UserAuthenticationAsync(_userRepo.GetId<string>(user.Email));
