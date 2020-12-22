@@ -6,6 +6,7 @@ using SmartSaver.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using SmartSaver.Domain.CustomExceptions;
 
 namespace SmartSaver.Domain.Repositories
 {
@@ -76,26 +77,25 @@ namespace SmartSaver.Domain.Repositories
                     .AsEnumerable(); // Order transactions from newest to oldest.
         }
 
-        public async Task<CreateTransactionResponse> CreateTransactionForAccount(TransactionDto transaction, int accountId)
+        public async Task<int> CreateTransaction(TransactionDto transaction)
         {
             if (transaction.Amount == 0)
             {
-                return CreateTransactionResponse.BadAmountError;
+                throw new InvalidModelException("Amount can not be 0");
             }
 
             transaction.Category = _context.Categories.First(c => c.Id == transaction.CategoryId);
             transaction.ActionTime = DateTime.UtcNow;
-            transaction.AccountId = accountId;
 
             if (!transaction.Category.TypeOfIncome)
             {
                 transaction.Amount *= -1;
             }
             
-            _context.Transactions.Add(transaction);
+            var created = _context.Transactions.Add(transaction);
             await _context.SaveChangesAsync();
 
-            return CreateTransactionResponse.Success;
+            return created.Entity.Id;
         }
 
         public TransactionDto GetById(int transactionId)

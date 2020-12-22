@@ -14,6 +14,9 @@ namespace SmartSaver.WebApi
         {
             CreateMap<CategoryRequestModel, CategoryDto>();
             CreateMap<CategoryDto, CategoryResponseModel>();
+
+            CreateMap<TransactionRequestModel, TransactionDto>();
+            CreateMap<TransactionDto, TransactionResponseModel>();
         }
     }
 }

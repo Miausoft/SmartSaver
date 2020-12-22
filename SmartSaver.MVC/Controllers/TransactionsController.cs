@@ -55,7 +55,7 @@ namespace SmartSaver.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind("Amount,CategoryId")] TransactionDto transaction)
         {
-            await _transactionRepo.CreateTransactionForAccount(
+            await _transactionRepo.CreateTransaction(
                 transaction, 
                 _accountRepo.GetAccountById(User.Identity.Name).Id
             );

@@ -34,11 +34,10 @@ namespace SmartSaver.Domain.Repositories
         /// <param name="accId">Account id</param>
         /// <returns>List of transactions</returns>
         List<TransactionDto> GetByAccountId(int accId);
-
-        Task<CreateTransactionResponse> CreateTransactionForAccount(TransactionDto transaction, int accountId);
         IEnumerable<TransactionDto> GetByAccountForDateRange(int accId, DateTime startData, DateTime endDate);
 
         TransactionDto GetById(int transactionId);
         Task<int> DeleteByIdAsync(int transactionId);
+        Task<int> CreateTransaction(TransactionDto transaction);
     }
 }

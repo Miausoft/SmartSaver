@@ -5,6 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.Domain.Repositories;
+using SmartSaver.WebApi.RequestModels;
+using SmartSaver.WebApi.ResponseModels;
+using AutoMapper;
+using SmartSaver.Domain.ActionFilters;
 
 namespace SmartSaver.WebApi.Controllers
 {
@@ -12,52 +16,52 @@ namespace SmartSaver.WebApi.Controllers
     public class TransactionController : Controller
     {
         private readonly ITransactionRepo _transactions;
+        private readonly IMapper _mapper;
 
-        public TransactionController(ITransactionRepo transactions)
+        public TransactionController(ITransactionRepo transactions, IMapper mapper)
         {
             _transactions = transactions;
+            _mapper = mapper;
         }
+
 
         [HttpGet("transaction/{transactionId}")]
-        public ActionResult<TransactionDto> Index(int transactionId)
+        public TransactionResponseModel Index(int transactionId)
         {
-            return _transactions.GetById(transactionId);
+            return _mapper.Map<TransactionResponseModel>(
+                _transactions.GetById(transactionId)
+            );
         }
+
 
         [HttpGet("transactions/{accountId}")]
-        public ActionResult<IEnumerable<TransactionDto>> Get(int accountId)
+        public IEnumerable<TransactionResponseModel> Get(int accountId)
         {
-            return _transactions.GetByAccountId(accountId);
+            return _mapper.Map<IEnumerable<TransactionResponseModel>>(
+                _transactions.GetByAccountId(accountId)
+            );
         }
+
 
         [HttpGet("transactions/{accountId}/{start}/{end}")]
-        public ActionResult<IEnumerable<TransactionDto>> Get(int accountId, DateTime start, DateTime end)
+        public IEnumerable<TransactionResponseModel> Get(int accountId, DateTime start, DateTime end)
         {
             var response = _transactions.GetByAccountForDateRange(accountId, start, end);
-            return Ok(response);
+            return _mapper.Map<IEnumerable<TransactionResponseModel>>(response);
         }
+
 
         [HttpPost("transactions")]
-        public async Task<ActionResult> Create(TransactionRestModel trm)
+        [CheckForInvalidModel]
+        public async Task<ActionResult> Create(TransactionRequestModel transaction)
         {
-            var result = await _transactions.CreateTransactionForAccount(new TransactionDto()
-            {
-                Amount = trm.Amount,
-                AccountId = trm.AccountId,
-                CategoryId = trm.CategoryId,
-            }, trm.AccountId);
+            var id = await _transactions.CreateTransaction(
+                _mapper.Map<TransactionDto>(transaction)
+            );
 
-            return result switch
-            {
-                CreateTransactionResponse.BadAmountError => 
-                    BadRequest("Bad request: Invalid transaction amount"),
-
-                CreateTransactionResponse.GeneralError => 
-                    BadRequest("Bad request: An error occured."),
-
-                _ => Ok(trm)
-            };
+            return Created($"transaction/{id}", transaction);
         }
+
 
         [HttpDelete("transaction/{transactionId}")]
         public async Task<ActionResult> Delete(int transactionId)
@@ -71,12 +75,5 @@ namespace SmartSaver.WebApi.Controllers
 
             return Ok($"{rowsAffected} rows affected.");
         }
-    }
-
-    public class TransactionRestModel
-    {
-        public decimal Amount { get; set; }
-        public int AccountId { get; set; }
-        public int CategoryId { get; set; }
     }
 }

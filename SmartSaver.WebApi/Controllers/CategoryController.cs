@@ -14,6 +14,7 @@ using AutoMapper;
 
 namespace SmartSaver.WebApi.Controllers
 {
+    [ApiController]
     public class CategoryController : Controller
     {
         public CategoryController(ICategoryRepo categories, IMapper mapper)
