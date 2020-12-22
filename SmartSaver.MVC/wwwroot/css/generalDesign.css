@@ -1,10 +1,8 @@
-﻿
-.btn:hover {
+﻿.btn:hover {
     background-color: #30735d;
     cursor: pointer;
     color: white;
 }
-
 
 input[type="date"]::before {
     color: #999999;
@@ -37,14 +35,9 @@ input[type="date"]:valid::before {
     padding: 10px;
 }
 
-.login-block {
+.auth-block {
     margin: 30px auto;
-    min-height: 93.6vh
-}
-
-.login-block .auth-box {
-    margin: 20px auto 0;
-    max-width: 450px !important
+    min-height: 93.6vh;
 }
 
 .card {
@@ -55,7 +48,9 @@ input[type="date"]:valid::before {
     margin-bottom: 30px;
     -webkit-transition: all .3s ease-in-out;
     transition: all .3s ease-in-out;
-    background-color: #fff
+    background-color: #fff;
+    max-width: 500px; 
+    padding: 20px 20px 20px 20px;
 }
 
 .card .card-block {
@@ -126,10 +121,13 @@ input[type="date"]:valid::before {
     color: red !important
 }
 
-.btn-google {
+.btn-auth {
     color: #545454;
     background-color: #ffffff;
-    box-shadow: 0 1px 2px 1px #ddd
+    box-shadow: 0 1px 2px 1px #ddd;
+    display: flex;
+    justify-content: center;
+    font-weight: 400;
 }
 
 .or-container {
@@ -149,4 +147,13 @@ input[type="date"]:valid::before {
     flex-grow: 1;
     margin: 0 15px;
     text-align: center
+}
+
+.pb-15 {
+    padding-bottom: 150px;
+}
+
+.background-auth {
+    background-size: cover;
+    background-image: url(../images/holdingdollar.jpg);
 }
