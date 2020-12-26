@@ -1,5 +1,5 @@
-﻿body, h1 {
-    font-family: "Raleway", sans-serif
+﻿body {
+    font-family: "Raleway", sans-serif;
 }
 
 .bgimg {
@@ -8,15 +8,22 @@
     background-size: cover;
 }
 
-.center1 {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 50%;
-}
-
 .descimg {
     background-image: url("https://images.unsplash.com/photo-1574790398664-0cb03682ed1c?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1051&q=80");
     background-position: center;
     background-size: cover;
+}
+
+.row-bottom {
+    position:absolute;
+    bottom:0px;
+    width:100%;
+}
+
+#description {
+    min-width: 300px;
+    max-width: 500px;
+    text-align: center;
+    color: black;
+    font-size: 21px;
 }

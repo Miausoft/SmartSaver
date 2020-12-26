@@ -48,10 +48,8 @@
         </div>
     </nav>
 </header>
-    @if (User.Identity.IsAuthenticated)
-    {
-        @await RenderSectionAsync("Jumbotron", required: false)
-    }
+
+    @await RenderSectionAsync("Jumbotron", required: false)
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -63,6 +61,7 @@
             &copy; 2020 - SmartSaver by MIAUsoft
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
