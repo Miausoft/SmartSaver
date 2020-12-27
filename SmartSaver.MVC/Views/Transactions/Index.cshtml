@@ -1,4 +1,4 @@
-﻿@using SmartSaver.Domain.Services.TransactionsCounterService
+@using SmartSaver.Domain.Services.TransactionsCounterService
 
 @model TransactionViewModel
 @{
@@ -8,11 +8,16 @@
     var balance = Model.Transactions.Sum(t => t.Amount);
 }
 
-@section Jumbotron {
-    <div class="jumbotron jumbotron-fluid mb-5">
+<head>
+    <link rel="stylesheet" type="text/css" href="~/css/generalDesign.css" />
+</head>
+
+@section Jumbotron 
+{
+    <div class="jumbotron jumbotron-fluid mb-5 background-auth">
         <div class="container">
             <h5 class="text-light" style="text-transform: uppercase; letter-spacing: 4px"><b>Balance</b></h5>
-            <span class="badge badge-pill badge-success">1000eur</span>
+            <span class="badge badge-pill badge-dark"><b class="display-4" style="font-size:27px;"> @balance.ToString("C2")</b></span>
         </div>
     </div>
 }
@@ -179,9 +184,7 @@
                 <td>@t.Category.Title</td>
             </tr>
         }
-        <tr>
-            <td colspan="3">Balance:<b> @balance.ToString("C2")</b></td>
-        </tr>
+
     </tbody>
 </table>
 <nav>
