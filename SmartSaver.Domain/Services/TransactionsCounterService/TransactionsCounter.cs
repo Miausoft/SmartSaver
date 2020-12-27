@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using SmartSaver.EntityFrameworkCore.Models;
@@ -32,7 +32,7 @@ namespace SmartSaver.Domain.Services.TransactionsCounterService
             return TotalIncome(transaction, from, to) + TotalExpense(transaction, from, to);
         }
 
-        public static IDictionary<int, decimal> TotalIncomeByCategory(IEnumerable<TransactionDto> transaction, DateTime from, DateTime to)
+        public static IDictionary<string, decimal> TotalIncomeByCategory(IEnumerable<TransactionDto> transaction, IEnumerable<CategoryDto> category, DateTime from, DateTime to)
         {
             return transaction.GroupBy(t => new { t.CategoryId, t.ActionTime }).Select(x => new TransactionDto
             {
@@ -44,10 +44,10 @@ namespace SmartSaver.Domain.Services.TransactionsCounterService
                 Amount = z.Where(z => z.Amount > 0).Select(z => z.Amount).Sum(),
                 CategoryId = z.Select(z => z.CategoryId).First()
             }
-            ).OrderBy(x => x.CategoryId).ToDictionary(x => x.CategoryId, x => x.Amount);
+            ).OrderBy(x => x.CategoryId).ToDictionary(x => category.Where(a => x.CategoryId == a.Id).Select(a => a.Title).First(), x => x.Amount);
         }
 
-        public static IDictionary<int, decimal> TotalExpenseByCategory(IEnumerable<TransactionDto> transaction, DateTime from, DateTime to)
+        public static IDictionary<string, decimal> TotalExpenseByCategory(IEnumerable<TransactionDto> transaction, IEnumerable<CategoryDto> category, DateTime from, DateTime to)
         {
             return transaction.GroupBy(t => new { t.CategoryId, t.ActionTime }).Select(x => new TransactionDto
             {
@@ -59,7 +59,7 @@ namespace SmartSaver.Domain.Services.TransactionsCounterService
                 Amount = z.Where(z => z.Amount < 0).Select(z => z.Amount).Sum(),
                 CategoryId = z.Select(z => z.CategoryId).First()
             }
-            ).OrderBy(z => z.CategoryId).ToDictionary(x => x.CategoryId, x => x.Amount /* / TransactionsCounter.TotalExpense(transaction, from, to) * 100*/);
+            ).OrderBy(z => z.CategoryId).ToDictionary(x => category.Where(a => x.CategoryId == a.Id).Select(a => a.Title).First(), x => x.Amount /* / TransactionsCounter.TotalExpense(transaction, from, to) * 100*/);
         }
 
         private static bool InRange(DateTime dateToCheck, DateTime startDate, DateTime endDate)

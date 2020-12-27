@@ -1,4 +1,8 @@
-﻿.btn:hover {
+html {
+    scroll-behavior: smooth;
+}
+
+.btn:hover {
     background-color: #30735d;
     cursor: pointer;
     color: white;
@@ -154,6 +158,52 @@ input[type="date"]:valid::before {
 }
 
 .background-auth {
-    background-size: cover;
     background-image: url(../images/holdingdollar.jpg);
+    background-position: center;
+    background-size: cover;
+}
+
+.full-screen {
+    min-height: calc(100vh - 53px);
+}
+
+.bg-sand {
+    background-color: #e4e8da;
+}
+
+.mb-100 {
+    margin-bottom: 100px;
+}
+
+.mt-100 {
+    margin-top: 100px;
+}
+
+.f-110 {
+    font-size: 110px;
+}
+
+.header-verify {
+    color: #000;
+    line-height: 2;
+    margin-bottom: 24px;
+    font-size: 22px;
+    text-align: center;
+}
+
+.container-verify {
+    padding: 20vh 0 20vh 0;
+    margin: auto;
+    max-width: 430px;
+}
+
+.p-verify {
+    line-height: 1.5;
+    font-size: 14px;
+    margin-bottom: 18px;
+}
+
+.a-verify {
+    font-size: 14px;
+    color: #5551ff;
 }

@@ -20,9 +20,6 @@ namespace SmartSaver.MVC.Controllers
     [AllowAnonymous]
     public class AuthenticationController : Controller
     {
-        private const string Subject = "Sveikiname prisijungus prie SmartSaver!";
-        private const string Body = "Norėdami patvirtinti savo paštą, prašome paspausti šią nuorodą: ";
-
         private readonly Domain.Services.AuthenticationServices.IAuthenticationService _auth;
         private readonly IConfiguration _configuration;
         private readonly IUserRepository _userRepo;
@@ -30,8 +27,8 @@ namespace SmartSaver.MVC.Controllers
         private readonly ITokenValidationService _tokenValidation;
         private readonly IMailer _mailer;
 
-        public AuthenticationController(Domain.Services.AuthenticationServices.IAuthenticationService auth, 
-                                        IConfiguration configuration, 
+        public AuthenticationController(Domain.Services.AuthenticationServices.IAuthenticationService auth,
+                                        IConfiguration configuration,
                                         IUserRepository userRepo,
                                         IEmailVerificationRepository emailRepo,
                                         ITokenValidationService tokenValidation,
@@ -71,12 +68,32 @@ namespace SmartSaver.MVC.Controllers
         {
             if (ModelState.IsValid && AddNewUser(model.Username, model.Email, model.Password))
             {
-                var confirmationLink = Url.Action("ConfirmEmail", "Authentication", new { token = _emailRepo.GetUserToken(_userRepo.GetId<string>(model.Email)) }, Request.Scheme);
-                _mailer.SendEmailAsync(new MailMessage(_configuration["Email:Address"], _configuration["Email:Address"], Subject, Body + confirmationLink));
-                return RedirectToAction(nameof(Login));
+                return RedirectToAction(nameof(Verify), new { email = model.Email } );
             }
 
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult Verify(User user, string email)
+        {
+            if (String.IsNullOrEmpty(email) || !_userRepo.DoesEmailExist(email) || _emailRepo.IsVerified(_userRepo.GetId<string>(email)))
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
+            var confirmationLink = Url.Action("ConfirmEmail", "Authentication", new { token = _emailRepo.GetUserToken(_userRepo.GetId<string>(email)) }, Request.Scheme);
+            
+            _mailer.SendEmailAsync(
+                new MailMessage(
+                    _configuration["Email:Address"],
+                    _configuration["Email:Address"], 
+                    "Verify your email address",
+                     System.IO.File.ReadAllText(_configuration["TemplatePaths:Email"]).Replace("@ViewBag.VerifyLink", confirmationLink))
+                { IsBodyHtml = true }); 
+            
+            user.Email = email;
+            return View(nameof(Verify), user);
         }
 
         [HttpPost]
@@ -96,12 +113,11 @@ namespace SmartSaver.MVC.Controllers
 
             if (!_emailRepo.IsVerified(_userRepo.GetId<string>(user.Email)))
             {
-                ModelState.AddModelError(nameof(user.Email), "Email is not confirmed.");
-                return View();
+                return View(nameof(Verify), user);
             }
 
             await UserAuthenticationAsync(_userRepo.GetId<string>(user.Email));
-            return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace("Controller", ""));
+            return LocalRedirect(returnUrl ?? Url.Content("~/"));
         }
 
         [HttpGet]
@@ -168,7 +184,6 @@ namespace SmartSaver.MVC.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmailAsync(string token)
         {
             if (token == null)
@@ -194,7 +209,7 @@ namespace SmartSaver.MVC.Controllers
                 await UserAuthenticationAsync(claim);
                 return RedirectToAction(nameof(DashboardController.Complete), nameof(DashboardController).Replace("Controller", ""));
             }
-            
+
             return RedirectToAction(nameof(Index), nameof(HomeController).Replace("Controller", ""));
         }
 

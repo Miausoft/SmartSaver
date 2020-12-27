@@ -1,4 +1,4 @@
-﻿@using SmartSaver.Domain.Services.TransactionsCounterService
+@using SmartSaver.Domain.Services.TransactionsCounterService
 
 @model TransactionViewModel
 @{
@@ -8,12 +8,17 @@
     var balance = Model.Transactions.Sum(t => t.Amount);
 }
 
-@section Jumbotron {
-    <div class="jumbotron jumbotron-fluid mb-5">
-      <div class="container">
-          <h5 class="text-light" style="text-transform: uppercase; letter-spacing: 4px"><b>Balance</b></h5>
-          <span class="badge badge-pill badge-success">1000eur</span>
-      </div>
+<head>
+    <link rel="stylesheet" type="text/css" href="~/css/generalDesign.css" />
+</head>
+
+@section Jumbotron 
+{
+    <div class="jumbotron jumbotron-fluid mb-5 background-auth">
+        <div class="container">
+            <h5 class="text-light" style="text-transform: uppercase; letter-spacing: 4px"><b>Balance</b></h5>
+            <span class="badge badge-pill badge-dark"><b class="display-4" style="font-size:27px;"> @balance.ToString("C2")</b></span>
+        </div>
     </div>
 }
 
@@ -32,39 +37,49 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form autocomplete="off" role="form" asp-controller="Transactions" asp-action="Create" method="POST">
+            <form asp-controller="Transactions" asp-action="Create" method="POST">
                 <div class="modal-body">
-                    <label>Amount</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="Amount" name="Amount"> <!-- Amount -->
-                        <div class="input-group-append">
-                            <span class="input-group-text">@currencySymbol</span>
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="Spending" name="Amount" />
+                            <div class="input-group-append">
+                                <span class="input-group-text form-group">@currencySymbol</span>
+                            </div>
+                        </div>
+                        <span id="SpendingStatus"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Spending category</label>
+                        <select class="form-control" id="CategoryId" name="CategoryId">
+                            <!-- Category -->
+                            @foreach (var c in Model.Categories)
+                            {
+                                @if (!c.TypeOfIncome)
+                                {
+                                    <option value="@c.Id">
+                                        @c.Title
+                                    </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Choose date</label>
+                        <div class="date-input input-group">
+                            <input type="date" class="form-control">
                         </div>
                     </div>
-
-                    <label>Spending category</label>
-                    <select class="form-control" id="CategoryId" name="CategoryId">
-                        <!-- Category -->
-                        @foreach (var c in Model.Categories)
-                        {
-                            @if (!c.TypeOfIncome)
-                            {
-                                <option value="@c.Id">
-                                    @c.Title
-                                </option>
-                            }
-                        }
-                    </select>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-success" type="submit">ADD SPENDING</button>
+                    <button id ="SpendingButton" class="btn btn-success" type="submit">ADD SPENDING</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<!-- Modal [Add Spending] -->
+<!-- Modal [Add Income] -->
 <div class="modal fade" id="addIncomeModal" tabindex="-1" role="dialog" aria-labelledby="addIncomeModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -74,32 +89,42 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form autocomplete="off" role="form" asp-controller="Transactions" asp-action="Create" method="POST">
+            <form asp-controller="Transactions" asp-action="Create" method="POST">
                 <div class="modal-body">
-                    <label>Amount</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="Amount" name="Amount"> <!-- Date -->
-                        <div class="input-group-append">
-                            <span class="input-group-text">@currencySymbol</span>
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="Income" name="Amount" />
+                            <div class="input-group-append">
+                                <span class="input-group-text form-group">@currencySymbol</span>
+                            </div>
+                        </div>
+                        <span id="IncomeStatus"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Spending category</label>
+                        <select class="form-control" id="CategoryId" name="CategoryId">
+                            <!-- Category -->
+                            @foreach (var c in Model.Categories)
+                            {
+                                @if (c.TypeOfIncome)
+                                {
+                                    <option value="@c.Id">
+                                        @c.Title
+                                    </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Choose date</label>
+                        <div class="date-input input-group">
+                            <input type="date" class="form-control">
                         </div>
                     </div>
-
-                    <label>Spending category</label>
-                    <select class="form-control" id="CategoryId" name="CategoryId">
-                        <!-- Category -->
-                        @foreach (var c in Model.Categories)
-                        {
-                            @if (c.TypeOfIncome)
-                            {
-                                <option value="@c.Id">
-                                    @c.Title
-                                </option>
-                            }
-                        }
-                    </select>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-success" type="submit">ADD INCOME</button>
+                    <button id ="IncomeButton" class="btn btn-success" type="submit">ADD INCOME</button>
                 </div>
             </form>
         </div>
@@ -116,25 +141,25 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form autocomplete="off" role="form" asp-controller="Transactions" asp-action="CreatePDF" method="get">
+            <form asp-controller="Transactions" asp-action="CreatePDF" method="get">
                 <div class="modal-body">
-                    <div class="col-sm-10">
+                    <div class="form-group">
                         <small class="form-text text-muted">FROM DATE</small>
                         <div class="date-input">
-                            <input type="date" asp-for="FromDate" required oninvalid="this.setCustomValidity('The field is required')" class="form-control">
+                            <input id="FromDate" type="date" asp-for="FromDate" class="form-control">
                         </div>
-                        <span class="text-danger"></span>
+                        <span id="FromStatus"></span>
                     </div>
-                    <div class="col-sm-10">
+                    <div class="form-group">
                         <small class="form-text text-muted">TO DATE</small>
                         <div class="date-input">
-                            <input type="date" asp-for="ToDate" required oninvalid="this.setCustomValidity('The field is required')" class="form-control">
+                            <input id="ToDate" type="date" asp-for="ToDate" class="form-control">
                         </div>
-                        <span class="text-danger"></span>
+                        <span id="ToStatus"></span>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-info" type="submit">GENERATE PDF</button>
+                    <button id="PdfButton" class="btn btn-info" type="submit">GENERATE PDF</button>
                 </div>
             </form>
         </div>
@@ -159,11 +184,70 @@
                 <td>@t.Category.Title</td>
             </tr>
         }
-        <tr>
-            <td colspan="3">Balance:<b> @balance.ToString("C2")</b></td>
-        </tr>
+
     </tbody>
 </table>
 <nav>
     <button style="border-radius: 0" type="button" class="btn btn-sm btn-info shadow-none" data-toggle="modal" data-target="#generatePdf">Generate Resume (PDF) 🖨️</button>
 </nav>
+
+
+<script>
+    const spendingStatus = document.getElementById('SpendingStatus');
+    const incomeStatus = document.getElementById('IncomeStatus');
+    const spending = document.getElementById('Spending');
+    const income = document.getElementById('Income');
+    const fromDate = document.getElementById('FromDate');
+    const toDate = document.getElementById('ToDate');
+    const fromStatus = document.getElementById('FromStatus');
+    const toStatus = document.getElementById('ToStatus');
+
+    document.getElementById("SpendingButton").onclick = function () {
+        if (!checkInputs(spending.value.trim(), spendingStatus)) {
+            return false;
+        }
+    }
+
+    document.getElementById("IncomeButton").onclick = function () {
+        if (!checkInputs(income.value.trim(), incomeStatus)) {
+            return false;
+        }
+    }
+
+    document.getElementById("PdfButton").onclick = function () {
+        if (!checkDate(fromDate.value, toDate.value, fromStatus, toStatus)) {
+            return false;
+        }
+    }
+
+    function checkInputs(value, status) {
+        if (value === '') {
+            setError(status, "Amount cannot be blank");
+        } else if (!isNumber(value)) {
+            setError(status, "Please provide numbers only without any signs");
+        } else {
+            return true;
+        }
+    }
+
+    function checkDate(from, to, fromStatus, toStatus) {
+        if (from === '') {
+            setError(fromStatus, "Please pick a date");
+        } if (to === '') {
+            setError(toStatus, "Please pick a date");
+        } else if (from > to) {
+            setError(toStatus, "Invalid date selection");
+        } else {
+            setError(toStatus, "");
+            return true;
+        }
+    }
+
+    function setError(status, message) {
+        $(status).html('<font color="Red">' + message + '</font>');
+    }
+
+    function isNumber(amount) {
+        return /^[0-9]*[.,]?[0-9]+$/.test(amount);
+    }
+</script>

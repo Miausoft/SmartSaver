@@ -92,13 +92,13 @@ namespace SmartSaver.MVC.Controllers
 
             if (fromDate > toDate)
             {
-                ModelState.AddModelError(String.Empty, "Invalid date");
                 return RedirectToAction(nameof(Index));
             }
 
             int userAccountId = _context.Users.Where(a => a.Id.ToString().Equals(User.Identity.Name)).Select(a => a.AccountId).FirstOrDefault();
+            var categories = _context.Categories.ToList();
             var transactions = _context.Transactions.Where(a => a.AccountId.Equals(userAccountId)).ToList();
-            byte[] bytes = new PDFCreator().GeneratePDF(transactions, fromDate, toDate);
+            byte[] bytes = new PDFCreator().GeneratePDF(transactions, categories, fromDate, toDate);
 
             return File(bytes, "application/pdf");
         }
