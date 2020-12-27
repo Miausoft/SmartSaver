@@ -13,7 +13,7 @@ namespace SmartSaver.Domain.Repositories
         BadRequest
     }
 
-    public interface ICategoryRepo
+    public interface ICategoryRepository
     {
         IEnumerable<Category> GetMultiple();
         IEnumerable<Category> GetMultiple(Expression<Func<Category, bool>> predicate);

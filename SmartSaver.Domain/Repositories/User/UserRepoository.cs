@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace SmartSaver.Domain.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepoository : IUserRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public UserRepository(ApplicationDbContext db)
+        public UserRepoository(ApplicationDbContext db)
         {
             _db = db;
         }

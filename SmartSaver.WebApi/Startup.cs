@@ -36,8 +36,8 @@ namespace SmartSaver.WebApi
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AzureSqlServer")));
             services.AddScoped<ITransactionRepoositry, TransactionRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<ICategoryRepo, CategoryRepo>();
+            services.AddScoped<IUserRepository, UserRepoository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

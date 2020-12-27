@@ -17,13 +17,13 @@ namespace SmartSaver.WebApi.Controllers
     [ApiController]
     public class CategoryController : Controller
     {
-        public CategoryController(ICategoryRepo categories, IMapper mapper)
+        public CategoryController(ICategoryRepository categories, IMapper mapper)
         {
             _categories = categories;
             _mapper = mapper;
         }
 
-        private ICategoryRepo _categories;
+        private ICategoryRepository _categories;
         private IMapper _mapper;
 
         [HttpGet("categories")]

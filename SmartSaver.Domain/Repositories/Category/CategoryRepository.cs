@@ -10,9 +10,9 @@ using SmartSaver.EntityFrameworkCore;
 
 namespace SmartSaver.Domain.Repositories
 {
-    public class CategoryRepo : ICategoryRepo
+    public class CategoryRepository : ICategoryRepository
     {
-        public CategoryRepo(ApplicationDbContext context)
+        public CategoryRepository(ApplicationDbContext context)
         {
             _context = context;
         }
