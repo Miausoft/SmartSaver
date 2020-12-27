@@ -11,12 +11,12 @@ namespace SmartSaver.Domain.Repositories
 {
     public class CategoryRepository : ICategoryRepository
     {
+        private readonly ApplicationDbContext _context;
+
         public CategoryRepository(ApplicationDbContext context)
         {
             _context = context;
         }
-
-        private ApplicationDbContext _context;
 
         public IEnumerable<Category> GetMultiple()
         {

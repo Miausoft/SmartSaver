@@ -19,10 +19,9 @@ namespace SmartSaver.MVC.Controllers
         private readonly ITransactionRepoositry _transactionRepo;
         private readonly IAccountRepoository _accountRepo;
 
-        public DashboardController(
-            ApplicationDbContext context, 
-            ITransactionRepoositry transactionRepo, 
-            IAccountRepoository accountRepo)
+        public DashboardController(ApplicationDbContext context, 
+                                   ITransactionRepoositry transactionRepo, 
+                                   IAccountRepoository accountRepo)
         {
             _context = context;
             _transactionRepo = transactionRepo;

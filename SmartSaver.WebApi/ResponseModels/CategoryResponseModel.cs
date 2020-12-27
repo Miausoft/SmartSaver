@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace SmartSaver.WebApi.ResponseModels
 {
     public class CategoryResponseModel

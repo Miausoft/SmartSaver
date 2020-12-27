@@ -3,7 +3,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using SmartSaver.Domain.Services.DocumentServices;
 using SmartSaver.EntityFrameworkCore;
 using SmartSaver.EntityFrameworkCore.Models;
@@ -17,18 +16,14 @@ namespace SmartSaver.MVC.Controllers
     public class TransactionsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<TransactionsController> _logger;
         private readonly IAccountRepoository _accountRepo;
         private readonly ITransactionRepoositry _transactionRepo;
 
-        public TransactionsController(
-            ApplicationDbContext context, 
-            ILogger<TransactionsController> logger, 
-            IAccountRepoository accountRepo, 
-            ITransactionRepoositry transactionRepo)
+        public TransactionsController(ApplicationDbContext context,
+                                      IAccountRepoository accountRepo, 
+                                      ITransactionRepoositry transactionRepo)
         {
             _context = context;
-            _logger = logger;
             _accountRepo = accountRepo;
             _transactionRepo = transactionRepo;
         }

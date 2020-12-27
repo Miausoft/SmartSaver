@@ -11,12 +11,12 @@ namespace SmartSaver.Domain.Repositories
 {
     public class TransactionRepository : ITransactionRepoositry
     {
+        private readonly ApplicationDbContext _context;
+
         public TransactionRepository(ApplicationDbContext context)
         {
             _context = context;
         }
-
-        private readonly ApplicationDbContext _context;
 
         public List<Transaction> GetThisMonthAccountSpendings(int accId)
         {

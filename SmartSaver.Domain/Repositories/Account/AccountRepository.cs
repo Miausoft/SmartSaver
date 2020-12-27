@@ -7,7 +7,7 @@ namespace SmartSaver.Domain.Repositories
 {
     public class AccountRepository : IAccountRepoository
     {
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
         public AccountRepository(ApplicationDbContext context)
         {
