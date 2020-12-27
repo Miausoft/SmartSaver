@@ -10,12 +10,12 @@ namespace SmartSaver.WebApi.Controllers
 {
     public class UserController : Controller
     {
-        public UserController(UserRepository users)
+        public UserController(IUserRepository users)
         {
             _users = users;
         }
 
-        private UserRepository _users;
+        private readonly IUserRepository _users;
 
         [HttpGet("users")]
         public IEnumerable<User> Index()
