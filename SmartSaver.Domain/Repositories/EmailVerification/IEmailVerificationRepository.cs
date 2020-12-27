@@ -4,9 +4,9 @@ namespace SmartSaver.Domain.Repositories
 {
     public interface IEmailVerificationRepository
     {
-        public bool IsVerified(string userId);
-        public string GetUserToken(string userId);
+        public bool IsVerified<T>(T userId);
+        public string GetUserToken<T>(T userId);
         public EmailVerification Create(EmailVerification emailVerification);
-        public void Delete(string userId);
+        public void Delete<T>(T userId);
     }
 }

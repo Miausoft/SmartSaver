@@ -18,19 +18,19 @@ namespace SmartSaver.Domain.Repositories
             _context = context;
         }
 
-        public IEnumerable<Transaction> GetByAccountId(int accId)
+        public IEnumerable<Transaction> GetByAccountId<T>(T accId)
         {
             return _context.Transactions
                     .Include(p => p.Category)
-                    .Where(t => t.AccountId == accId)
+                    .Where(t => t.AccountId.ToString() == accId.ToString())
                     .OrderByDescending(a => a.ActionTime);
         }
 
-        public IEnumerable<Transaction> GetByAccountForDateRange(int accId, DateTime startData, DateTime endDate)
+        public IEnumerable<Transaction> GetByAccountForDateRange<T>(T accId, DateTime startData, DateTime endDate)
         {
             return _context.Transactions
                     .Include(p => p.Category)
-                    .Where(t => t.AccountId == accId && t.ActionTime >= startData && t.ActionTime <= endDate)
+                    .Where(t => t.AccountId.ToString() == accId.ToString() && t.ActionTime >= startData && t.ActionTime <= endDate)
                     .OrderByDescending(a => a.ActionTime);
         }
 
@@ -55,14 +55,14 @@ namespace SmartSaver.Domain.Repositories
             return created.Entity.Id;
         }
 
-        public Transaction GetById(int transactionId)
+        public Transaction GetById<T>(T transactionId)
         {
-            return _context.Transactions.First(t => t.Id == transactionId);
+            return _context.Transactions.First(t => t.Id.ToString() == transactionId.ToString());
         }
 
-        public Task<int> DeleteById(int transactionId)
+        public Task<int> DeleteById<T>(T transactionId)
         {
-            Transaction transaction = _context.Transactions.First(t => t.Id == transactionId);
+            Transaction transaction = _context.Transactions.First(t => t.Id.ToString() == transactionId.ToString());
             _context.Transactions.Remove(transaction);
             return _context.SaveChangesAsync();
         }

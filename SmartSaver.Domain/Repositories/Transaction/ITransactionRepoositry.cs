@@ -14,10 +14,10 @@ namespace SmartSaver.Domain.Repositories
 
     public interface ITransactionRepoositry
     {
-        IEnumerable<Transaction> GetByAccountId(int accId);
-        IEnumerable<Transaction> GetByAccountForDateRange(int accId, DateTime startData, DateTime endDate);
-        Transaction GetById(int transactionId);
-        Task<int> DeleteById(int transactionId);
+        IEnumerable<Transaction> GetByAccountId<T>(T accId);
+        IEnumerable<Transaction> GetByAccountForDateRange<T>(T accId, DateTime startData, DateTime endDate);
+        Transaction GetById<T>(T transactionId);
+        Task<int> DeleteById<T>(T transactionId);
         Task<int> CreateTransaction(Transaction transaction);
     }
 }
