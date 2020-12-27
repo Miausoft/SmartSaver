@@ -192,7 +192,7 @@ input[type="date"]:valid::before {
 }
 
 .container-verify {
-    padding-top: 20vh;
+    padding: 20vh 0 20vh 0;
     margin: auto;
     max-width: 430px;
 }
