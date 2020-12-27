@@ -1,8 +1,6 @@
 ﻿using SmartSaver.EntityFrameworkCore.Models;
-using SmartSaver.Domain.Repositories;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Linq;
 using System;
 using System.Threading.Tasks;
 

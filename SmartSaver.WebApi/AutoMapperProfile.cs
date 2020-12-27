@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AutoMapper;
+﻿using AutoMapper;
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.WebApi.RequestModels;
 using SmartSaver.WebApi.ResponseModels;

@@ -1,6 +1,5 @@
 ﻿using SmartSaver.EntityFrameworkCore.Models;
 
-
 namespace SmartSaver.Domain.Repositories
 {
     public interface IEmailVerificationRepository

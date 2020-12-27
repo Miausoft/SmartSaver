@@ -1,12 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.Domain.Repositories;
-using SmartSaver.Domain.CustomExceptions;
 using SmartSaver.Domain.ActionFilters;
 using SmartSaver.WebApi.RequestModels;
 using SmartSaver.WebApi.ResponseModels;

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

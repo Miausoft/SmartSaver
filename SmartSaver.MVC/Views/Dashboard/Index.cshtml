@@ -1,5 +1,3 @@
-@using SmartSaver.EntityFrameworkCore.Models
-@using SmartSaver.MVC.Models
 @model DashboardViewModel
 @{
     var score = Math.Min(Math.Round(Model.SavedCurrentMonth * 10 / Model.ToSaveCurrentMonth, 1), 10);
