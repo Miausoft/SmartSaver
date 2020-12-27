@@ -15,10 +15,10 @@ namespace SmartSaver.WebApi.Controllers
     [ApiController]
     public class TransactionController : Controller
     {
-        private readonly ITransactionRepo _transactions;
+        private readonly ITransactionRepoositry _transactions;
         private readonly IMapper _mapper;
 
-        public TransactionController(ITransactionRepo transactions, IMapper mapper)
+        public TransactionController(ITransactionRepoositry transactions, IMapper mapper)
         {
             _transactions = transactions;
             _mapper = mapper;
@@ -56,7 +56,7 @@ namespace SmartSaver.WebApi.Controllers
         public async Task<ActionResult> Create(TransactionRequestModel transaction)
         {
             var id = await _transactions.CreateTransaction(
-                _mapper.Map<TransactionDto>(transaction)
+                _mapper.Map<Transaction>(transaction)
             );
 
             return Created($"transaction/{id}", transaction);

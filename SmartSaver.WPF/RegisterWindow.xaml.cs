@@ -54,7 +54,7 @@ namespace SmartSaver.WPF
 
             if (informationCorrect)
             {
-                RegistrationResult registrationResult = _auth.Register(new UserDto()
+                RegistrationResult registrationResult = _auth.Register(new User()
                 {
                     Username = username, 
                     Password = newPassword1Textbox.Password, 

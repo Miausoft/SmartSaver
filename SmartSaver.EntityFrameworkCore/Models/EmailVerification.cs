@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartSaver.EntityFrameworkCore.Models
 {
-    public class EmailVerificationDto
+    public class EmailVerification
     {
         [ForeignKey("UserId")]
-        public UserDto User { get; set; }
+        public User User { get; set; }
 
         [Key]
         public int UserId { get; set; }

@@ -2,14 +2,14 @@
 
 namespace SmartSaver.Domain.Repositories
 {
-    public interface IAccountRepo
+    public interface IAccountRepoository
     {
         /// <summary>
         /// Gets single account object for given username.
         /// </summary>
         /// <param name="username">Username of a user</param>
         /// <returns>Account object</returns>
-        AccountDto GetAccountById(string username);
+        Account GetAccountById(string username);
 
         /// <summary>
         /// Checks if account already had filled his information with
@@ -17,6 +17,6 @@ namespace SmartSaver.Domain.Repositories
         /// </summary>
         /// <param name="account">Reference to an account object</param>
         /// <returns>Boolean</returns>
-        bool IsAccountValid(AccountDto account);
+        bool IsAccountValid(Account account);
     }
 }

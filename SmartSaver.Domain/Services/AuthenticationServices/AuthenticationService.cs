@@ -22,9 +22,9 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
             _context = context;
         }
 
-        public override UserDto Login(string email, string password)
+        public override User Login(string email, string password)
         {
-            UserDto user = base.Login(email, password);
+            User user = base.Login(email, password);
             if (user == null || !_hasher.Verify(password: password, passwordHash: user.Password))
             {
                 return null;
@@ -33,7 +33,7 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
             return user;
         }
 
-        public override RegistrationResult Register(UserDto user)
+        public override RegistrationResult Register(User user)
         {
             if (!String.IsNullOrEmpty(user.Password))
             {

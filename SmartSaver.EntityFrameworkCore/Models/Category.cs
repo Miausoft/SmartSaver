@@ -2,7 +2,7 @@
 
 namespace SmartSaver.EntityFrameworkCore.Models
 {
-    public class CategoryDto
+    public class Category
     {
         [Key]
         public int Id { get; set; }

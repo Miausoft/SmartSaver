@@ -98,7 +98,7 @@ namespace SmartSaver.MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(UserDto user, string returnUrl)
+        public async Task<IActionResult> Login(User user, string returnUrl)
         {
             if (!ModelState.IsValid)
             {
@@ -173,11 +173,11 @@ namespace SmartSaver.MVC.Controllers
                 return false;
             }
 
-            _auth.Register(new UserDto() { Username = username, Email = email, Password = password });
+            _auth.Register(new User() { Username = username, Email = email, Password = password });
 
             if (password != null)
             {
-                _emailRepo.Create(new EmailVerificationDto { UserId = _userRepo.GetId<int>(email), EmailVerified = false, Token = _tokenValidation.GenerateToken(_userRepo.GetId<string>(email)) });
+                _emailRepo.Create(new EmailVerification { UserId = _userRepo.GetId<int>(email), EmailVerified = false, Token = _tokenValidation.GenerateToken(_userRepo.GetId<string>(email)) });
             }
 
             return true;

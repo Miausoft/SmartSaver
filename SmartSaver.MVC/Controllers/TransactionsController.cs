@@ -19,14 +19,14 @@ namespace SmartSaver.MVC.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<TransactionsController> _logger;
-        private readonly IAccountRepo _accountRepo;
-        private readonly ITransactionRepo _transactionRepo;
+        private readonly IAccountRepoository _accountRepo;
+        private readonly ITransactionRepoositry _transactionRepo;
 
         public TransactionsController(
             ApplicationDbContext context, 
             ILogger<TransactionsController> logger, 
-            IAccountRepo accountRepo, 
-            ITransactionRepo transactionRepo)
+            IAccountRepoository accountRepo, 
+            ITransactionRepoositry transactionRepo)
         {
             _context = context;
             _logger = logger;
@@ -53,11 +53,10 @@ namespace SmartSaver.MVC.Controllers
         // POST: TransactionsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind("Amount,CategoryId")] TransactionDto transaction)
+        public async Task<ActionResult> Create([Bind("Amount,CategoryId")] Transaction transaction)
         {
             await _transactionRepo.CreateTransaction(
-                transaction, 
-                _accountRepo.GetAccountById(User.Identity.Name).Id
+                transaction
             );
 
             return RedirectToAction(nameof(Index));

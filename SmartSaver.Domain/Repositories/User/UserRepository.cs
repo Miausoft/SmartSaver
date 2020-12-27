@@ -32,22 +32,22 @@ namespace SmartSaver.Domain.Repositories
             return (T)Convert.ChangeType(_db.Users.Where(u => u.Email == email).Select(u => u.Id).FirstOrDefault(), typeof(T));
         }
 
-        public IEnumerable<UserDto> Get()
+        public IEnumerable<User> Get()
         {
             return _db.Users;
         }
 
-        public IEnumerable<UserDto> Get(Expression<Func<UserDto, bool>> expression)
+        public IEnumerable<User> Get(Expression<Func<User, bool>> expression)
         {
             return _db.Users.Where(expression);
         }
 
-        public UserDto GetSingle(Expression<Func<UserDto, bool>> expression)
+        public User GetSingle(Expression<Func<User, bool>> expression)
         {
             return Get(expression).First();
         }
 
-        public async Task<CreateUserResponse> CreateAsync(UserDto user)
+        public async Task<CreateUserResponse> CreateAsync(User user)
         {
             _db.Users.Add(user);
             var response = await _db.SaveChangesAsync();

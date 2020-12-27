@@ -12,11 +12,11 @@ namespace SmartSaver.WebApi
     {
         public AutoMapperProfile()
         {
-            CreateMap<CategoryRequestModel, CategoryDto>();
-            CreateMap<CategoryDto, CategoryResponseModel>();
+            CreateMap<CategoryRequestModel, Category>();
+            CreateMap<Category, CategoryResponseModel>();
 
-            CreateMap<TransactionRequestModel, TransactionDto>();
-            CreateMap<TransactionDto, TransactionResponseModel>();
+            CreateMap<TransactionRequestModel, Transaction>();
+            CreateMap<Transaction, TransactionResponseModel>();
         }
     }
 }

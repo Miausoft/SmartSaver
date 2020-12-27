@@ -16,13 +16,13 @@ namespace SmartSaver.MVC.Controllers
     public class DashboardController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly ITransactionRepo _transactionRepo;
-        private readonly IAccountRepo _accountRepo;
+        private readonly ITransactionRepoositry _transactionRepo;
+        private readonly IAccountRepoository _accountRepo;
 
         public DashboardController(
             ApplicationDbContext context, 
-            ITransactionRepo transactionRepo, 
-            IAccountRepo accountRepo)
+            ITransactionRepoositry transactionRepo, 
+            IAccountRepoository accountRepo)
         {
             _context = context;
             _transactionRepo = transactionRepo;
@@ -53,7 +53,7 @@ namespace SmartSaver.MVC.Controllers
                 
                 SpendingTransactions = _transactionRepo.GetThisMonthAccountSpendings(account.Id),
                 
-                Transactions = _context.Accounts.Include(nameof(TransactionDto) + "s").First(a => a.Id == account.Id).Transactions.ToList()
+                Transactions = _context.Accounts.Include(nameof(Transaction) + "s").First(a => a.Id == account.Id).Transactions.ToList()
             };
 
             return View(dvm);
@@ -73,13 +73,13 @@ namespace SmartSaver.MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Complete(AccountDto account)
+        public IActionResult Complete(Account account)
         {
             if (ModelState.IsValid)
             {
                 if (account.DateValid())
                 {
-                    AccountDto current = _accountRepo.GetAccountById(User.Identity.Name);
+                    Account current = _accountRepo.GetAccountById(User.Identity.Name);
 
                     current.Goal = account.Goal;
                     current.Revenue = account.Revenue;

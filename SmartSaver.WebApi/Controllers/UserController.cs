@@ -18,19 +18,19 @@ namespace SmartSaver.WebApi.Controllers
         private UserRepository _users;
 
         [HttpGet("users")]
-        public IEnumerable<UserDto> Index()
+        public IEnumerable<User> Index()
         {
             return _users.Get();
         }
 
         [HttpGet("user/{userId}")]
-        public UserDto Get(int userId)
+        public User Get(int userId)
         {
             return _users.GetSingle(u => u.Id == userId);
         }
 
         [HttpPost("users")]
-        public async Task<ActionResult> Create(UserDto user)
+        public async Task<ActionResult> Create(User user)
         {
             if (!ModelState.IsValid)
             {

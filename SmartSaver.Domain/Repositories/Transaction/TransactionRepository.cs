@@ -10,16 +10,16 @@ using SmartSaver.Domain.CustomExceptions;
 
 namespace SmartSaver.Domain.Repositories
 {
-    public class TransactionRepo : ITransactionRepo
+    public class TransactionRepository : ITransactionRepoositry
     {
-        public TransactionRepo(ApplicationDbContext context)
+        public TransactionRepository(ApplicationDbContext context)
         {
             _context = context;
         }
 
         private readonly ApplicationDbContext _context;
 
-        public List<TransactionDto> GetThisMonthAccountSpendings(int accId)
+        public List<Transaction> GetThisMonthAccountSpendings(int accId)
         {
             var transactions = _context.Transactions
                 .Include(p => p.Category)
@@ -33,7 +33,7 @@ namespace SmartSaver.Domain.Repositories
         {
             var chartData = new List<Balance>();
 
-            var transactions = _context.Transactions.Include(nameof(CategoryDto))
+            var transactions = _context.Transactions.Include(nameof(Category))
                 .Where(t => t.ActionTime > CurrentMonthFirstDayDate() && t.AccountId == accId);
 
             decimal balance = 0;
@@ -59,7 +59,7 @@ namespace SmartSaver.Domain.Repositories
             return new DateTime(thisYear, thisMonth, 1);
         }
 
-        public List<TransactionDto> GetByAccountId(int accId)
+        public List<Transaction> GetByAccountId(int accId)
         {
             return _context.Transactions
                     .Include(p => p.Category)// Includes Category object.
@@ -68,7 +68,7 @@ namespace SmartSaver.Domain.Repositories
                     .ToList();
         }
 
-        public IEnumerable<TransactionDto> GetByAccountForDateRange(int accId, DateTime startData, DateTime endDate)
+        public IEnumerable<Transaction> GetByAccountForDateRange(int accId, DateTime startData, DateTime endDate)
         {
             return _context.Transactions
                     .Include(p => p.Category)// Includes Category object.
@@ -77,7 +77,7 @@ namespace SmartSaver.Domain.Repositories
                     .AsEnumerable(); // Order transactions from newest to oldest.
         }
 
-        public async Task<int> CreateTransaction(TransactionDto transaction)
+        public async Task<int> CreateTransaction(Transaction transaction)
         {
             if (transaction.Amount == 0)
             {
@@ -98,14 +98,14 @@ namespace SmartSaver.Domain.Repositories
             return created.Entity.Id;
         }
 
-        public TransactionDto GetById(int transactionId)
+        public Transaction GetById(int transactionId)
         {
             return _context.Transactions.First(t => t.Id == transactionId);
         }
 
         public async Task<int> DeleteByIdAsync(int transactionId)
         {
-            TransactionDto transaction = _context.Transactions.First(t => t.Id == transactionId);
+            Transaction transaction = _context.Transactions.First(t => t.Id == transactionId);
             _context.Transactions.Remove(transaction);
             var result = await _context.SaveChangesAsync();
             return result;

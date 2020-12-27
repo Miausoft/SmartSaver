@@ -12,14 +12,14 @@ namespace SmartSaver.Domain.Repositories
         GeneralError
     }
 
-    public interface ITransactionRepo
+    public interface ITransactionRepoositry
     {
         /// <summary>
         /// Method that returns all account transactions from spending category.
         /// </summary>
         /// <param name="accId"></param>
         /// <returns>Spendings</returns>
-        List<TransactionDto> GetThisMonthAccountSpendings(int accId);
+        List<Transaction> GetThisMonthAccountSpendings(int accId);
 
         /// <summary>
         /// Method that returns balance history (how balance changed) for an account.
@@ -33,11 +33,11 @@ namespace SmartSaver.Domain.Repositories
         /// </summary>
         /// <param name="accId">Account id</param>
         /// <returns>List of transactions</returns>
-        List<TransactionDto> GetByAccountId(int accId);
-        IEnumerable<TransactionDto> GetByAccountForDateRange(int accId, DateTime startData, DateTime endDate);
+        List<Transaction> GetByAccountId(int accId);
+        IEnumerable<Transaction> GetByAccountForDateRange(int accId, DateTime startData, DateTime endDate);
 
-        TransactionDto GetById(int transactionId);
+        Transaction GetById(int transactionId);
         Task<int> DeleteByIdAsync(int transactionId);
-        Task<int> CreateTransaction(TransactionDto transaction);
+        Task<int> CreateTransaction(Transaction transaction);
     }
 }

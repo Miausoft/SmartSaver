@@ -7,16 +7,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SmartSaver.Domain.Repositories
 {
-    public class AccountRepo : IAccountRepo
+    public class AccountRepository : IAccountRepoository
     {
         private ApplicationDbContext _context;
 
-        public AccountRepo(ApplicationDbContext context)
+        public AccountRepository(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public AccountDto GetAccountById(string id)
+        public Account GetAccountById(string id)
         {
             return _context.Users
                 .Include(u => u.Account)
@@ -24,7 +24,7 @@ namespace SmartSaver.Domain.Repositories
                 .Account;
         }
 
-        public bool IsAccountValid(AccountDto account)
+        public bool IsAccountValid(Account account)
         {
             return account.Goal > 0;
         }

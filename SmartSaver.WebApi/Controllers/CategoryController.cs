@@ -46,7 +46,7 @@ namespace SmartSaver.WebApi.Controllers
         [CheckForInvalidModel]
         public async Task<ActionResult> Create(CategoryRequestModel category)
         {
-            int createdId = await _categories.CreateAsync(_mapper.Map<CategoryDto>(category));
+            int createdId = await _categories.CreateAsync(_mapper.Map<Category>(category));
             return Created($"category/{createdId}", category);
         }
     }

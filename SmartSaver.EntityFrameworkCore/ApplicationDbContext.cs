@@ -12,11 +12,11 @@ namespace SmartSaver.EntityFrameworkCore
         public ApplicationDbContext() {}
         public ApplicationDbContext(DbContextOptions options) : base(options) {}
 
-        public virtual DbSet<UserDto> Users { get; set; }
-        public virtual DbSet<AccountDto> Accounts { get; set; }
-        public virtual DbSet<TransactionDto> Transactions { get; set; }
-        public virtual DbSet<CategoryDto> Categories { get; set; }
-        public virtual DbSet<EmailVerificationDto> EmailVerifications { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Account> Accounts { get; set; }
+        public virtual DbSet<Transaction> Transactions { get; set; }
+        public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<EmailVerification> EmailVerifications { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -26,27 +26,27 @@ namespace SmartSaver.EntityFrameworkCore
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<AccountDto>()
+            modelBuilder.Entity<Account>()
                 .Property(a => a.Goal)
                 .HasColumnType("decimal(18,4)");
 
-            modelBuilder.Entity<TransactionDto>()
+            modelBuilder.Entity<Transaction>()
                 .Property(t => t.Amount)
                 .HasColumnType("decimal(18,4)");
 
-            modelBuilder.Entity<TransactionDto>()
+            modelBuilder.Entity<Transaction>()
                 .Property(t => t.CategoryId)
                 .HasDefaultValue(1);
 
-            modelBuilder.Entity<CategoryDto>()
+            modelBuilder.Entity<Category>()
                 .Property(t => t.TypeOfIncome)
                 .IsRequired();
 
-            modelBuilder.Entity<UserDto>()
+            modelBuilder.Entity<User>()
                 .Property(t => t.Password)
                 .IsRequired(false);
 
-            modelBuilder.Entity<UserDto>()
+            modelBuilder.Entity<User>()
                 .Property(t => t.Username)
                 .IsRequired(true);
         }

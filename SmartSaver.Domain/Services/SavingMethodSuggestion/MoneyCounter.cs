@@ -27,7 +27,7 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
         /// a dynamic number which shows account's balance he can spend without any hesitation because goal will be reached in time
         /// zero represents that account can't have any more spendings if he wants to reach his goal in time. There will be some suggestion for an user in the future
         /// </summary>
-        public static decimal AmountLeftToSpend(AccountDto acc)
+        public static decimal AmountLeftToSpend(Account acc)
         {
             return TransactionsCounter.SavedSum(acc.Transactions, acc.GoalStartDate, acc.GoalEndDate)
                 - (AmountToSaveAMonth(acc) * Math.Ceiling(DateCounter.MonthsPassed(acc.GoalStartDate)));

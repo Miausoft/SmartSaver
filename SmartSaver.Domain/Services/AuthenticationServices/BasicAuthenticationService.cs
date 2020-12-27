@@ -23,7 +23,7 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns>Account</returns>
-        public virtual UserDto Login(string email, string password)
+        public virtual User Login(string email, string password)
         {
             var user = Context.Users.FirstOrDefault(u => u.Email.Equals(email));
             if (user == null || user.Password == null)
@@ -44,7 +44,7 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
         /// </summary>
         /// <param name="user"></param>
         /// <returns>RegistrationResult.Success</returns>
-        public virtual RegistrationResult Register(UserDto user)
+        public virtual RegistrationResult Register(User user)
         {
             FillMandatoryData(ref user);
             Context.Users.Add(user);
@@ -53,10 +53,10 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
             return RegistrationResult.Success;
         }
 
-        private static void FillMandatoryData(ref UserDto user)
+        private static void FillMandatoryData(ref User user)
         {
             user.DateJoined = DateTime.UtcNow;
-            user.Account = new AccountDto();
+            user.Account = new Account();
         }
     }
 }

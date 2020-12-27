@@ -1,6 +1,6 @@
 namespace SmartSaver.EntityFrameworkCore.Models
 {
-    public class SuggestionDto
+    public class Suggestion
     {
         public int Id { get; set; }
         public string ProblemCode { get; set; }
