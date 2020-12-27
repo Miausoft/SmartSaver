@@ -36,7 +36,7 @@ namespace SmartSaver.WebApi
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AzureSqlServer")));
             services.AddScoped<ITransactionRepoositry, TransactionRepository>();
-            services.AddScoped<IUserRepository, UserRepoository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
         }
 
