@@ -102,12 +102,11 @@ namespace SmartSaver.Domain.Repositories
             return _context.Transactions.First(t => t.Id == transactionId);
         }
 
-        public async Task<int> DeleteByIdAsync(int transactionId)
+        public Task<int> DeleteById(int transactionId)
         {
             Transaction transaction = _context.Transactions.First(t => t.Id == transactionId);
             _context.Transactions.Remove(transaction);
-            var result = await _context.SaveChangesAsync();
-            return result;
+            return _context.SaveChangesAsync();
         }
     }
 
