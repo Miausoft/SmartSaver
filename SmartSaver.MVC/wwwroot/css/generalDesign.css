@@ -1,4 +1,4 @@
-﻿html {
+html {
     scroll-behavior: smooth;
 }
 
@@ -181,4 +181,29 @@ input[type="date"]:valid::before {
 
 .f-110 {
     font-size: 110px;
+}
+
+.header-verify {
+    color: #000;
+    line-height: 2;
+    margin-bottom: 24px;
+    font-size: 22px;
+    text-align: center;
+}
+
+.container-verify {
+    padding-top: 20vh;
+    margin: auto;
+    max-width: 430px;
+}
+
+.p-verify {
+    line-height: 1.5;
+    font-size: 14px;
+    margin-bottom: 18px;
+}
+
+.a-verify {
+    font-size: 14px;
+    color: #5551ff;
 }

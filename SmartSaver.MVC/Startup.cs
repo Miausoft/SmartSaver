@@ -10,6 +10,7 @@ using SmartSaver.MVC.ServiceCollectionExtensions;
 using System.Collections.Generic;
 using System.Globalization;
 using SmartSaver.Domain;
+using Serilog;
 
 namespace SmartSaver.MVC
 {
@@ -34,9 +35,18 @@ namespace SmartSaver.MVC
 
             services.AddMvc();
           
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AzureSqlServer")));
+            services.AddDbContext<ApplicationDbContext>(options => 
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("AzureSqlServer"));
+            });
           
             services.AddDomainLibrary();
+
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.File("log-.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
+            services.AddSingleton(_ => Log.Logger);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

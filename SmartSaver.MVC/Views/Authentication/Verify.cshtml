@@ -1,0 +1,24 @@
+﻿@model SmartSaver.EntityFrameworkCore.Models.User
+
+<head>
+    <link rel="stylesheet" type="text/css" href="~/css/generalDesign.css" />
+    <title>Confirm Your Email</title>
+</head>
+
+<div class="container-verify">
+    <div class="header-verify">Verify your email</div>
+    <p class="p-verify">
+        To use SmartSaver, click the verification button in the email we sent to
+        <span class="font-weight-bold">@Model.Email</span>.
+        This helps keep your account secure.
+    </p>
+    <p class="p-verify">
+        No email in your inbox or spam folder?
+        <a class="a-verify" href="/Authentication/Verify?email=@Model.Email">Let’s resend it</a>.
+    </p>
+    <p class="p-verify">
+        Wrong address? <a class="a-verify" href="/Authentication/Login">Sign in</a>
+        with a different email. If you mistyped your email when signing up,
+        <a class="a-verify" href="/Authentication/Register">create a new account</a>.
+    </p>
+</div>
