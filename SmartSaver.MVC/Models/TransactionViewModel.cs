@@ -7,7 +7,5 @@ namespace SmartSaver.MVC.Models
     {
         public List<Transaction> Transactions { get; set; }
         public List<Category> Categories { get; set; }
-        public string FromDate { get; set; }
-        public string ToDate { get; set; }
     }
 }

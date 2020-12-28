@@ -53,8 +53,6 @@ namespace SmartSaver.Domain.Repositories
                 transaction.Amount *= -1;
             }
 
-            transaction.ActionTime = DateTime.Now;
-
             var created = _context.Transactions.Add(transaction);
             await _context.SaveChangesAsync();
 

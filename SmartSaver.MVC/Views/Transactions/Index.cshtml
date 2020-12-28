@@ -65,7 +65,7 @@
                     <div class="form-group">
                         <label>Choose date</label>
                         <div class="date-input input-group">
-                            <input type="date" class="form-control">
+                            <input type="date" class="form-control" name="ActionTime" required>
                         </div>
                     </div>
                 </div>
@@ -101,7 +101,7 @@
                     </div>
                     <div class="form-group">
                         <label>Spending category</label>
-                        <select class="form-control" id="CategoryId" name="CategoryId">
+                        <select class="form-control" name="CategoryId">
                             <!-- Category -->
                             @foreach (var c in Model.Categories)
                             {
@@ -117,7 +117,7 @@
                     <div class="form-group">
                         <label>Choose date</label>
                         <div class="date-input input-group">
-                            <input type="date" class="form-control">
+                            <input type="date" class="form-control" name="ActionTime" required>
                         </div>
                     </div>
                 </div>
@@ -144,14 +144,14 @@
                     <div class="form-group">
                         <small class="form-text text-muted">FROM DATE</small>
                         <div class="date-input">
-                            <input type ="date" name="FromDate" class="form-control">
+                            <input type ="date" name="FromDate" class="form-control" required>
                         </div>
                         <span id="FromStatus"></span>
                     </div>
                     <div class="form-group">
                         <small class="form-text text-muted">TO DATE</small>
                         <div class="date-input">
-                            <input type="date" name="ToDate" class="form-control">
+                            <input type="date" name="ToDate" class="form-control" required>
                         </div>
                         <span id="ToStatus"></span>
                     </div>
@@ -201,7 +201,7 @@
     const toStatus = document.getElementById('ToStatus');
 
     document.getElementById("SpendingButton").onclick = function () {
-        if (!checkInputs(spending.value, spendingStatus)) {
+        if (!checkInputs(spending.value.trim(), spendingStatus)) {
             return false;
         }
     }
@@ -232,7 +232,7 @@
     }
 
     function checkDate(from, to, fromStatus, toStatus) {
-        if (from === '' || from) {
+        if (from === '') {
             setError(fromStatus, "Please pick a date");
         } if (to === '') {
             setError(toStatus, "Please pick a date");
