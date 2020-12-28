@@ -146,14 +146,14 @@
                     <div class="form-group">
                         <small class="form-text text-muted">FROM DATE</small>
                         <div class="date-input">
-                            <input id="FromDate" type="date" asp-for="FromDate" class="form-control">
+                            <input type ="date" name="FromDate" class="form-control">
                         </div>
                         <span id="FromStatus"></span>
                     </div>
                     <div class="form-group">
                         <small class="form-text text-muted">TO DATE</small>
                         <div class="date-input">
-                            <input id="ToDate" type="date" asp-for="ToDate" class="form-control">
+                            <input type="date" name="ToDate" class="form-control">
                         </div>
                         <span id="ToStatus"></span>
                     </div>
@@ -197,8 +197,8 @@
     const incomeStatus = document.getElementById('IncomeStatus');
     const spending = document.getElementById('Spending');
     const income = document.getElementById('Income');
-    const fromDate = document.getElementById('FromDate');
-    const toDate = document.getElementById('ToDate');
+    const fromDate = document.getElementsByName('FromDate')[0];
+    const toDate = document.getElementsByName('ToDate')[0];
     const fromStatus = document.getElementById('FromStatus');
     const toStatus = document.getElementById('ToStatus');
 
@@ -215,6 +215,8 @@
     }
 
     document.getElementById("PdfButton").onclick = function () {
+        $(fromStatus).html("");
+        $(toStatus).html("");
         if (!checkDate(fromDate.value, toDate.value, fromStatus, toStatus)) {
             return false;
         }
