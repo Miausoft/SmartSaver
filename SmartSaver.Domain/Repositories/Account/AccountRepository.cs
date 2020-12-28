@@ -2,6 +2,7 @@
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace SmartSaver.Domain.Repositories
 {
@@ -14,7 +15,7 @@ namespace SmartSaver.Domain.Repositories
             _context = context;
         }
 
-        public Account GetAccountById<T>(T accId)
+        public Account GetById<T>(T accId)
         {
             return _context.Users
                 .Include(u => u.Account)
@@ -22,7 +23,12 @@ namespace SmartSaver.Domain.Repositories
                 .Account;
         }
 
-        public bool IsAccountValid(Account account)
+        public Task<int> Save()
+        {
+            return _context.SaveChangesAsync();
+        }
+
+        public bool IsValid(Account account)
         {
             return account.Goal > 0;
         }
