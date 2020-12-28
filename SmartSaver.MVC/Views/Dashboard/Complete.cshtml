@@ -7,13 +7,12 @@
 
 <head class="background-complete">
     <link rel="stylesheet" type="text/css" href="~/css/generalDesign.css" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>@ViewBag.Title</title>
 </head>
 <body style="background: rgb(25,25,25); background: radial-gradient(circle, rgba(25,25,25,0.28925073447347693) 0%, rgba(99,124,113,1) 100%); ">
-    <div class="row mt-5">
-        <div class="col-md-6">
-            <section class="auth-block pt-1">
+    <div class="row mt-5 justify-content-center">
+        <div class="col-md-6 mt-4">
+            <section class="auth-block">
                 <div class="card">
                     <div class="card-block">
                         <h4 class="text-center pb-4">Essential information for our AI</h4>
@@ -21,53 +20,45 @@
                         <form role="form" asp-controller="Dashboard" asp-action="Complete" method="POST">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                            <div class="form-group row">
-                                <div class="col-sm-10">
-                                    <label asp-for="Goal" class="col-form-label"></label>
-                                    <div class="input-group">
-                                        <input asp-for="Goal" type="text" class="form-control">
-                                        <div class="input-group-append">
-                                            <div class="input-group-text">
-                                                <span>@currencySymbol</span>
-                                            </div>
+                            <div class="form-group">
+                                <label asp-for="Goal" class="col-form-label"></label>
+                                <div class="input-group">
+                                    <input asp-for="Goal" type="text" class="form-control">
+                                    <div class="input-group-append">
+                                        <div class="input-group-text">
+                                            <span>@currencySymbol</span>
                                         </div>
                                     </div>
-                                    <small class="form-text text-muted">Amount or money you are willing to save.</small>
-                                    <span asp-validation-for="Goal" class="text-danger"></span>
                                 </div>
+                                <small class="form-text text-muted">Amount or money you are willing to save.</small>
+                                <span asp-validation-for="Goal" class="text-danger"></span>
                             </div>
 
-                            <div class="form-group row">
-                                <div class="col-sm-10">
-                                    <label asp-for="Revenue" class="col-form-label"></label>
-                                    <div class="input-group">
-                                        <input asp-for="Revenue" type="text" class="form-control">
-                                        <div class="input-group-append">
-                                            <div class="input-group-text">
-                                                <span>@currencySymbol</span>
-                                            </div>
+                            <div class="form-group">
+                                <label asp-for="Revenue" class="col-form-label"></label>
+                                <div class="input-group">
+                                    <input asp-for="Revenue" type="text" class="form-control">
+                                    <div class="input-group-append">
+                                        <div class="input-group-text">
+                                            <span>@currencySymbol</span>
                                         </div>
                                     </div>
-                                    <small class="form-text text-muted">Your average monthly income.</small>
-                                    <span asp-validation-for="Revenue" class="text-danger"></span>
                                 </div>
+                                <small class="form-text text-muted">Your average monthly income.</small>
+                                <span asp-validation-for="Revenue" class="text-danger"></span>
                             </div>
 
-                            <div class="form-group row">
-                                <div class="col-sm-10">
-                                    <label asp-for="GoalEndDate" class="col-form-label"></label>
-                                    <div class="date-input">
-                                        <input asp-for="GoalEndDate" type="date" required oninvalid="this.setCustomValidity('The field is required')" class="form-control">
-                                    </div>
-                                    <small class="form-text text-muted">When do you believe you will achieve your goal?</small>
-                                    <span asp-validation-for="GoalEndDate" class="text-danger"></span>
+                            <div class="form-group">
+                                <label asp-for="GoalEndDate" class="col-form-label"></label>
+                                <div class="date-input">
+                                    <input asp-for="GoalEndDate" type="date" required class="form-control">
                                 </div>
+                                <small class="form-text text-muted">When do you believe you will achieve your goal?</small>
+                                <span asp-validation-for="GoalEndDate" class="text-danger"></span>
                             </div>
 
-                            <div class="form-group row" style="padding:0 80px 0 60px">
-
-                                <button type="submit" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Submit</button>
-
+                            <div class="form-group mx-5">
+                                <button type="submit" class="btn btn-primary btn-md btn-block waves-effect text-center">Submit</button>
                             </div>
 
                         </form>
@@ -76,8 +67,8 @@
             </section>
         </div>
 
-        <div class="col-md-6">
-            <img src="https://media1.tenor.com/images/7d5d330ddd6ade55878b5991221e5a08/tenor.gif" class="img-thumbnail" />
+        <div class="col-md-6 mt-4">
+            <img class="img-thumbnail" id="pablo-waiting" />
         </div>
     </div>
 </body>

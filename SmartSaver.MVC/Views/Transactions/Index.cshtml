@@ -1,5 +1,3 @@
-@using SmartSaver.Domain.Services.TransactionsCounterService
-
 @model TransactionViewModel
 @{
     ViewData["Title"] = "Transactions";
@@ -217,6 +215,7 @@
     document.getElementById("PdfButton").onclick = function () {
         $(fromStatus).html("");
         $(toStatus).html("");
+
         if (!checkDate(fromDate.value, toDate.value, fromStatus, toStatus)) {
             return false;
         }
@@ -233,7 +232,7 @@
     }
 
     function checkDate(from, to, fromStatus, toStatus) {
-        if (from === '') {
+        if (from === '' || from) {
             setError(fromStatus, "Please pick a date");
         } if (to === '') {
             setError(toStatus, "Please pick a date");

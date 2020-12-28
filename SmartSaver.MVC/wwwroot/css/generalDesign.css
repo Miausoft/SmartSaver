@@ -40,7 +40,7 @@ input[type="date"]:valid::before {
 }
 
 .auth-block {
-    margin: 30px auto;
+    margin: auto;
     min-height: 93.6vh;
 }
 
@@ -212,4 +212,8 @@ input[type="date"]:valid::before {
 .a-verify {
     font-size: 14px;
     color: #5551ff;
+}
+
+#pablo-waiting {
+    content: url(https://media1.tenor.com/images/7d5d330ddd6ade55878b5991221e5a08/tenor.gif);
 }

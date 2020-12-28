@@ -7,8 +7,6 @@ using SmartSaver.MVC.Models;
 using SmartSaver.Domain.Services.TransactionsCounterService;
 using SmartSaver.Domain.Services.SavingMethodSuggestion;
 using SmartSaver.Domain.Repositories;
-using System.Threading.Tasks;
-using System.Threading;
 
 namespace SmartSaver.MVC.Controllers
 {
@@ -76,19 +74,31 @@ namespace SmartSaver.MVC.Controllers
         [HttpPost]
         public IActionResult Complete(Account account)
         {
-            if (!ModelState.IsValid || account.GoalEndDate <= DateTime.Now)
+            if (ModelState.IsValid)
             {
+                if (account.GoalEndDate <= DateTime.Now)
+                {
+                    ModelState.AddModelError("GoalEndDate", "Invalid date");
+                    return View();
+                }
+
+                Account current = _accountRepo.GetById(User.Identity.Name);
+                current.Goal = account.Goal;
+                current.Revenue = account.Revenue;
+                current.GoalStartDate = DateTime.Now;
+                current.GoalEndDate = account.GoalEndDate;
+                _accountRepo.Save().Wait();
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                if (account.GoalEndDate <= DateTime.Now)
+                {
+                    ModelState.AddModelError("GoalEndDate", "Invalid date");
+                }
+
                 return View();
             }
-
-            Account current = _accountRepo.GetById(User.Identity.Name);
-            current.Goal = account.Goal;
-            current.Revenue = account.Revenue;
-            current.GoalStartDate = DateTime.Now;
-            current.GoalEndDate = account.GoalEndDate;
-            _accountRepo.Save().Wait();
-
-            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
