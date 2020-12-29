@@ -14,11 +14,11 @@ namespace SmartSaver.Domain.Repositories
             _context = context;
         }
 
-        public Account GetAccountById(string id)
+        public Account GetAccountById<T>(T accId)
         {
             return _context.Users
                 .Include(u => u.Account)
-                .First(u => u.Id.ToString().Equals(id))
+                .First(u => u.Id.ToString().Equals(accId.ToString()))
                 .Account;
         }
 

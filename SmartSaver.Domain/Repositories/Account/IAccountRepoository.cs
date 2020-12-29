@@ -9,7 +9,7 @@ namespace SmartSaver.Domain.Repositories
         /// </summary>
         /// <param name="username">Username of a user</param>
         /// <returns>Account object</returns>
-        Account GetAccountById(string username);
+        Account GetAccountById<T>(T accId);
 
         /// <summary>
         /// Checks if account already had filled his information with
