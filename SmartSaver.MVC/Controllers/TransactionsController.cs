@@ -50,7 +50,7 @@ namespace SmartSaver.MVC.Controllers
         public async Task<ActionResult> Create([Bind("Amount,CategoryId")] Transaction transaction)
         {
             transaction.AccountId = _accountRepo.GetAccountById(User.Identity.Name).Id;
-            await _transactionRepo.CreateTransaction(transaction);
+            await _transactionRepo.Create(transaction);
 
             return RedirectToAction(nameof(Index));
         }

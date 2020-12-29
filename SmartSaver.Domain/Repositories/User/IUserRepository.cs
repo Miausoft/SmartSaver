@@ -16,9 +16,9 @@ namespace SmartSaver.Domain.Repositories
     {
         public IEnumerable<User> Get();
         public IEnumerable<User> Get(Expression<Func<User, bool>> expression);
-        public bool DoesUsernameExist<T>(T username);
-        public bool DoesEmailExist<T>(T email);
-        public T GetId<T>(T email);
+        public bool DoesUsernameExist(string username);
+        public bool DoesEmailExist(string email);
+        public T GetId<T>(string email);
         User GetSingle(Expression<Func<User, bool>> expression);
         Task<CreateUserResponse> CreateAsync(User user);
     }

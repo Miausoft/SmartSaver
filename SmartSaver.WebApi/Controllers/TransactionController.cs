@@ -54,7 +54,7 @@ namespace SmartSaver.WebApi.Controllers
         [CheckForInvalidModel]
         public async Task<ActionResult> Create(TransactionRequestModel transaction)
         {
-            var id = await _transactions.CreateTransaction(
+            var id = await _transactions.Create(
                 _mapper.Map<Transaction>(transaction)
             );
 

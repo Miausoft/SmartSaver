@@ -18,6 +18,6 @@ namespace SmartSaver.Domain.Repositories
         IEnumerable<Transaction> GetByAccountForDateRange<T>(T accId, DateTime startData, DateTime endDate);
         Transaction GetById<T>(T transactionId);
         Task<int> DeleteById<T>(T transactionId);
-        Task<int> CreateTransaction(Transaction transaction);
+        Task<int> Create(Transaction transaction);
     }
 }

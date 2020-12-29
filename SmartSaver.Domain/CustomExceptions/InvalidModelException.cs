@@ -10,5 +10,6 @@ namespace SmartSaver.Domain.CustomExceptions
         public InvalidModelException(string message, Exception inner) : base(message, inner) { }
         protected InvalidModelException(System.Runtime.Serialization.SerializationInfo info,
             System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+        public override string StackTrace { get ; }
     }
 }

@@ -34,21 +34,25 @@ namespace SmartSaver.Domain.Repositories
                     .OrderByDescending(a => a.ActionTime);
         }
 
-        public async Task<int> CreateTransaction(Transaction transaction)
+        public async Task<int> Create(Transaction transaction)
         {
-            if (transaction.Amount == 0)
+            if (transaction.Amount <= 0)
             {
-                throw new InvalidModelException("Amount can not be 0");
+                throw new InvalidModelException("Amount cannot be less than or equal to 0");
             }
 
-            transaction.Category = _context.Categories.First(c => c.Id == transaction.CategoryId);
-            transaction.ActionTime = DateTime.UtcNow;
+            if (_context.Categories.FirstOrDefault(x => x.Id.Equals(transaction.CategoryId)) == null)
+            {
+                throw new InvalidModelException("There is no such category");
+            }
 
-            if (!transaction.Category.TypeOfIncome)
+            if (!_context.Categories.Where(x => transaction.CategoryId.Equals(x.Id)).First().TypeOfIncome)
             {
                 transaction.Amount *= -1;
             }
-            
+
+            transaction.Category = _context.Categories.First(c => c.Id == transaction.CategoryId);
+            transaction.ActionTime = DateTime.Now;
             var created = _context.Transactions.Add(transaction);
             await _context.SaveChangesAsync();
 

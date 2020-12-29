@@ -17,19 +17,19 @@ namespace SmartSaver.Domain.Repositories
             _db = db;
         }
 
-        public bool DoesUsernameExist<T>(T username)
+        public bool DoesUsernameExist(string username)
         {
-            return _db.Users.FirstOrDefault(u => u.Username.Equals(username.ToString())) != null;
+            return _db.Users.FirstOrDefault(u => u.Username.Equals(username)) != null;
         }
 
-        public bool DoesEmailExist<T>(T email)
+        public bool DoesEmailExist(string email)
         {
             return _db.Users.FirstOrDefault(u => u.Email.Equals(email)) != null;
         }
 
-        public T GetId<T>(T email)
+        public T GetId<T>(string email)
         {
-            return (T)Convert.ChangeType(_db.Users.Where(u => u.Email == email.ToString()).Select(u => u.Id).FirstOrDefault(), typeof(T));
+            return (T)Convert.ChangeType(_db.Users.Where(u => u.Email == email).Select(u => u.Id).FirstOrDefault(), typeof(T));
         }
 
         public IEnumerable<User> Get()
