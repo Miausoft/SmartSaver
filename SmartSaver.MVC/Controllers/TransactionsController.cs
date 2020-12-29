@@ -28,7 +28,7 @@ namespace SmartSaver.MVC.Controllers
             _transactionRepo = transactionRepo;
         }
 
-        // GET: TransactionsController
+        [HttpGet]
         public ActionResult Index()
         {
             return View(new TransactionViewModel()
@@ -38,13 +38,6 @@ namespace SmartSaver.MVC.Controllers
             });
         }
 
-        // GET: TransactionsController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: TransactionsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind("Amount,CategoryId")] Transaction transaction)
@@ -55,14 +48,7 @@ namespace SmartSaver.MVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: TransactionsController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: TransactionsController/Delete/5
-        [HttpPost]
+        [HttpDelete]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
         {
