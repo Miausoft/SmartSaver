@@ -1,68 +1,71 @@
 @model DashboardViewModel
 @{
+    ViewData["Title"] = "Dashboard";
+
     var score = Math.Min(Math.Round(Model.SavedCurrentMonth * 10 / Model.ToSaveCurrentMonth, 1), 10);
 }
+
 <head>
-    <link rel="stylesheet" type="text/css" href="~/css/generalDesign.css" />
+    <title>@ViewBag.Title</title>
 </head>
 
 @section Jumbotron {
-<div class="jumbotron jumbotron-fluid mb-5 bg-dollar bg-top">
-    <div class="container">
-        <h5 class="text-light" style="text-transform: uppercase; letter-spacing: 5px"><b>this month score</b></h5>
-        <div style="cursor: pointer; font-size: 1.2em" data-toggle="modal" data-target="#scoreModal">
-            @if (score >= 9)
-             {
-                <span class="badge badge-pill badge-primary">@score out of 10 &#128526;</span>
-             } 
-             else if (score < 9 && score >= 6)
-             {
-                 <span class="badge badge-pill badge-warning">@score out of 10</span>
-             }
-             else
-             {
-                 <span class="badge badge-pill badge-danger">@score out of 10 &#128561;</span>
-             }
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="scoreModal" tabindex="-1" role="dialog" aria-labelledby="scoreModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">This month score</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                At the end of the month you should have at least <b>@Model.ToSaveCurrentMonth.ToString("C")</b> money left in your budget.<br />
-                For this moment you have <b>@Model.SavedCurrentMonth.ToString("C")</b> in your budget.
-                <hr />
-                This month you have saved @((score*10)) % of the required amount!
-                @if (score <= 10)
+    <div class="jumbotron jumbotron-fluid mb-5 bg-dollar bg-top">
+        <div class="container">
+            <h5 class="text-light" style="text-transform: uppercase; letter-spacing: 5px"><b>this month score</b></h5>
+            <div style="cursor: pointer; font-size: 1.2em" data-toggle="modal" data-target="#scoreModal">
+                @if (score >= 9)
                 {
-                    <p>You can do better!</p>
+                    <span class="badge badge-pill badge-primary">@score out of 10 &#128526;</span>
+                }
+                else if (score < 9 && score >= 6)
+                {
+                    <span class="badge badge-pill badge-warning">@score out of 10</span>
+                }
+                else
+                {
+                    <span class="badge badge-pill badge-danger">@score out of 10 &#128561;</span>
                 }
             </div>
-            <div class="modal-footer justify-content-between">
-                <div class="col col-lg-auto">
-                    <button class="btn btn-success" type="button" data-dismiss="modal" aria-label="Close">
-                        I will move towards my dream!
+        </div>
+    </div>
+
+    <div class="modal fade" id="scoreModal" tabindex="-1" role="dialog" aria-labelledby="scoreModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">This month score</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="col col-lg-auto">
-                    <form method="post">
-                        <button type="submit" class="btn btn-success" asp-controller="Dashboard" asp-action="Delete">
-                            Delete data
+                <div class="modal-body">
+                    At the end of the month you should have at least <b>@Model.ToSaveCurrentMonth.ToString("C")</b> money left in your budget.<br />
+                    For this moment you have <b>@Model.SavedCurrentMonth.ToString("C")</b> in your budget.
+                    <hr />
+                    This month you have saved @((score*10)) % of the required amount!
+                    @if (score <= 10)
+                    {
+                        <p>You can do better!</p>
+                    }
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <div class="col col-lg-auto">
+                        <button class="btn btn-success" type="button" data-dismiss="modal" aria-label="Close">
+                            I will move towards my dream!
                         </button>
-                    </form>
+                    </div>
+                    <div class="col col-lg-auto">
+                        <form method="post">
+                            <button type="submit" class="btn btn-success" asp-controller="Dashboard" asp-action="Delete">
+                                Delete data
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 }
 
 @if (Model.CurrentMonthBalanceHistory.Count == 0)
@@ -73,7 +76,7 @@
         <div class="circle"></div>
         <div class="circle"></div>
         <h3 class="nothing-label">Nothing</h3>
-        
+
     </div>
 }
 else
@@ -102,7 +105,7 @@ else
                 </div>
             </div>
         </div>
-        
+
         <div class="col-md-8">
             <div class="card w-100">
                 <div class="card-header">
@@ -121,7 +124,7 @@ else
     let chart = document.getElementById("mychart")
     let categoryChart = document.getElementById("categoryChart")
     console.log(chart);
-    
+
     let myChart = new Chart(chart, {
         type: 'line',
         data: {
@@ -134,7 +137,7 @@ else
             }],
         },
     });
-    
+
     let doughnutChart = new Chart(categoryChart, {
         type: 'doughnut',
         data: {
@@ -142,7 +145,7 @@ else
                 backgroundColor: ['rgb(82,244,13)', 'rgb(255,59,81)', 'rgb(155,155,222)', 'rgb(91,38,67)'],
                 data: @Html.Raw(Json.Serialize(Model.CurrentMonthTotalExpenseByCategory.Select(t => Math.Round(t.Value, 2))))
             }],
-        
+
             labels: @Html.Raw(Json.Serialize(Model.CurrentMonthTotalExpenseByCategory.Select(t => t.Key)))
         }
     })

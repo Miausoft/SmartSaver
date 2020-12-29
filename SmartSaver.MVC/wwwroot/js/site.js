@@ -1,4 +1,15 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿
+window.onload = function () {
+    const preloader = document.getElementsByClassName('load')[0];
+    const inputElem = document.getElementsByTagName('form');
+    const modals = document.getElementsByClassName('close');
 
-// Write your JavaScript code.
+    for (var i = 0; i < inputElem.length; i++) {
+        inputElem[i].addEventListener('submit', function () {
+            for (var j = 0; j < modals.length; j++) {
+                modals[j].click();
+            }
+            preloader.style.visibility = "visible";
+        });
+    }
+}

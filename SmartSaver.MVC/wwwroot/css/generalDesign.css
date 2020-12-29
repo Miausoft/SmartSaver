@@ -1,5 +1,11 @@
-html {
-    scroll-behavior: smooth;
+.load {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    z-index: 99;
+    margin:0 0 0 0;
+    background: url("../images/preloader.gif") no-repeat center center rgba(255,255,255,255);
+    visibility:hidden;
 }
 
 .btn:hover {
