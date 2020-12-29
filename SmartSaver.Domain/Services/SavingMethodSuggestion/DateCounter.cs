@@ -56,5 +56,15 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
         {
             return (DateTime.Now.Month - goalStartDate.Month) + 12 * (DateTime.Now.Year - goalStartDate.Year) + 1;
         }
+
+        public static bool InRange(DateTime dateToCheck, DateTime startDate, DateTime endDate)
+        {
+            return dateToCheck >= startDate && dateToCheck < endDate;
+        }
+
+        public static DateTime TruncateToDayStart(DateTime dateTime)
+        {
+            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day);
+        }
     }
 }
