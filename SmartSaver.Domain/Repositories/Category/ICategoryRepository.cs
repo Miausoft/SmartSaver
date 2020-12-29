@@ -18,5 +18,7 @@ namespace SmartSaver.Domain.Repositories
         IEnumerable<Category> GetMultiple(Expression<Func<Category, bool>> predicate);
         Category GetSingle(Expression<Func<Category, bool>> predicate);
         Task<int> CreateAsync(Category category);
+        Task<int> DeleteById<T>(T categoryId);
+        Task<int> DeleteByName(string title);
     }
 }

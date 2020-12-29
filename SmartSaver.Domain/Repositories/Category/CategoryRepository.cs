@@ -46,5 +46,19 @@ namespace SmartSaver.Domain.Repositories
                 .First(c => c.Title.Equals(category.Title))
                 .Id;
         }
+
+        public Task<int> DeleteById<T>(T categoryId)
+        {
+            Category category = _context.Categories.FirstOrDefault(t => t.Id.ToString() == categoryId.ToString());
+            _context.Categories.Remove(category);
+            return _context.SaveChangesAsync();
+        }
+
+        public Task<int> DeleteByName(string title)
+        {
+            Category category = _context.Categories.FirstOrDefault(t => t.Title == title);
+            _context.Categories.Remove(category);
+            return _context.SaveChangesAsync();
+        }
     }
 }
