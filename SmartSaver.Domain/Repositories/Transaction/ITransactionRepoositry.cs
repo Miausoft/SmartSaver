@@ -14,21 +14,8 @@ namespace SmartSaver.Domain.Repositories
 
     public interface ITransactionRepoositry
     {
-        /// <summary>
-        /// Method that returns all account transactions from spending category.
-        /// </summary>
-        /// <param name="accId"></param>
-        /// <returns>Spendings</returns>
-        List<Transaction> GetThisMonthAccountSpendings(int accId);
-
-        /// <summary>
-        /// All transactions an account made.
-        /// </summary>
-        /// <param name="accId">Account id</param>
-        /// <returns>List of transactions</returns>
         List<Transaction> GetByAccountId(int accId);
         IEnumerable<Transaction> GetByAccountForDateRange(int accId, DateTime startData, DateTime endDate);
-
         Transaction GetById(int transactionId);
         Task<int> DeleteById(int transactionId);
         Task<int> CreateTransaction(Transaction transaction);

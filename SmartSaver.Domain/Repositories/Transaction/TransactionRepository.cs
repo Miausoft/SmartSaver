@@ -18,25 +18,6 @@ namespace SmartSaver.Domain.Repositories
             _context = context;
         }
 
-        public List<Transaction> GetThisMonthAccountSpendings(int accId)
-        {
-            var transactions = _context.Transactions
-                .Include(p => p.Category)
-                .Where(t => t.ActionTime > CurrentMonthFirstDayDate() &&
-                            t.AccountId == accId
-                            && t.Category.TypeOfIncome == false).ToList();
-            return transactions;
-        }
-
-        private DateTime CurrentMonthFirstDayDate()
-        {
-            var date = new DateTime();
-            var thisMonth = date.Month;
-            var thisYear = date.Year;
-
-            return new DateTime(thisYear, thisMonth, 1);
-        }
-
         public List<Transaction> GetByAccountId(int accId)
         {
             return _context.Transactions

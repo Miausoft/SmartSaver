@@ -1,13 +1,6 @@
 @model DashboardViewModel
 @{
     var score = Math.Min(Math.Round(Model.SavedCurrentMonth * 10 / Model.ToSaveCurrentMonth, 1), 10);
-    
-    var categories = Model.SpendingTransactions.GroupBy(t => t.Category.Title)
-        .Select(g => new CategorySpending()
-        {
-            Amount = g.Select(p => p.Amount).Sum(),
-            Title = g.First().Category.Title
-        }).ToList();
 }
 <head>
     <link rel="stylesheet" type="text/css" href="~/css/generalDesign.css" />
@@ -73,7 +66,7 @@
 </div>
 }
 
-@if (Model.BalanceHistory.Count == 0)
+@if (Model.CurrentMonthBalanceHistory.Count == 0)
 {
     <link rel="stylesheet" href="css/ring.css" />
     <div class="circles" id="circles">
@@ -133,12 +126,12 @@ else
     let myChart = new Chart(chart, {
         type: 'line',
         data: {
-            labels: @Html.Raw(Json.Serialize(Model.BalanceHistory.Select(t => t.Key.ToShortDateString()))),
+            labels: @Html.Raw(Json.Serialize(Model.CurrentMonthBalanceHistory.Select(t => t.Key.ToShortDateString()))),
             datasets: [{
                 label: 'Balance',
                 backgroundColor: '#C3E6CB',
                 borderColor: '#2CA746',
-                data: @Html.Raw(Json.Serialize(Model.BalanceHistory.Select(t => t.Value)))
+                data: @Html.Raw(Json.Serialize(Model.CurrentMonthBalanceHistory.Select(t => t.Value)))
             }],
         },
     });
@@ -148,10 +141,10 @@ else
         data: {
             datasets: [{
                 backgroundColor: ['rgb(82,244,13)', 'rgb(255,59,81)', 'rgb(155,155,222)', 'rgb(91,38,67)'],
-                data: @Html.Raw(Json.Serialize(categories.Select(t => t.Amount)))
+                data: @Html.Raw(Json.Serialize(Model.CurrentMonthTotalExpenseByCategory.Select(t => Math.Round(t.Value, 2))))
             }],
         
-            labels: @Html.Raw(Json.Serialize(categories.Select(t => t.Title)))
+            labels: @Html.Raw(Json.Serialize(Model.CurrentMonthTotalExpenseByCategory.Select(t => t.Key)))
         }
     })
 </script>

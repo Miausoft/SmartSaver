@@ -21,6 +21,7 @@ namespace SmartSaver.Domain
             services.AddScoped<ITokenValidationService, TokenValidationService>();
             services.AddScoped<IAccountRepoository, AccountRepository>();
             services.AddScoped<ITransactionRepoositry, TransactionRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
 
             return services;
         }

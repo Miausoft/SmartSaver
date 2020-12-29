@@ -18,14 +18,17 @@ namespace SmartSaver.MVC.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ITransactionRepoositry _transactionRepo;
         private readonly IAccountRepoository _accountRepo;
+        private readonly ICategoryRepository _categoryRepo;
 
         public DashboardController(ApplicationDbContext context, 
                                    ITransactionRepoositry transactionRepo, 
-                                   IAccountRepoository accountRepo)
+                                   IAccountRepoository accountRepo,
+                                   ICategoryRepository categoryRepo)
         {
             _context = context;
             _transactionRepo = transactionRepo;
             _accountRepo = accountRepo;
+            _categoryRepo = categoryRepo;
         }
         
         [HttpGet]
@@ -48,12 +51,13 @@ namespace SmartSaver.MVC.Controllers
                 ToSaveCurrentMonth = MoneyCounter
                     .AmountToSaveAMonth(account),
 
-                BalanceHistory = TransactionsCounter
+                CurrentMonthBalanceHistory = TransactionsCounter
                     .BalanceHistory(account.Transactions)
                     .Where(x => x.Key.Year == DateTime.Now.Year && x.Key.Month == DateTime.Now.Month)
                     .ToDictionary(x => x.Key, x => x.Value),
 
-                SpendingTransactions = _transactionRepo.GetThisMonthAccountSpendings(account.Id)
+                CurrentMonthTotalExpenseByCategory = TransactionsCounter
+                    .TotalExpenseByCategory(account.Transactions, _categoryRepo.GetMultiple(), new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1), DateTime.Now.AddDays(1))
             };
 
             return View(dvm);
