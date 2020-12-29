@@ -22,13 +22,6 @@ namespace SmartSaver.Domain.Repositories
         List<Transaction> GetThisMonthAccountSpendings(int accId);
 
         /// <summary>
-        /// Method that returns balance history (how balance changed) for an account.
-        /// </summary>
-        /// <param name="accId"></param>
-        /// <returns>List of balance changes</returns>
-        List<Balance> GetBalanceHistory(int accId);
-
-        /// <summary>
         /// All transactions an account made.
         /// </summary>
         /// <param name="accId">Account id</param>

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using SmartSaver.EntityFrameworkCore.Models;
-using SmartSaver.Domain.Repositories;
+using System;
 
 namespace SmartSaver.MVC.Models
 {
@@ -8,7 +8,7 @@ namespace SmartSaver.MVC.Models
     {
         public decimal SavedCurrentMonth { get; set; }
         public decimal ToSaveCurrentMonth { get; set; }
-        public List<Balance> FirstChartData { get; set; }
+        public IDictionary<DateTime, decimal> BalanceHistory { get; set; }
         public List<Transaction> Transactions { get; set; }
         public List<Transaction> SpendingTransactions { get; set; }
     }

@@ -133,12 +133,12 @@ else
     let myChart = new Chart(chart, {
         type: 'line',
         data: {
-            labels: @Html.Raw(Json.Serialize(Model.FirstChartData.Select(t => t.ActionTime.ToShortDateString()))),
+            labels: @Html.Raw(Json.Serialize(Model.BalanceHistory.Select(t => t.Key.ToShortDateString()))),
             datasets: [{
                 label: 'Balance',
                 backgroundColor: '#C3E6CB',
                 borderColor: '#2CA746',
-                data: @Html.Raw(Json.Serialize(Model.FirstChartData.Select(t => t.Amount)))
+                data: @Html.Raw(Json.Serialize(Model.BalanceHistory.Select(t => t.Value)))
             }],
         },
     });

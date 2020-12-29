@@ -47,9 +47,12 @@ namespace SmartSaver.MVC.Controllers
                 
                 ToSaveCurrentMonth = MoneyCounter
                     .AmountToSaveAMonth(account),
-                
-                FirstChartData = _transactionRepo.GetBalanceHistory(account.Id),
-                
+
+                BalanceHistory = TransactionsCounter
+                    .BalanceHistory(account.Transactions)
+                    .Where(x => x.Key.Year == DateTime.Now.Year && x.Key.Month == DateTime.Now.Month)
+                    .ToDictionary(x => x.Key, x => x.Value),
+
                 SpendingTransactions = _transactionRepo.GetThisMonthAccountSpendings(account.Id),
                 
                 Transactions = _context.Accounts.Include(nameof(Transaction) + "s").First(a => a.Id == account.Id).Transactions.ToList()
