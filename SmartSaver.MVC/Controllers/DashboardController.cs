@@ -53,9 +53,7 @@ namespace SmartSaver.MVC.Controllers
                     .Where(x => x.Key.Year == DateTime.Now.Year && x.Key.Month == DateTime.Now.Month)
                     .ToDictionary(x => x.Key, x => x.Value),
 
-                SpendingTransactions = _transactionRepo.GetThisMonthAccountSpendings(account.Id),
-                
-                Transactions = _context.Accounts.Include(nameof(Transaction) + "s").First(a => a.Id == account.Id).Transactions.ToList()
+                SpendingTransactions = _transactionRepo.GetThisMonthAccountSpendings(account.Id)
             };
 
             return View(dvm);

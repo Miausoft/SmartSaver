@@ -9,7 +9,6 @@ namespace SmartSaver.MVC.Models
         public decimal SavedCurrentMonth { get; set; }
         public decimal ToSaveCurrentMonth { get; set; }
         public IDictionary<DateTime, decimal> BalanceHistory { get; set; }
-        public List<Transaction> Transactions { get; set; }
         public List<Transaction> SpendingTransactions { get; set; }
     }
 
