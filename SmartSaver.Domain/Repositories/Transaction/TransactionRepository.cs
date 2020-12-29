@@ -18,22 +18,20 @@ namespace SmartSaver.Domain.Repositories
             _context = context;
         }
 
-        public List<Transaction> GetByAccountId(int accId)
+        public IEnumerable<Transaction> GetByAccountId(int accId)
         {
             return _context.Transactions
-                    .Include(p => p.Category)// Includes Category object.
+                    .Include(p => p.Category)
                     .Where(t => t.AccountId == accId)
-                    .OrderByDescending(a => a.ActionTime) // Order transactions from newest to oldest.
-                    .ToList();
+                    .OrderByDescending(a => a.ActionTime);
         }
 
         public IEnumerable<Transaction> GetByAccountForDateRange(int accId, DateTime startData, DateTime endDate)
         {
             return _context.Transactions
-                    .Include(p => p.Category)// Includes Category object.
+                    .Include(p => p.Category)
                     .Where(t => t.AccountId == accId && t.ActionTime >= startData && t.ActionTime <= endDate)
-                    .OrderByDescending(a => a.ActionTime)
-                    .AsEnumerable(); // Order transactions from newest to oldest.
+                    .OrderByDescending(a => a.ActionTime);
         }
 
         public async Task<int> CreateTransaction(Transaction transaction)

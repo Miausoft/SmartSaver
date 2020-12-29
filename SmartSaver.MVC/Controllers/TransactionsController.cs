@@ -33,7 +33,7 @@ namespace SmartSaver.MVC.Controllers
         {
             return View(new TransactionViewModel()
             {
-                Transactions = _transactionRepo.GetByAccountId(int.Parse(User.Identity.Name)),
+                Transactions = _transactionRepo.GetByAccountId(int.Parse(User.Identity.Name)).ToList(),
                 Categories = _context.Categories.ToList()
             });
         }

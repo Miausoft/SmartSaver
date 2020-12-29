@@ -65,7 +65,7 @@ namespace SmartSaver.WebApi.Controllers
         [HttpDelete("transaction/{transactionId}")]
         public async Task<ActionResult> Delete(int transactionId)
         {
-            int rowsAffected = await _transactions.DeleteByIdAsync(transactionId);
+            int rowsAffected = await _transactions.DeleteById(transactionId);
 
             if (rowsAffected < 1)
             {

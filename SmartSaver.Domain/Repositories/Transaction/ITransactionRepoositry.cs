@@ -14,7 +14,7 @@ namespace SmartSaver.Domain.Repositories
 
     public interface ITransactionRepoositry
     {
-        List<Transaction> GetByAccountId(int accId);
+        IEnumerable<Transaction> GetByAccountId(int accId);
         IEnumerable<Transaction> GetByAccountForDateRange(int accId, DateTime startData, DateTime endDate);
         Transaction GetById(int transactionId);
         Task<int> DeleteById(int transactionId);
