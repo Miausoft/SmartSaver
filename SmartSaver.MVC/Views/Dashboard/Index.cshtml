@@ -2,7 +2,9 @@
 @{
     ViewData["Title"] = "Dashboard";
 
-    var score = Math.Min(Math.Round(Model.SavedCurrentMonth * 10 / Model.ToSaveCurrentMonth, 1), 10);
+    var score = Math.Max(Math.Min(Math.Round(Model.SavedCurrentMonth * 10 / Model.ToSaveCurrentMonth, 1), 10), 0);
+    var freeMoneyToSpend = Math.Round(Model.FreeMoneyToSpend);
+    var estimatedTime = Model.EstimatedTime;
 }
 
 <head>
@@ -40,8 +42,22 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    At the end of the month you should have at least <b>@Model.ToSaveCurrentMonth.ToString("C")</b> money left in your budget.<br />
-                    For this moment you have <b>@Model.SavedCurrentMonth.ToString("C")</b> in your budget.
+                    <p>
+                        At the end of the month you should have at least <b>@Model.ToSaveCurrentMonth.ToString("C2")</b> money left in your budget.<br />
+                        For this moment you have <b>@Model.SavedCurrentMonth.ToString("C")</b> in your budget.
+                    </p>
+                    @if (freeMoneyToSpend > 0)
+                    {
+                        <p>
+
+                            You can spend <b>@freeMoneyToSpend.ToString("C2")</b> without any hesitation.
+                            The goal will be reached just on time.
+                        </p>
+                    }
+                    @if (estimatedTime != DateTime.MinValue)
+                    {
+                        <p>Estimated time until goal: <b>@estimatedTime.ToShortDateString()</b></p>
+                    }
                     <hr />
                     This month you have saved @((score*10)) % of the required amount!
                     @if (score <= 10)

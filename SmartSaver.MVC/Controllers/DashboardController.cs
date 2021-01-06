@@ -39,7 +39,7 @@ namespace SmartSaver.MVC.Controllers
                 .GetByAccountId(account.Id)
                 .ToList();
 
-            DashboardViewModel dvm = new DashboardViewModel()
+            return View(new DashboardViewModel()
             {
                 SavedCurrentMonth = TransactionsCounter
                     .AmountSavedCurrentMonth(account.Transactions),
@@ -53,10 +53,12 @@ namespace SmartSaver.MVC.Controllers
                     .ToDictionary(x => x.Key, x => x.Value),
 
                 CurrentMonthTotalExpenseByCategory = TransactionsCounter
-                    .TotalExpenseByCategory(account.Transactions, _categoryRepo.GetMultiple(), new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1), DateTime.Now.AddDays(1))
-            };
+                    .TotalExpenseByCategory(account.Transactions, _categoryRepo.GetMultiple(), new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1), DateTime.Now.AddDays(1)),
 
-            return View(dvm);
+                FreeMoneyToSpend = MoneyCounter.FreeMoneyToSpend(account),
+
+                EstimatedTime = MoneyCounter.EstimatedTime(account)
+            });
         }
 
         [HttpGet]
@@ -85,7 +87,7 @@ namespace SmartSaver.MVC.Controllers
                 Account current = _accountRepo.GetById(User.Identity.Name);
                 current.Goal = account.Goal;
                 current.Revenue = account.Revenue;
-                current.GoalStartDate = DateTime.Now;
+                current.GoalStartDate = DateTime.Today;
                 current.GoalEndDate = account.GoalEndDate;
                 _accountRepo.Save().Wait();
                 return RedirectToAction(nameof(Index));

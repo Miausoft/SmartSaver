@@ -7,8 +7,8 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
     public static class MoneyCounter
     {
         /// <summary>
-        /// a dynamic number to represent amount of money account have to save current month
-        /// the method can return a negative number meaning that in previous months it was saved more than it was necessary.
+        /// a dynamic number to represent amount of money account have to save current month.
+        /// The method can return a negative number meaning that in previous months it was saved more than it was necessary.
         /// </summary>
         public static decimal AmountToSaveAMonth(Account acc)
         {
@@ -24,20 +24,20 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
         }
 
         /// <summary>
-        /// a dynamic number which shows account's balance he can spend without any hesitation because goal will be reached in time
-        /// zero represents that account can't have any more spendings if he wants to reach his goal in time. There will be some suggestion for an user in the future
+        /// A dynamic number which shows account's balance he can spend without any hesitation because goal will be reached in time.
+        /// Zero represents that account can't have any more spendings if he wants to reach his goal in time.
         /// </summary>
-        public static decimal AmountLeftToSpend(Account acc)
+        public static decimal FreeMoneyToSpend(Account acc)
         {
             return TransactionsCounter.SavedSum(acc.Transactions, acc.GoalStartDate, acc.GoalEndDate)
                 - (AmountToSaveAMonth(acc) * Math.Ceiling(DateCounter.MonthsPassed(acc.GoalStartDate)));
         }
 
         /// <summary>
-        /// a dynamic number to represent amount of money account left to save until now
-        /// the method does not consider today's date. It only counts previous months
-        /// the method will return negative number if account saved more than he had to
-        /// the method will return positive number if account saved less than he had to
+        /// A dynamic number to represent amount of money account left to save until now.
+        /// The method does not consider today's date. It only counts previous months.
+        /// The method will return a negative number if the account saved more than he had to.
+        /// The method will return a positive number if the account saved less than he had to.
         /// </summary>
         public static decimal AmountLeftToSave(Account acc)
         {
@@ -57,6 +57,17 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
             }
 
             return leftToSpend;
+        }
+
+        public static DateTime EstimatedTime(Account acc)
+        {
+            decimal savedSum = TransactionsCounter.SavedSum(acc.Transactions, acc.GoalStartDate, acc.GoalEndDate);
+
+            if (savedSum < 0) return DateTime.MinValue;
+            if (savedSum >= acc.Goal && DateTime.Today < acc.GoalEndDate) return DateTime.Today;
+            else if (MoneyCounter.Average(Math.Floor(DateCounter.DaysPassed(acc.GoalStartDate)), savedSum) == 1) return acc.GoalEndDate.Date;
+            else if (MoneyCounter.Average(Math.Floor(DateCounter.DaysPassed(acc.GoalStartDate)), savedSum) == 0) return DateTime.MinValue;
+            else return DateTime.Now.AddDays((double)Math.Ceiling((acc.Goal - savedSum) / MoneyCounter.Average(DateCounter.DaysPassed(acc.GoalStartDate), savedSum)));
         }
     }
 }

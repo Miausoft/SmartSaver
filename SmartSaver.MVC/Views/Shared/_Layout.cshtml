@@ -10,17 +10,18 @@
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/generalDesign.css" />
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script type="text/javascript" src="~/js/site.js"></script>
 </head>
 <body>
     <div class="load"></div>
     <header>
         <nav class="navbar navbar-expand-sm navbar-light" style="background-color: rgb(30, 51, 45)">
             <div class="container">
-                <img src="/images/caticowhite.png" width="30" height="30" alt="">
-                <a class="navbar-brand font-weight-bold text-light" asp-area="" asp-controller="Home" asp-action="Index">smartsaver</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index">
+                    <img href="/Home/Index/" src="/images/caticowhite.png" width="30" height="30" alt="">
+                </a>
+                <a class="navbar-brand font-weight-bold text-light" asp-area="" asp-controller="Home" asp-action="Index">
+                    smartsaver
+                </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -67,5 +68,8 @@
             &copy; 2020 - SmartSaver by MIAUsoft
         </div>
     </footer>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/site.js"></script>
 </body>
 </html>

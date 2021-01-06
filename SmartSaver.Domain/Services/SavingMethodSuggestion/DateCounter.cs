@@ -33,7 +33,13 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
         /// </summary>
         public static int DaysUntilMonthEnd(DateTime now, DateTime goalStartDate, DateTime goalEndDate)
         {
-            if (now.Year == goalEndDate.Year && now.Month == goalEndDate.Month)
+
+            if(goalStartDate.Year == goalEndDate.Year && goalStartDate.Month == goalEndDate.Month)
+            {
+                return goalEndDate.Subtract(goalStartDate).Days;
+            }
+
+            else if (now.Year == goalEndDate.Year && now.Month == goalEndDate.Month)
             {
                 return goalEndDate.Day - 1;
             }

@@ -13,7 +13,7 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
         {
             decimal amountSavedCurrentMonth = TransactionsCounter.AmountSavedCurrentMonth(acc.Transactions);
             decimal amountToSaveAMonth = MoneyCounter.AmountToSaveAMonth(acc);
-            decimal freeMoneyToSpend = MoneyCounter.AmountLeftToSpend(acc);
+            decimal freeMoneyToSpend = MoneyCounter.FreeMoneyToSpend(acc);
             string suggestion = "Šį mėnesį sutaupėte: " + amountSavedCurrentMonth.ToString("C") + "\n";
 
             if (Math.Round(amountToSaveAMonth, 2) == Math.Round(amountSavedCurrentMonth, 2))
@@ -89,34 +89,6 @@ namespace SmartSaver.Domain.Services.SavingMethodSuggestion
             else
             {
                 suggestion = "neturite jokių išlaidų, todėl pasiūlymų, kaip taypyti pinigus, jums pateikti negalime :(";
-            }
-
-            return suggestion;
-        }
-
-        public static string EstimatedTime(Account acc)
-        {
-            decimal savedSum = TransactionsCounter.SavedSum(acc.Transactions, acc.GoalStartDate, acc.GoalEndDate);
-
-            if (savedSum < 0) return "Per taupymo laikotarpį kol kas nesutaupėte jokios pinigų sumos";
-            else if (savedSum >= acc.Goal && DateTime.Today < acc.GoalEndDate) return "Sugebėjote sutaupyti anksčiau nei numatėte!";
-            else if (savedSum >= acc.Goal && DateTime.Today > acc.GoalEndDate) return "Sugebėjote sutaupyti, tačiau vėliau nei numatėte!";
-            else if (MoneyCounter.Average(DateCounter.DaysPassed(acc.GoalStartDate), savedSum) == 1) return acc.Goal.ToString("C") + " sutaupysite iki\n " + acc.GoalEndDate.ToShortDateString();
-            else if (MoneyCounter.Average(DateCounter.DaysPassed(acc.GoalStartDate), savedSum) == 0) return "Numatytas laikas iki taupymo pabaigos: N/A";
-            else return acc.Goal.ToString("C") + " sutaupysite iki\n" + DateTime.Now.AddDays((double)Math.Ceiling((acc.Goal - savedSum) / MoneyCounter.Average(DateCounter.DaysPassed(acc.GoalStartDate), savedSum))).ToShortDateString();
-        }
-
-       public static string FreeMoneyToSpend(Account acc)
-        {
-            string suggestion = "Pinigų suma, kurią galite skirti papildomoms išlaidoms: ";
-
-            if (MoneyCounter.AmountLeftToSpend(acc) >= 0)
-            {
-                suggestion += Math.Round(MoneyCounter.AmountLeftToSpend(acc), 2).ToString("C");
-            }
-            else
-            {
-                suggestion += "N/A";
             }
 
             return suggestion;
