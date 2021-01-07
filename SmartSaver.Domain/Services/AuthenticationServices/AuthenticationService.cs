@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using SmartSaver.Domain.Services.PasswordHash;
 using SmartSaver.Domain.Services.Regex;
 using SmartSaver.EntityFrameworkCore;

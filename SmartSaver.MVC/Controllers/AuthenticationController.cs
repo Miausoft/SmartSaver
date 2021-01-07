@@ -9,11 +9,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using SmartSaver.Domain.Services.AuthenticationServices;
 using SmartSaver.Domain.Services.EmailServices;
 using SmartSaver.Domain.TokenValidation;
 using SmartSaver.EntityFrameworkCore.Models;
-using SmartSaver.EntityFrameworkCore.Repositories;
+using SmartSaver.Domain.Repositories;
 using SmartSaver.MVC.Models;
 
 namespace SmartSaver.MVC.Controllers
@@ -159,7 +158,10 @@ namespace SmartSaver.MVC.Controllers
 
         private async Task UserAuthenticationAsync(string userId)
         {
-            var claim = new List<Claim> { new Claim(ClaimTypes.Name, userId) };
+            var claim = new List<Claim> 
+            { 
+                new Claim(ClaimTypes.Name, userId)
+            };
             var identity = new ClaimsIdentity(claim, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);

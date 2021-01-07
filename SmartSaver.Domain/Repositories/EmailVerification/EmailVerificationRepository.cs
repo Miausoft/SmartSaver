@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SmartSaver.EntityFrameworkCore;
 using SmartSaver.EntityFrameworkCore.Models;
 using System.Linq;
 
-namespace SmartSaver.EntityFrameworkCore.Repositories
+namespace SmartSaver.Domain.Repositories
 {
     public class EmailVerificationRepository : IEmailVerificationRepository
     {
@@ -13,9 +14,9 @@ namespace SmartSaver.EntityFrameworkCore.Repositories
             _db = db;
         }
 
-        public bool IsVerified(string userId)
+        public bool IsVerified<T>(T userId)
         {
-            if(_db.EmailVerifications.FirstOrDefault(u => u.UserId.ToString().Equals(userId)) == null)
+            if(_db.EmailVerifications.FirstOrDefault(u => u.UserId.ToString().Equals(userId.ToString())) == null)
             {
                 return true;
             }
@@ -23,9 +24,9 @@ namespace SmartSaver.EntityFrameworkCore.Repositories
             return false;
         }
 
-        public string GetUserToken(string userId)
+        public string GetUserToken<T>(T userId)
         {
-            return _db.EmailVerifications.Include(a => a.User).Where(a => a.UserId.ToString().Equals(userId)).Select(a => a.Token).FirstOrDefault();
+            return _db.EmailVerifications.Include(a => a.User).Where(a => a.UserId.ToString().Equals(userId.ToString())).Select(a => a.Token).FirstOrDefault();
         }
 
         public EmailVerification Create(EmailVerification emailVerification)
@@ -36,9 +37,9 @@ namespace SmartSaver.EntityFrameworkCore.Repositories
             return emailVerification;
         }
 
-        public void Delete(string userId)
+        public void Delete<T>(T userId)
         {
-            var dataToDelete = _db.EmailVerifications.FirstOrDefault(u => u.UserId.ToString() == userId);
+            var dataToDelete = _db.EmailVerifications.FirstOrDefault(u => u.UserId.ToString() == userId.ToString());
             _db.EmailVerifications.Remove(dataToDelete);
             _db.SaveChanges();
         }

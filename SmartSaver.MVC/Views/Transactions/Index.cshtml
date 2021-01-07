@@ -1,5 +1,3 @@
-@using SmartSaver.Domain.Services.TransactionsCounterService
-
 @model TransactionViewModel
 @{
     ViewData["Title"] = "Transactions";
@@ -9,12 +7,13 @@
 }
 
 <head>
-    <link rel="stylesheet" type="text/css" href="~/css/generalDesign.css" />
+    <title>@ViewBag.Title</title>
 </head>
 
-@section Jumbotron 
+
+@section Jumbotron
 {
-    <div class="jumbotron jumbotron-fluid mb-5 background-auth">
+    <div class="jumbotron jumbotron-fluid mb-5 bg-dollar bg-top">
         <div class="container">
             <h5 class="text-light" style="text-transform: uppercase; letter-spacing: 4px"><b>Balance</b></h5>
             <span class="badge badge-pill badge-dark"><b class="display-4" style="font-size:27px;"> @balance.ToString("C2")</b></span>
@@ -44,7 +43,7 @@
                         <div class="input-group">
                             <input type="text" class="form-control" id="Spending" name="Amount" />
                             <div class="input-group-append">
-                                <span class="input-group-text form-group">@currencySymbol</span>
+                                <span class="input-group-text">@currencySymbol</span>
                             </div>
                         </div>
                         <span id="SpendingStatus"></span>
@@ -67,12 +66,12 @@
                     <div class="form-group">
                         <label>Choose date</label>
                         <div class="date-input input-group">
-                            <input type="date" class="form-control">
+                            <input type="date" class="form-control" name="ActionTime" required>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id ="SpendingButton" class="btn btn-success" type="submit">ADD SPENDING</button>
+                    <button id="SpendingButton" class="btn btn-success" type="submit">ADD SPENDING</button>
                 </div>
             </form>
         </div>
@@ -96,14 +95,14 @@
                         <div class="input-group">
                             <input type="text" class="form-control" id="Income" name="Amount" />
                             <div class="input-group-append">
-                                <span class="input-group-text form-group">@currencySymbol</span>
+                                <span class="input-group-text">@currencySymbol</span>
                             </div>
                         </div>
                         <span id="IncomeStatus"></span>
                     </div>
                     <div class="form-group">
                         <label>Spending category</label>
-                        <select class="form-control" id="CategoryId" name="CategoryId">
+                        <select class="form-control" name="CategoryId">
                             <!-- Category -->
                             @foreach (var c in Model.Categories)
                             {
@@ -119,12 +118,12 @@
                     <div class="form-group">
                         <label>Choose date</label>
                         <div class="date-input input-group">
-                            <input type="date" class="form-control">
+                            <input type="date" class="form-control" name="ActionTime" required>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id ="IncomeButton" class="btn btn-success" type="submit">ADD INCOME</button>
+                    <button id="IncomeButton" class="btn btn-success" type="submit">ADD INCOME</button>
                 </div>
             </form>
         </div>
@@ -146,14 +145,14 @@
                     <div class="form-group">
                         <small class="form-text text-muted">FROM DATE</small>
                         <div class="date-input">
-                            <input id="FromDate" type="date" asp-for="FromDate" class="form-control">
+                            <input type="date" name="FromDate" class="form-control" required>
                         </div>
                         <span id="FromStatus"></span>
                     </div>
                     <div class="form-group">
                         <small class="form-text text-muted">TO DATE</small>
                         <div class="date-input">
-                            <input id="ToDate" type="date" asp-for="ToDate" class="form-control">
+                            <input type="date" name="ToDate" class="form-control" required>
                         </div>
                         <span id="ToStatus"></span>
                     </div>
@@ -197,8 +196,8 @@
     const incomeStatus = document.getElementById('IncomeStatus');
     const spending = document.getElementById('Spending');
     const income = document.getElementById('Income');
-    const fromDate = document.getElementById('FromDate');
-    const toDate = document.getElementById('ToDate');
+    const fromDate = document.getElementsByName('FromDate')[0];
+    const toDate = document.getElementsByName('ToDate')[0];
     const fromStatus = document.getElementById('FromStatus');
     const toStatus = document.getElementById('ToStatus');
 
@@ -215,6 +214,9 @@
     }
 
     document.getElementById("PdfButton").onclick = function () {
+        $(fromStatus).html("");
+        $(toStatus).html("");
+
         if (!checkDate(fromDate.value, toDate.value, fromStatus, toStatus)) {
             return false;
         }
@@ -248,6 +250,6 @@
     }
 
     function isNumber(amount) {
-        return /^[0-9]*[.,]?[0-9]+$/.test(amount);
+        return /^(0*[1-9][0-9]*(\,[0-9]+)?|0+\,[0-9]*[1-9][0-9]*)$/.test(amount);
     }
 </script>

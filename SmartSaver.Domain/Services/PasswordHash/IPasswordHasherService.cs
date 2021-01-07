@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace SmartSaver.Domain.Services.PasswordHash
 {
     public interface IPasswordHasherService : IPasswordHash, IPasswordVerify { }

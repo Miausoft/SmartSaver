@@ -1,5 +1,11 @@
-html {
-    scroll-behavior: smooth;
+.load {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    z-index: 99;
+    margin:0 0 0 0;
+    background: url("../images/preloader.gif") no-repeat center center rgba(255,255,255,255);
+    visibility:hidden;
 }
 
 .btn:hover {
@@ -40,7 +46,7 @@ input[type="date"]:valid::before {
 }
 
 .auth-block {
-    margin: 30px auto;
+    margin: auto;
     min-height: 93.6vh;
 }
 
@@ -49,11 +55,10 @@ input[type="date"]:valid::before {
     -webkit-box-shadow: 0 0 5px 0 rgba(43, 43, 43, .1), 0 11px 6px -7px rgba(43, 43, 43, .1);
     box-shadow: 0 0 5px 0 rgba(43, 43, 43, .1), 0 11px 6px -7px rgba(43, 43, 43, .1);
     border: none;
-    margin-bottom: 30px;
     -webkit-transition: all .3s ease-in-out;
     transition: all .3s ease-in-out;
     background-color: #fff;
-    max-width: 500px; 
+    max-width: 100vw;
     padding: 20px 20px 20px 20px;
 }
 
@@ -157,10 +162,17 @@ input[type="date"]:valid::before {
     padding-bottom: 150px;
 }
 
-.background-auth {
+.bg-dollar {
     background-image: url(../images/holdingdollar.jpg);
-    background-position: center;
     background-size: cover;
+}
+
+.bg-center {
+    background-position: center;
+}
+
+.bg-top {
+    background-position: top;
 }
 
 .full-screen {
@@ -206,4 +218,8 @@ input[type="date"]:valid::before {
 .a-verify {
     font-size: 14px;
     color: #5551ff;
+}
+
+#pablo-waiting {
+    content: url(https://media1.tenor.com/images/7d5d330ddd6ade55878b5991221e5a08/tenor.gif);
 }
