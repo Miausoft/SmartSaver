@@ -188,6 +188,20 @@
 </table>
 <nav>
     <button style="border-radius: 0" type="button" class="btn btn-sm btn-info shadow-none" data-toggle="modal" data-target="#generatePdf">Generate Resume (PDF) 🖨️</button>
+    <cs-pager 
+              cs-paging-pagenumber="4" 
+              cs-paging-totalitems="4" 
+              cs-paging-pagesize="1" 
+              cs-pagenumber-param="pagenumber" 
+              asp-controller="Transactions" 
+              asp-action="Index" 
+              cs-pager-li-current-class="page-item active"
+              cs-pager-li-other-class="page-item"
+              cs-pager-li-non-active-class="page-item disabled"
+              cs-pager-link-current-class="page-link"
+              cs-pager-link-other-class="page-link">
+
+    </cs-pager>
 </nav>
 
 
