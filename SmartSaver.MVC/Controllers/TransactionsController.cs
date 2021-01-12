@@ -29,11 +29,16 @@ namespace SmartSaver.MVC.Controllers
         }
 
         [HttpGet]
-        public ActionResult Index()
+        public ActionResult Index(int pageNumber = 1, int pageSize = 10)
         {
+            int excludeRecords = (pageSize * pageNumber) - pageSize;
+
             return View(new TransactionViewModel()
             {
-                Transactions = _transactionRepo.GetByAccountId(User.Identity.Name).ToList(),
+                Transactions = _transactionRepo.GetByAccountId(User.Identity.Name)
+                                                .Skip(excludeRecords)
+                                                .Take(pageSize)
+                                                .ToList(),
                 Categories = _categoryRepo.GetMultiple().ToList()
             });
         }
