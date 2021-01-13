@@ -1,6 +1,8 @@
 @model cloudscribe.Pagination.Models.PagedResult<TransactionViewModel>
 @{
     ViewData["Title"] = "Transactions";
+    ViewData["Controller"] = "Transactions";
+    ViewData["Action"] = "Index";
 
     var currencySymbol = System.Globalization.RegionInfo.CurrentRegion.CurrencySymbol;
     var balance = Model.Data.Select(s => s.Transactions).FirstOrDefault().Sum(t => t.Amount);
@@ -188,20 +190,7 @@
 </table>
 <nav>
     <button style="border-radius: 0" type="button" class="btn btn-sm btn-info shadow-none" data-toggle="modal" data-target="#generatePdf">Generate Resume (PDF) 🖨️</button>
-    <cs-pager 
-              cs-paging-pagenumber=(int)Model.PageNumber 
-              cs-paging-totalitems=(int)Model.TotalItems 
-              cs-paging-pagesize=Model.PageSize
-              cs-pagenumber-param="pagenumber" 
-              asp-controller="Transactions" 
-              asp-action="Index" 
-              cs-pager-li-current-class="page-item active"
-              cs-pager-li-other-class="page-item"
-              cs-pager-li-non-active-class="page-item disabled"
-              cs-pager-link-current-class="page-link"
-              cs-pager-link-other-class="page-link">
-
-    </cs-pager>
+    <partial name="_PaginationPartial" view-data="ViewData" model="Model" />
 </nav>
 
 
