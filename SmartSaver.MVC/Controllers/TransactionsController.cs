@@ -9,6 +9,7 @@ using SmartSaver.MVC.Models;
 using SmartSaver.Domain.Repositories;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using cloudscribe.Pagination.Models;
 
 namespace SmartSaver.MVC.Controllers
 {
@@ -32,15 +33,25 @@ namespace SmartSaver.MVC.Controllers
         public ActionResult Index(int pageNumber = 1, int pageSize = 10)
         {
             int excludeRecords = (pageSize * pageNumber) - pageSize;
-
-            return View(new TransactionViewModel()
+            var result = new PagedResult<TransactionViewModel>
             {
-                Transactions = _transactionRepo.GetByAccountId(User.Identity.Name)
+                TotalItems = _transactionRepo.GetByAccountId(User.Identity.Name).Count(),
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                Data = new List<TransactionViewModel>
+                {
+                    new TransactionViewModel
+                    {
+                        Transactions = _transactionRepo.GetByAccountId(User.Identity.Name)
                                                 .Skip(excludeRecords)
                                                 .Take(pageSize)
                                                 .ToList(),
-                Categories = _categoryRepo.GetMultiple().ToList()
-            });
+                        Categories = _categoryRepo.GetMultiple().ToList()
+                    }
+                }
+            };
+
+            return View(result);
         }
 
         [HttpPost]

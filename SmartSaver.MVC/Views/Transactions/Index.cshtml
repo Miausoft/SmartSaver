@@ -1,9 +1,9 @@
-@model TransactionViewModel
+@model cloudscribe.Pagination.Models.PagedResult<TransactionViewModel>
 @{
     ViewData["Title"] = "Transactions";
 
     var currencySymbol = System.Globalization.RegionInfo.CurrentRegion.CurrencySymbol;
-    var balance = Model.Transactions.Sum(t => t.Amount);
+    var balance = Model.Data.Select(s => s.Transactions).FirstOrDefault().Sum(t => t.Amount);
 }
 
 <head>
@@ -52,7 +52,7 @@
                         <label>Spending category</label>
                         <select class="form-control" id="CategoryId" name="CategoryId">
                             <!-- Category -->
-                            @foreach (var c in Model.Categories)
+                            @foreach (var c in Model.Data.Select(c => c.Categories).FirstOrDefault())
                             {
                                 @if (!c.TypeOfIncome)
                                 {
@@ -104,7 +104,7 @@
                         <label>Spending category</label>
                         <select class="form-control" name="CategoryId">
                             <!-- Category -->
-                            @foreach (var c in Model.Categories)
+                            @foreach (var c in Model.Data.Select(c => c.Categories).FirstOrDefault())
                             {
                                 @if (c.TypeOfIncome)
                                 {
@@ -175,7 +175,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var t in Model.Transactions)
+        @foreach (var t in Model.Data.Select(s => s.Transactions).FirstOrDefault())
         {
             <tr class="@(t.Category.TypeOfIncome ? "table-success" : "")">
                 <td>@t.ActionTime.ToShortDateString()</td>
@@ -189,9 +189,9 @@
 <nav>
     <button style="border-radius: 0" type="button" class="btn btn-sm btn-info shadow-none" data-toggle="modal" data-target="#generatePdf">Generate Resume (PDF) 🖨️</button>
     <cs-pager 
-              cs-paging-pagenumber="4" 
-              cs-paging-totalitems="4" 
-              cs-paging-pagesize="1" 
+              cs-paging-pagenumber=(int)Model.PageNumber 
+              cs-paging-totalitems=(int)Model.TotalItems 
+              cs-paging-pagesize=Model.PageSize
               cs-pagenumber-param="pagenumber" 
               asp-controller="Transactions" 
               asp-action="Index" 
