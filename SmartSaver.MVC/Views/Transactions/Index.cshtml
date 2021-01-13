@@ -43,12 +43,12 @@
                     <div class="form-group">
                         <label>Amount</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="Spending" name="Amount" />
+                            <input type="text" class="form-control" id="spending" name="Amount" />
                             <div class="input-group-append">
                                 <span class="input-group-text">@currencySymbol</span>
                             </div>
                         </div>
-                        <span id="SpendingStatus"></span>
+                        <span id="spendingStatus"></span>
                     </div>
                     <div class="form-group">
                         <label>Spending category</label>
@@ -73,7 +73,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="SpendingButton" class="btn btn-success" type="submit">ADD SPENDING</button>
+                    <button id="spendingButton" class="btn btn-success" type="submit">ADD SPENDING</button>
                 </div>
             </form>
         </div>
@@ -95,12 +95,12 @@
                     <div class="form-group">
                         <label>Amount</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="Income" name="Amount" />
+                            <input type="text" class="form-control" id="income" name="Amount" />
                             <div class="input-group-append">
                                 <span class="input-group-text">@currencySymbol</span>
                             </div>
                         </div>
-                        <span id="IncomeStatus"></span>
+                        <span id="incomeStatus"></span>
                     </div>
                     <div class="form-group">
                         <label>Spending category</label>
@@ -125,7 +125,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="IncomeButton" class="btn btn-success" type="submit">ADD INCOME</button>
+                    <button id="incomeButton" class="btn btn-success" type="submit">ADD INCOME</button>
                 </div>
             </form>
         </div>
@@ -147,20 +147,20 @@
                     <div class="form-group">
                         <small class="form-text text-muted">FROM DATE</small>
                         <div class="date-input">
-                            <input type="date" name="FromDate" class="form-control" required>
+                            <input type="date" id="fromDate" class="form-control" required>
                         </div>
-                        <span id="FromStatus"></span>
+                        <span id="fromStatus"></span>
                     </div>
                     <div class="form-group">
                         <small class="form-text text-muted">TO DATE</small>
                         <div class="date-input">
-                            <input type="date" name="ToDate" class="form-control" required>
+                            <input type="date" id="toDate" class="form-control" required>
                         </div>
-                        <span id="ToStatus"></span>
+                        <span id="toStatus"></span>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="PdfButton" class="btn btn-info" type="submit">GENERATE PDF</button>
+                    <button id="pdfButton" class="btn btn-info" type="submit">GENERATE PDF</button>
                 </div>
             </form>
         </div>
@@ -195,35 +195,23 @@
 
 
 <script>
-    const spendingStatus = document.getElementById('SpendingStatus');
-    const incomeStatus = document.getElementById('IncomeStatus');
-    const spending = document.getElementById('Spending');
-    const income = document.getElementById('Income');
-    const fromDate = document.getElementsByName('FromDate')[0];
-    const toDate = document.getElementsByName('ToDate')[0];
-    const fromStatus = document.getElementById('FromStatus');
-    const toStatus = document.getElementById('ToStatus');
-
-    document.getElementById("SpendingButton").onclick = function () {
-        if (!checkInputs(spending.value.trim(), spendingStatus)) {
+    $("#spendingButton").on('click', function () {
+        if (!checkInputs($("#spending").val().trim(), $("#spendingStatus")))
             return false;
-        }
-    }
+    });
 
-    document.getElementById("IncomeButton").onclick = function () {
-        if (!checkInputs(income.value.trim(), incomeStatus)) {
+    $("#incomeButton").on('click', function () {
+        if (!checkInputs($("#income").val().trim(), $("#incomeStatus")))
             return false;
-        }
-    }
+    });
 
-    document.getElementById("PdfButton").onclick = function () {
-        $(fromStatus).html("");
-        $(toStatus).html("");
+    $("#pdfButton").on('click', function () {
+        $("#fromStatus").html("");
+        $("#toStatus").html("");
 
-        if (!checkDate(fromDate.value, toDate.value, fromStatus, toStatus)) {
+        if (!checkDate($("#fromDate").val(), $("#toDate").val(), $("#fromStatus"), $("#toStatus")))
             return false;
-        }
-    }
+    });
 
     function checkInputs(value, status) {
         if (value === '') {
