@@ -29,11 +29,11 @@ namespace SmartSaver.MVC.Controllers
             _categoryRepo = categoryRepo;
         }
 
+        [Route("Transactions/{pageNumber?}")]
         [HttpGet]
         public ActionResult Index(int pageNumber = 1, int pageSize = 10)
         {
-            int excludeRecords = (pageSize * pageNumber) - pageSize;
-            var result = new PagedResult<TransactionViewModel>
+            return View(new PagedResult<TransactionViewModel>
             {
                 TotalItems = _transactionRepo.GetByAccountId(User.Identity.Name).Count(),
                 PageNumber = pageNumber,
@@ -43,15 +43,13 @@ namespace SmartSaver.MVC.Controllers
                     new TransactionViewModel
                     {
                         Transactions = _transactionRepo.GetByAccountId(User.Identity.Name)
-                                                .Skip(excludeRecords)
+                                                .Skip((pageSize * pageNumber) - pageSize)
                                                 .Take(pageSize)
                                                 .ToList(),
                         Categories = _categoryRepo.GetMultiple().ToList()
                     }
                 }
-            };
-
-            return View(result);
+            });
         }
 
         [HttpPost]
