@@ -188,10 +188,15 @@
 
     </tbody>
 </table>
-<nav>
-    <button style="border-radius: 0" type="button" class="btn btn-sm btn-info shadow-none" data-toggle="modal" data-target="#generatePdf">Generate Resume (PDF) 🖨️</button>
-    <partial name="_PaginationPartial" view-data="ViewData" model="Model" />
-</nav>
+
+<div class="row">
+    <div class="col-8">
+        <button style="border-radius: 0" type="button" class="btn btn-sm btn-info shadow-none" data-toggle="modal" data-target="#generatePdf">Generate Resume (PDF) 🖨️</button>
+    </div>
+    <div class="col-4 d-flex flex-row-reverse">
+        <partial name="_PaginationPartial" view-data="ViewData" model="Model" />
+    </div>
+</div>
 
 
 <script>
