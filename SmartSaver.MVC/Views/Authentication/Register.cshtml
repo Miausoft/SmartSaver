@@ -5,6 +5,7 @@
 
 <head>
     <title>@ViewBag.Title</title>
+    <script src="~/js/views/authentication/register.js"></script>
 </head>
 
 <body class="pb-15 bg-dollar bg-top" onload="UsernameCheck(); EmailCheck()">
@@ -34,7 +35,7 @@
                             <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm Password" />
                             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20" style="padding:5px 35px 5px 35px;">Register</button>
+                        <button id="register" type="submit" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20" style="padding:5px 35px 5px 35px;">Register</button>
                     </form>
                     <div class="or-container">
                         <div class="line-separator"></div>
@@ -71,51 +72,3 @@
         </div>
     </section>
 </body>
-
-<script>
-    function UsernameCheck() {
-        var length = document.getElementById("Username").value.length;
-        if (length != 0) {
-            $("#Status1").html('<font color="Green">Loading...</font>');
-            $("#Username").css("border-color", "Green");
-            if (length >= 5) {
-                $.get("@Url.Action("DoesUsernameExist", "Authentication")",
-                    {
-                        username: $('#Username').val()
-                    },
-                    function (data) {
-                        if (data == false) {
-                            $("#Status1").html('<font color="Green">Username is available.</font>');
-                            $("#Username").css("border-color", "Green");
-                        }
-                        else {
-                            $("#Status1").html('<font color="Red">Username is already taken.</font>');
-                            $("#Username").css("border-color", "Red");
-                        }
-                    });
-            }
-            else {
-                $("#Status1").html('<font color="Red">Username must be at least 5 characters long.</font>');
-                $("#Username").css("border-color", "Red");
-            }
-        }
-    }
-
-    function EmailCheck() {
-        if (document.getElementById("Email").value.length != 0) {
-            $.get("@Url.Action("DoesEmailExist", "Authentication")",
-                {
-                    email: $('#Email').val()
-                },
-                function (data) {
-                    if (data == false) {
-                        $("#Status2").html("");
-                    }
-                    else {
-                        $("#Status2").html('<font color="Red">Email is already asociated with another account.</font>');
-                        $("#Email").css("border-color", "Red");
-                    }
-                });
-        }
-    }
-</script>

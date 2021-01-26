@@ -17,16 +17,6 @@ namespace SmartSaver.Domain.Repositories
             _db = db;
         }
 
-        public bool DoesUsernameExist(string username)
-        {
-            return _db.Users.FirstOrDefault(u => u.Username.Equals(username)) != null;
-        }
-
-        public bool DoesEmailExist(string email)
-        {
-            return _db.Users.FirstOrDefault(u => u.Email.Equals(email)) != null;
-        }
-
         public T GetId<T>(string email)
         {
             return (T)Convert.ChangeType(_db.Users.Where(u => u.Email == email).Select(u => u.Id).FirstOrDefault(), typeof(T));
@@ -44,7 +34,7 @@ namespace SmartSaver.Domain.Repositories
 
         public User GetSingle(Expression<Func<User, bool>> expression)
         {
-            return Get(expression).First();
+            return Get(expression).FirstOrDefault();
         }
 
         public async Task<CreateUserResponse> CreateAsync(User user)

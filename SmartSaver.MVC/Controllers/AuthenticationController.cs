@@ -68,7 +68,7 @@ namespace SmartSaver.MVC.Controllers
         {
             if (ModelState.IsValid && AddNewUser(model.Username, model.Email, model.Password))
             {
-                return RedirectToAction(nameof(Verify), new { email = model.Email } );
+                return RedirectToAction(nameof(Verify), new { email = model.Email });
             }
 
             return View();
@@ -77,21 +77,21 @@ namespace SmartSaver.MVC.Controllers
         [HttpGet]
         public IActionResult Verify(User user, string email)
         {
-            if (String.IsNullOrEmpty(email) || !_userRepo.DoesEmailExist(email) || _emailRepo.IsVerified(_userRepo.GetId<string>(email)))
+            if (String.IsNullOrEmpty(email) || _userRepo.GetSingle(e => e.Email == email) != null || _emailRepo.IsVerified(_userRepo.GetId<string>(email)))
             {
                 return RedirectToAction(nameof(Login));
             }
 
             var confirmationLink = Url.Action("ConfirmEmail", "Authentication", new { token = _emailRepo.GetUserToken(_userRepo.GetId<string>(email)) }, Request.Scheme);
-            
+
             _mailer.SendEmailAsync(
                 new MailMessage(
                     _configuration["Email:Address"],
-                    _configuration["Email:Address"], 
+                    _configuration["Email:Address"],
                     "Verify your email address",
                      System.IO.File.ReadAllText(_configuration["TemplatePaths:Email"]).Replace("@ViewBag.VerifyLink", confirmationLink))
-                { IsBodyHtml = true }); 
-            
+                { IsBodyHtml = true });
+
             user.Email = email;
             return View(nameof(Verify), user);
         }
@@ -158,8 +158,8 @@ namespace SmartSaver.MVC.Controllers
 
         private async Task UserAuthenticationAsync(string userId)
         {
-            var claim = new List<Claim> 
-            { 
+            var claim = new List<Claim>
+            {
                 new Claim(ClaimTypes.Name, userId)
             };
             var identity = new ClaimsIdentity(claim, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -169,7 +169,7 @@ namespace SmartSaver.MVC.Controllers
 
         private bool AddNewUser(string username, string email, string password)
         {
-            if (_userRepo.DoesUsernameExist(username) || _userRepo.DoesEmailExist(email))
+            if (_userRepo.GetSingle(u => u.Username == username || u.Email == email) == null)
             {
                 return false;
             }
@@ -214,8 +214,9 @@ namespace SmartSaver.MVC.Controllers
             return RedirectToAction(nameof(Index), nameof(HomeController).Replace("Controller", ""));
         }
 
-        public bool DoesUsernameExist(string username) => _userRepo.DoesUsernameExist(username);
-
-        public bool DoesEmailExist(string email) => _userRepo.DoesEmailExist(email);
+        public User GetUser(string user)
+        {
+            return _userRepo.GetSingle(u => u.Username == user || u.Email == user);
+        }
     }
 }
