@@ -30,8 +30,4 @@
     <ProjectReference Include="..\SmartSaver.EntityFrameworkCore\SmartSaver.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\js\views\dashboard\" />
-  </ItemGroup>
-
 </Project>

@@ -77,7 +77,7 @@ namespace SmartSaver.MVC.Controllers
         [HttpGet]
         public IActionResult Verify(User user, string email)
         {
-            if (String.IsNullOrEmpty(email) || _userRepo.GetSingle(e => e.Email == email) != null || _emailRepo.IsVerified(_userRepo.GetId<string>(email)))
+            if (String.IsNullOrEmpty(email) || _userRepo.GetSingle(e => e.Email == email) == null || _emailRepo.IsVerified(_userRepo.GetId<string>(email)))
             {
                 return RedirectToAction(nameof(Login));
             }
