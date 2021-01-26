@@ -5,7 +5,7 @@
         $("#Username").css("border-color", "Green");
         if (length >= 5) {
             try {
-                if (await doesUserExist($("#Username").val()) != null) {
+                if (await getUser($("#Username").val()) != null) {
                     $("#Status1").html('<font color="Red">Username is already taken.</font>');
                     $("#Username").css("border-color", "Red");
                 } else {
@@ -26,7 +26,7 @@
 async function EmailCheck() {
     if ($("#Email").val().length != 0) {
         try {
-            if (await doesUserExist($("#Email").val()) != null) {
+            if (await getUser($("#Email").val()) != null) {
                 $("#Status2").html('<font color="Red">Email is already asociated with another account.</font>');
                 $("#Email").css("border-color", "Red");
             } else {
@@ -38,7 +38,7 @@ async function EmailCheck() {
     }
 }
 
-function doesUserExist(data) { // TODO: need to call api 
+function getUser(data) { // TODO: need to call api 
     return Promise.resolve($.ajax({
         url: '/Authentication/GetUser',
         datatype: 'json',
