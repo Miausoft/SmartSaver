@@ -13,17 +13,15 @@
         <div class="card center w-100" style="max-width:500px;">
             <div class="card-block">
                 <div class="col-md-12">
+                    <h4 class="text-center pb-4">Create New Account</h4>
                     <form method="post" asp-action="Register" asp-controller="Authentication" asp-route-returnUrl="@Context.Request.Query["returnurl"]">
-
-                        <h4 class="text-center pb-4">Create New Account</h4>
-
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group required">
                             <input asp-for="Username" class="form-control" oninput="UsernameCheck()" id="Username" placeholder="Username" />
                             <span asp-validation-for="Username" class="text-danger placeholder" id="Status1"></span>
                         </div>
                         <div class="form-group required">
-                            <input asp-for="Email" class="form-control asterisk" oninput="EmailCheck()" id="Email" placeholder="Email" />
+                            <input asp-for="Email" class="form-control" oninput="EmailCheck()" id="Email" placeholder="Email" />
                             <span asp-validation-for="Email" class="text-danger" id="Status2"></span>
                         </div>
                         <div class="form-group required">

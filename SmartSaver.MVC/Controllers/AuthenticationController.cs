@@ -75,7 +75,7 @@ namespace SmartSaver.MVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult Verify(User user, string email)
+        public IActionResult Verify(string email)
         {
             if (String.IsNullOrEmpty(email) || _userRepo.GetSingle(e => e.Email == email) == null || _emailRepo.IsVerified(_userRepo.GetId<string>(email)))
             {
@@ -92,19 +92,13 @@ namespace SmartSaver.MVC.Controllers
                      System.IO.File.ReadAllText(_configuration["TemplatePaths:Email"]).Replace("@ViewBag.VerifyLink", confirmationLink))
                 { IsBodyHtml = true });
 
-            user.Email = email;
-            return View(nameof(Verify), user);
+            return View(nameof(Verify), ViewBag.Email = email);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(User user, string returnUrl)
+        public async Task<IActionResult> Login(AuthenticationViewModel user, string returnUrl)
         {
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
-
             if (_auth.Login(user.Email, user.Password) == null)
             {
                 ModelState.AddModelError(nameof(user.Email), "Incorrect username or password.");
@@ -169,7 +163,7 @@ namespace SmartSaver.MVC.Controllers
 
         private bool AddNewUser(string username, string email, string password)
         {
-            if (_userRepo.GetSingle(u => u.Username == username || u.Email == email) == null)
+            if (_userRepo.GetSingle(u => u.Username == username || u.Email == email) != null)
             {
                 return false;
             }
