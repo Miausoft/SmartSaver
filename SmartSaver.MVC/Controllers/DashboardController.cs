@@ -41,6 +41,12 @@ namespace SmartSaver.MVC.Controllers
 
             return View(new DashboardViewModel()
             {
+                Goal = account.Goal,
+
+                GoalEndDate = account.GoalEndDate,
+
+                Revenue = account.Revenue,
+
                 SavedCurrentMonth = TransactionsCounter
                     .AmountSavedCurrentMonth(account.Transactions),
 
@@ -74,27 +80,27 @@ namespace SmartSaver.MVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult Complete(Account account)
+        public IActionResult Complete(DashboardViewModel model)
         {
             if (ModelState.IsValid)
             {
-                if (account.GoalEndDate <= DateTime.Now)
+                if (model.GoalEndDate <= DateTime.Now)
                 {
                     ModelState.AddModelError("GoalEndDate", "Invalid date");
                     return View();
                 }
 
-                Account current = _accountRepo.GetById(User.Identity.Name);
-                current.Goal = account.Goal;
-                current.Revenue = account.Revenue;
-                current.GoalStartDate = DateTime.Today;
-                current.GoalEndDate = account.GoalEndDate;
+                Account account = _accountRepo.GetById(User.Identity.Name);
+                account.Goal = model.Goal;
+                account.Revenue = model.Revenue;
+                account.GoalStartDate = DateTime.Today;
+                account.GoalEndDate = model.GoalEndDate;
                 _accountRepo.Save().Wait();
                 return RedirectToAction(nameof(Index));
             }
             else
             {
-                if (account.GoalEndDate <= DateTime.Now)
+                if (model.GoalEndDate <= DateTime.Now)
                 {
                     ModelState.AddModelError("GoalEndDate", "Invalid date");
                 }
