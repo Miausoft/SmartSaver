@@ -22,6 +22,27 @@ namespace SmartSaver.EntityFrameworkCore
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Username)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .Property(t => t.Username)
+                .IsRequired();
+
+            modelBuilder.Entity<User>()
+                .Property(t => t.Email)
+                .IsRequired();
+
+            modelBuilder.Entity<User>()
+                .Property(t => t.Password)
+                .IsRequired(false);
+
             modelBuilder.Entity<Account>()
                 .Property(a => a.Goal)
                 .HasColumnType("decimal(18,4)");
@@ -37,14 +58,6 @@ namespace SmartSaver.EntityFrameworkCore
             modelBuilder.Entity<Category>()
                 .Property(t => t.TypeOfIncome)
                 .IsRequired();
-
-            modelBuilder.Entity<User>()
-                .Property(t => t.Password)
-                .IsRequired(false);
-
-            modelBuilder.Entity<User>()
-                .Property(t => t.Username)
-                .IsRequired(true);
         }
     }
 }

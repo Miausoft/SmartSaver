@@ -172,7 +172,7 @@ namespace SmartSaver.MVC.Controllers
 
             if (password != null)
             {
-                _emailRepo.Create(new EmailVerification { UserId = _userRepo.GetId<int>(email), EmailVerified = false, Token = _tokenValidation.GenerateToken(_userRepo.GetId<string>(email)) });
+                _emailRepo.Create(new EmailVerification { UserId = _userRepo.GetId<int>(email), Token = _tokenValidation.GenerateToken(_userRepo.GetId<string>(email)) });
             }
 
             return true;

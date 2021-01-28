@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartSaver.EntityFrameworkCore.Models
 {
@@ -8,10 +7,6 @@ namespace SmartSaver.EntityFrameworkCore.Models
     {
         [Key]
         public int Id { get; set; }
-
-        [ForeignKey("AccountId")]
-        public Account Account { get; set; }
-        public int AccountId { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }

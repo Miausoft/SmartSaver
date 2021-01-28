@@ -29,7 +29,7 @@ namespace SmartSaver.MVC.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            Account account = _accountRepo.GetById(User.Identity.Name);
+            Account account = _accountRepo.GetById(User.Identity.Name).FirstOrDefault();
             if (!_accountRepo.IsValid(account))
             {
                 return View(nameof(Complete));
@@ -70,7 +70,7 @@ namespace SmartSaver.MVC.Controllers
         [HttpGet]
         public IActionResult Complete()
         {
-            var account = _accountRepo.GetById(User.Identity.Name);
+            var account = _accountRepo.GetById(User.Identity.Name).FirstOrDefault();
             if (!_accountRepo.IsValid(account))
             {
                 return View(nameof(Complete));
@@ -90,7 +90,7 @@ namespace SmartSaver.MVC.Controllers
                     return View();
                 }
 
-                Account account = _accountRepo.GetById(User.Identity.Name);
+                Account account = _accountRepo.GetById(User.Identity.Name).FirstOrDefault();
                 account.Goal = model.Goal;
                 account.Revenue = model.Revenue;
                 account.GoalStartDate = DateTime.Today;
@@ -112,7 +112,7 @@ namespace SmartSaver.MVC.Controllers
         [HttpPost]
         public IActionResult Delete()
         {
-            Account current = _accountRepo.GetById(User.Identity.Name);
+            Account current = _accountRepo.GetById(User.Identity.Name).FirstOrDefault();
             current.GoalStartDate = DateTime.MinValue;
             current.GoalEndDate = DateTime.MinValue;
             current.Goal = 0;

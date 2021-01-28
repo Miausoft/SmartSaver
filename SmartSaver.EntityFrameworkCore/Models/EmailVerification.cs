@@ -5,12 +5,11 @@ namespace SmartSaver.EntityFrameworkCore.Models
 {
     public class EmailVerification
     {
-        [ForeignKey("UserId")]
+        [ForeignKey(nameof(UserId))]
         public User User { get; set; }
 
         [Key]
         public int UserId { get; set; }
-        public bool EmailVerified { get; set; }
         public string Token { get; set; }
     }
 }
