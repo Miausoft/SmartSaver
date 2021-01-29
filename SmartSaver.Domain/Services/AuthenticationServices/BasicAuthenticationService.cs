@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using SmartSaver.EntityFrameworkCore;
 using SmartSaver.EntityFrameworkCore.Models;
 
@@ -32,17 +31,11 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
         /// <returns>RegistrationResult.Success</returns>
         public virtual RegistrationResult Register(User user)
         {
-            FillMandatoryData(ref user);
+            Context.Accounts.Add(new Account { User = user, UserId = user.Id });
             Context.Users.Add(user);
             Context.SaveChanges();
 
             return RegistrationResult.Success;
-        }
-
-        public virtual void FillMandatoryData(ref User user)
-        {
-            user.DateJoined = DateTime.UtcNow;
-            Context.Accounts.Add(new Account { User = user, UserId = user.Id });
         }
     }
 }
