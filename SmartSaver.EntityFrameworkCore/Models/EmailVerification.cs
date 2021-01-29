@@ -10,6 +10,7 @@ namespace SmartSaver.EntityFrameworkCore.Models
 
         [Key]
         public int UserId { get; set; }
+
         public string Token { get; set; }
     }
 }
