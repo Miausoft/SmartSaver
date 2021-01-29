@@ -19,5 +19,6 @@ namespace SmartSaver.Domain.Repositories
         public T GetId<T>(string email);
         User GetSingle(Expression<Func<User, bool>> expression);
         Task<CreateUserResponse> CreateAsync(User user);
+        public Task<int> Save();
     }
 }

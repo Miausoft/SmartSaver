@@ -12,7 +12,6 @@ namespace SmartSaver.EntityFrameworkCore
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<Transaction> Transactions { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
-        public virtual DbSet<EmailVerification> EmailVerifications { get; set; }
         public virtual DbSet<ProblemSuggestion> ProblemSuggestions { get; set; }
         public virtual DbSet<SolutionSuggestion> SolutionSuggestions { get; set; }
 
@@ -32,6 +31,14 @@ namespace SmartSaver.EntityFrameworkCore
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)
                 .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Token)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.Token)
+                .IsRequired(false);
 
             modelBuilder.Entity<User>()
                 .Property(u => u.Username)
@@ -82,14 +89,6 @@ namespace SmartSaver.EntityFrameworkCore
 
             modelBuilder.Entity<Category>()
                 .HasIndex(c => c.Title)
-                .IsUnique();
-
-            modelBuilder.Entity<EmailVerification>()
-                .Property(e => e.Token)
-                .IsRequired();
-
-            modelBuilder.Entity<EmailVerification>()
-                .HasIndex(u => u.Token)
                 .IsUnique();
 
             modelBuilder.Entity<SolutionSuggestion>()

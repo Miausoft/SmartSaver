@@ -15,10 +15,9 @@ namespace SmartSaver.Domain
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IPasswordHasherService, PasswordHasherService>();
             services.AddScoped<IPasswordRegex, PasswordRegex>();
+            services.AddScoped<ITokenValidationService, TokenValidationService>();
             services.AddScoped<IMailer, Mailer>();
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IEmailVerificationRepository, EmailVerificationRepository>();
-            services.AddScoped<ITokenValidationService, TokenValidationService>();
             services.AddScoped<IAccountRepoository, AccountRepository>();
             services.AddScoped<ITransactionRepoositry, TransactionRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
