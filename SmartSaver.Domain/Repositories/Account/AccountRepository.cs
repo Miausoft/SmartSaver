@@ -1,8 +1,9 @@
 ﻿using System.Linq;
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using SmartSaver.Domain.CustomExceptions;
 
 namespace SmartSaver.Domain.Repositories
 {
@@ -15,12 +16,23 @@ namespace SmartSaver.Domain.Repositories
             _context = context;
         }
 
-        public Account GetById<T>(T accId)
+        public async Task<Account> CreateAsync(Account account)
         {
-            return _context.Users
-                .Include(u => u.Account)
-                .First(u => u.Id.ToString().Equals(accId.ToString()))
-                .Account;
+            _context.Accounts.Add(account);
+
+            if (await _context.SaveChangesAsync() == 0)
+            {
+                throw new InvalidModelException();
+            }
+
+            return _context.Accounts
+                .First(a => a.UserId.ToString().Equals(account.UserId));
+        }
+
+        public IEnumerable<Account> GetById<T>(T userId)
+        {
+            return _context.Accounts
+                .Where(a => a.UserId.ToString().Equals(userId.ToString()));
         }
 
         public Task<int> Save()

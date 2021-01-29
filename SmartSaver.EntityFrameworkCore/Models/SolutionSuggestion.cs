@@ -2,11 +2,10 @@
 
 namespace SmartSaver.EntityFrameworkCore.Models
 {
-    public class Category
+    public class SolutionSuggestion
     {
         [Key]
         public int Id { get; set; }
-        public string Title { get; set; }
-        public bool TypeOfIncome { get; set; }
+        public string SolutionText { get; set; }
     }
 }

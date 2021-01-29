@@ -12,7 +12,8 @@ namespace SmartSaver.EntityFrameworkCore
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<Transaction> Transactions { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
-        public virtual DbSet<EmailVerification> EmailVerifications { get; set; }
+        public virtual DbSet<ProblemSuggestion> ProblemSuggestions { get; set; }
+        public virtual DbSet<SolutionSuggestion> SolutionSuggestions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -22,9 +23,46 @@ namespace SmartSaver.EntityFrameworkCore
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Username)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Token)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.Token)
+                .IsRequired(false);
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.Username)
+                .IsRequired();
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.Email)
+                .IsRequired();
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.Password)
+                .IsRequired(false);
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.DateJoined)
+                .HasDefaultValueSql("getdate()");
+
             modelBuilder.Entity<Account>()
                 .Property(a => a.Goal)
                 .HasColumnType("decimal(18,4)");
+
+            modelBuilder.Entity<Account>()
+                .Property(a => a.Goal)
+                .HasDefaultValue(0);
 
             modelBuilder.Entity<Transaction>()
                 .Property(t => t.Amount)
@@ -34,17 +72,32 @@ namespace SmartSaver.EntityFrameworkCore
                 .Property(t => t.CategoryId)
                 .HasDefaultValue(1);
 
+            modelBuilder.Entity<Transaction>()
+                .Property(t => t.ActionTime)
+                .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<Account>(a =>
+                a.HasCheckConstraint("PositiveGoal", "Goal >= 0"));
+
             modelBuilder.Entity<Category>()
-                .Property(t => t.TypeOfIncome)
+                .Property(c => c.TypeOfIncome)
                 .IsRequired();
 
-            modelBuilder.Entity<User>()
-                .Property(t => t.Password)
-                .IsRequired(false);
+            modelBuilder.Entity<Category>()
+                .Property(c => c.Title)
+                .IsRequired();
 
-            modelBuilder.Entity<User>()
-                .Property(t => t.Username)
-                .IsRequired(true);
+            modelBuilder.Entity<Category>()
+                .HasIndex(c => c.Title)
+                .IsUnique();
+
+            modelBuilder.Entity<SolutionSuggestion>()
+                .HasIndex(s => s.SolutionText)
+                .IsUnique();
+
+            modelBuilder.Entity<ProblemSuggestion>()
+                .HasIndex(p => p.ProblemText)
+                .IsUnique();
         }
     }
 }

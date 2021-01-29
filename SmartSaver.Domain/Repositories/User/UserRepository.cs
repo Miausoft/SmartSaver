@@ -40,9 +40,13 @@ namespace SmartSaver.Domain.Repositories
         public async Task<CreateUserResponse> CreateAsync(User user)
         {
             _db.Users.Add(user);
-            var response = await _db.SaveChangesAsync();
+            await Save();
 
             return CreateUserResponse.Success;
+        }
+        public Task<int> Save()
+        {
+            return _db.SaveChangesAsync();
         }
     }
 }
