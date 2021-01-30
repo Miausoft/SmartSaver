@@ -15,13 +15,13 @@ namespace SmartSaver.Domain.TokenValidation
         {
             _configuration = configuration;
         }
-        public string GenerateToken(string userId)
+        public string GenerateToken<T>(T userId)
         {
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.NameIdentifier, userId)
+                    new Claim(ClaimTypes.NameIdentifier, userId.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddDays(double.Parse(_configuration["Token:DaysToExpiration"])),
                 Issuer = _configuration["Token:MyIssuer"],
