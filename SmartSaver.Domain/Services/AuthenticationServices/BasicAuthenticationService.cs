@@ -21,7 +21,7 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
         /// <returns>Account</returns>
         public virtual User Login(string email, string password)
         {
-            return Context.Users.FirstOrDefault(u => u.Email.Equals(email));
+            return Context.Users.FirstOrDefault(u => password != null && u.Email.Equals(email));
         }
 
         /// <summary>
