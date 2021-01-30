@@ -8,6 +8,7 @@ using SmartSaver.Domain.Repositories;
 using SmartSaver.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using SmartSaver.EntityFrameworkCore.Models;
 
 namespace SmartSaver.WebApi
 {
@@ -35,9 +36,9 @@ namespace SmartSaver.WebApi
             });
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AzureSqlServer")));
-            services.AddScoped<ITransactionRepoositry, TransactionRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IRepository<User>, Repository<User>>();
+            services.AddScoped<IRepository<Transaction>, Repository<Transaction>>();
+            services.AddScoped<IRepository<Category>, Repository<Category>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

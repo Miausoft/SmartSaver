@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.Domain.Repositories;
 using SmartSaver.Domain.ActionFilters;
@@ -13,10 +12,10 @@ namespace SmartSaver.WebApi.Controllers
     [ApiController]
     public class CategoryController : Controller
     {
-        private readonly ICategoryRepository _categories;
+        private readonly IRepository<Category> _categories;
         private readonly IMapper _mapper;
 
-        public CategoryController(ICategoryRepository categories, IMapper mapper)
+        public CategoryController(IRepository<Category> categories, IMapper mapper)
         {
             _categories = categories;
             _mapper = mapper;
@@ -26,24 +25,23 @@ namespace SmartSaver.WebApi.Controllers
         public IEnumerable<CategoryResponseModel> Index()
         {
             return _mapper.Map<IEnumerable<CategoryResponseModel>>(
-                _categories.GetMultiple()
-            );
+                _categories.GetAll());
         }
 
         [HttpGet("category/{categoryId}")]
         public CategoryResponseModel Get(int categoryId)
         {
             return _mapper.Map<CategoryResponseModel>(
-                _categories.GetSingle(c => c.Id == categoryId)
-            );
+                _categories.GetById(categoryId));
         }
 
         [HttpPost("categories")]
         [CheckForInvalidModel]
-        public async Task<ActionResult> Create(CategoryRequestModel category)
+        public ActionResult Create(CategoryRequestModel category)
         {
-            int createdId = await _categories.CreateAsync(_mapper.Map<Category>(category));
-            return Created($"category/{createdId}", category);
+            _categories.Insert(_mapper.Map<Category>(category));
+            _categories.Save();
+            return Created($"category/{category}", category);
         }
     }
 }
