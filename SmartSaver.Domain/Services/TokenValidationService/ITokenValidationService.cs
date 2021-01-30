@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SmartSaver.Domain.TokenValidation
+﻿namespace SmartSaver.Domain.TokenValidation
 {
     public interface ITokenValidationService
     {
-        public string GenerateToken(string userId);
+        public string GenerateToken<T>(T userId);
         public bool ValidateToken(string token);
         public string GetClaim(string token, string claimType);
     }

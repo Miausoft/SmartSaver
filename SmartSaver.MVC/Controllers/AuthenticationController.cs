@@ -14,6 +14,7 @@ using SmartSaver.Domain.TokenValidation;
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.Domain.Repositories;
 using SmartSaver.MVC.Models;
+using System.Linq;
 
 namespace SmartSaver.MVC.Controllers
 {
@@ -22,13 +23,13 @@ namespace SmartSaver.MVC.Controllers
     {
         private readonly Domain.Services.AuthenticationServices.IAuthenticationService _auth;
         private readonly IConfiguration _configuration;
-        private readonly IUserRepository _userRepo;
+        private readonly IRepository<User> _userRepo;
         private readonly ITokenValidationService _tokenValidation;
         private readonly IMailer _mailer;
 
         public AuthenticationController(Domain.Services.AuthenticationServices.IAuthenticationService auth,
                                         IConfiguration configuration,
-                                        IUserRepository userRepo,
+                                        IRepository<User> userRepo,
                                         ITokenValidationService tokenValidation,
                                         IMailer mailer)
         {
@@ -43,7 +44,7 @@ namespace SmartSaver.MVC.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace("Controller", ""));
+                return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace(nameof(Controller), ""));
             }
 
             return View();
@@ -53,7 +54,7 @@ namespace SmartSaver.MVC.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace("Controller", ""));
+                return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace(nameof(Controller), ""));
             }
 
             return View();
@@ -74,14 +75,14 @@ namespace SmartSaver.MVC.Controllers
         [HttpGet]
         public IActionResult Verify(string email)
         {
-            User user = _userRepo.GetSingle(e => e.Email == email);
+            User user = _userRepo.SearchFor(e => e.Email.Equals(email)).FirstOrDefault();
 
             if (String.IsNullOrEmpty(email) || user == null || user.Token == null)
             {
                 return RedirectToAction(nameof(Login));
             }
 
-            var confirmationLink = Url.Action("ConfirmEmail", "Authentication", new { token = user.Token }, Request.Scheme);
+            var confirmationLink = Url.Action(nameof(ConfirmEmail), nameof(AuthenticationController).Replace(nameof(Controller), ""), new { token = user.Token }, Request.Scheme);
 
             _mailer.SendEmailAsync(
                 new MailMessage(
@@ -96,20 +97,22 @@ namespace SmartSaver.MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(AuthenticationViewModel user, string returnUrl)
+        public IActionResult Login(AuthenticationViewModel model, string returnUrl)
         {
-            if (_auth.Login(user.Email, user.Password) == null)
+            User user = _auth.Login(model.Email, model.Password);
+
+            if (user == null)
             {
-                ModelState.AddModelError(nameof(user.Email), "Incorrect username or password.");
+                ModelState.AddModelError(nameof(model.Email), "Incorrect username or password.");
                 return View();
             }
 
-            if (_userRepo.GetSingle(e => e.Email == user.Email).Token != null)
+            if (user.Token != null)
             {
-                return View(nameof(Verify), ViewBag.Email = user.Email);
+                return View(nameof(Verify), ViewBag.Email = model.Email);
             }
 
-            await UserAuthenticationAsync(_userRepo.GetId<string>(user.Email));
+            UserAuthentication(user.Id);
             return LocalRedirect(returnUrl ?? Url.Content("~/"));
         }
 
@@ -117,7 +120,7 @@ namespace SmartSaver.MVC.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
-            return RedirectToAction(nameof(HomeController.Index), nameof(HomeController).Replace("Controller", ""));
+            return RedirectToAction(nameof(HomeController.Index), nameof(HomeController).Replace(nameof(Controller), ""));
         }
 
         [HttpPost]
@@ -125,21 +128,21 @@ namespace SmartSaver.MVC.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace("Controller", ""));
+                return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace(nameof(Controller), ""));
             }
 
             var properties = new AuthenticationProperties { RedirectUri = Url.Action(nameof(ExternalResponse), new { ReturnUrl = returnUrl }) };
             return Challenge(properties, provider);
         }
 
-        public async Task<IActionResult> ExternalResponse(string returnUrl)
+        public IActionResult ExternalResponse(string returnUrl)
         {
-            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            if (result.Succeeded)
+            var result = HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            if (result.Result.Succeeded)
             {
-                var email = result.Principal.FindFirstValue(ClaimTypes.Email);
+                var email = result.Result.Principal.FindFirstValue(ClaimTypes.Email);
                 AddNewUser(email, email, null);
-                await UserAuthenticationAsync(_userRepo.GetId<string>(email).ToString());
+                UserAuthentication(_userRepo.SearchFor(e => e.Email.Equals(email)).FirstOrDefault().Id);
                 return LocalRedirect(returnUrl ?? Url.Content("~/"));
             }
             else
@@ -149,20 +152,20 @@ namespace SmartSaver.MVC.Controllers
             }
         }
 
-        private async Task UserAuthenticationAsync(string userId)
+        private void UserAuthentication<T>(T userId)
         {
             var claim = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, userId)
+                new Claim(ClaimTypes.Name, userId.ToString())
             };
             var identity = new ClaimsIdentity(claim, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal).Wait();
         }
 
         private bool AddNewUser(string username, string email, string password)
         {
-            if (_userRepo.GetSingle(u => u.Username == username || u.Email == email) != null)
+            if (_userRepo.SearchFor(u => u.Email.Equals(email)).FirstOrDefault() != null)
             {
                 return false;
             }
@@ -171,47 +174,48 @@ namespace SmartSaver.MVC.Controllers
 
             if (password != null)
             {
-                _userRepo.GetSingle(u => u.Email == email).Token = _tokenValidation.GenerateToken(_userRepo.GetId<string>(email));
-                _userRepo.Save().Wait();
+                User user = _userRepo.SearchFor(u => u.Email.Equals(email)).FirstOrDefault();
+                user.Token = _tokenValidation.GenerateToken(user.Id);
+                _userRepo.Save();
             }
 
             return true;
         }
 
         [HttpGet]
-        public async Task<IActionResult> ConfirmEmailAsync(string token)
+        public IActionResult ConfirmEmail(string token)
         {
             if (token == null)
             {
-                return RedirectToAction(nameof(Index), nameof(HomeController).Replace("Controller", ""));
+                return RedirectToAction(nameof(Index), nameof(HomeController).Replace(nameof(Controller), ""));
             }
 
             if (!_tokenValidation.ValidateToken(token))
             {
-                return RedirectToAction(nameof(Index), nameof(HomeController).Replace("Controller", ""));
+                return RedirectToAction(nameof(Index), nameof(HomeController).Replace(nameof(Controller), ""));
             }
 
             var claim = _tokenValidation.GetClaim(token, "nameid");
             if (String.IsNullOrEmpty(claim))
             {
-                return RedirectToAction(nameof(Index), nameof(HomeController).Replace("Controller", ""));
+                return RedirectToAction(nameof(Index), nameof(HomeController).Replace(nameof(Controller), ""));
             }
 
-            var userToken = _userRepo.GetSingle(u => u.Id.ToString().Equals(claim)).Token;
-            if (token == userToken)
+            User user = _userRepo.SearchFor(u => u.Id.ToString().Equals(claim)).FirstOrDefault();
+            if (token == user.Token)
             {
-                _userRepo.GetSingle(u => u.Token == token).Token = null;
-                _userRepo.Save().Wait();
-                await UserAuthenticationAsync(claim);
-                return RedirectToAction(nameof(DashboardController.Complete), nameof(DashboardController).Replace("Controller", ""));
+                user.Token = null;
+                _userRepo.Save();
+                UserAuthentication(claim);
+                return RedirectToAction(nameof(DashboardController.Complete), nameof(DashboardController).Replace(nameof(Controller), ""));
             }
 
-            return RedirectToAction(nameof(Index), nameof(HomeController).Replace("Controller", ""));
+            return RedirectToAction(nameof(Index), nameof(HomeController).Replace(nameof(Controller), ""));
         }
 
         public User GetUser(string user)
         {
-            return _userRepo.GetSingle(u => u.Username == user || u.Email == user);
+            return _userRepo.SearchFor(u => u.Username.Equals(user) || u.Email.Equals(user)).FirstOrDefault();
         }
     }
 }

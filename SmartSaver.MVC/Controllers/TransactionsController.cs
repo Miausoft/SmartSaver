@@ -7,7 +7,6 @@ using SmartSaver.Domain.Services.DocumentServices;
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.MVC.Models;
 using SmartSaver.Domain.Repositories;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using cloudscribe.Pagination.Models;
 
@@ -16,13 +15,13 @@ namespace SmartSaver.MVC.Controllers
     [Authorize]
     public class TransactionsController : Controller
     {
-        private readonly IAccountRepoository _accountRepo;
-        private readonly ITransactionRepoositry _transactionRepo;
-        private readonly ICategoryRepository _categoryRepo;
+        private readonly IRepository<Account> _accountRepo;
+        private readonly IRepository<Transaction> _transactionRepo;
+        private readonly IRepository<Category> _categoryRepo;
 
-        public TransactionsController(IAccountRepoository accountRepo, 
-                                      ITransactionRepoositry transactionRepo,
-                                      ICategoryRepository categoryRepo)
+        public TransactionsController(IRepository<Account> accountRepo,
+                                      IRepository<Transaction> transactionRepo,
+                                      IRepository<Category> categoryRepo)
         {
             _accountRepo = accountRepo;
             _transactionRepo = transactionRepo;
@@ -33,20 +32,22 @@ namespace SmartSaver.MVC.Controllers
         [HttpGet]
         public ActionResult Index(int pageNumber = 1, int pageSize = 10)
         {
+            Account account = _accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).FirstOrDefault();
+            var transactions = _transactionRepo.SearchFor(t => t.AccountId.ToString().Equals(account.Id.ToString()));
             return View(new PagedResult<TransactionViewModel>
             {
-                TotalItems = _transactionRepo.GetByAccountId(User.Identity.Name).Count(),
+                TotalItems = transactions.Count(),
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 Data = new List<TransactionViewModel>
                 {
                     new TransactionViewModel
                     {
-                        Transactions = _transactionRepo.GetByAccountId(User.Identity.Name)
-                                                .Skip((pageSize * pageNumber) - pageSize)
-                                                .Take(pageSize)
-                                                .ToList(),
-                        Categories = _categoryRepo.GetMultiple().ToList()
+                        Transactions = transactions
+                                       .Skip((pageSize * pageNumber) - pageSize)
+                                       .Take(pageSize)
+                                       .ToList(),
+                        Categories = _categoryRepo.GetAll().ToList()
                     }
                 }
             });
@@ -54,10 +55,11 @@ namespace SmartSaver.MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind("Amount,CategoryId,ActionTime")] Transaction transaction)
+        public ActionResult Create([Bind("Amount,CategoryId,ActionTime")] Transaction transaction)
         {
-            transaction.AccountId = _accountRepo.GetById(User.Identity.Name).FirstOrDefault().Id;
-            await _transactionRepo.Create(transaction);
+            transaction.AccountId = _accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).FirstOrDefault().Id;
+            _transactionRepo.Insert(transaction);
+            _transactionRepo.Save();
 
             return RedirectToAction(nameof(Index));
         }
@@ -84,9 +86,8 @@ namespace SmartSaver.MVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            List<Category> categories = _categoryRepo.GetMultiple().ToList();
-            List<Transaction> transactions = _transactionRepo.GetByAccountId(User.Identity.Name).ToList();
-            byte[] bytes = new PDFCreator().GeneratePDF(transactions, categories, fromDate, toDate);
+            List<Transaction> transactions = _transactionRepo.SearchFor(t => t.AccountId.ToString().Equals(_accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).FirstOrDefault())).ToList();
+            byte[] bytes = new PDFCreator().GeneratePDF(transactions, _categoryRepo.GetAll(), fromDate, toDate);
 
             return File(bytes, "application/pdf");
         }
