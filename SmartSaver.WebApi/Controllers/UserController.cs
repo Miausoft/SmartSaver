@@ -31,7 +31,7 @@ namespace SmartSaver.WebApi.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(CreateUserResponse.StateNotValid);
+                return BadRequest();
             }
 
             _users.Insert(user);
