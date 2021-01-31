@@ -44,7 +44,7 @@ namespace SmartSaver.MVC.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace(nameof(Controller), ""));
+                return RedirectToAction(nameof(AccountController.Index), nameof(AccountController).Replace(nameof(Controller), ""));
             }
 
             return View();
@@ -54,7 +54,7 @@ namespace SmartSaver.MVC.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace(nameof(Controller), ""));
+                return RedirectToAction(nameof(AccountController.Index), nameof(AccountController).Replace(nameof(Controller), ""));
             }
 
             return View();
@@ -128,7 +128,7 @@ namespace SmartSaver.MVC.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace(nameof(Controller), ""));
+                return RedirectToAction(nameof(AccountController.Index), nameof(AccountController).Replace(nameof(Controller), ""));
             }
 
             var properties = new AuthenticationProperties { RedirectUri = Url.Action(nameof(ExternalResponse), new { ReturnUrl = returnUrl }) };
@@ -187,18 +187,18 @@ namespace SmartSaver.MVC.Controllers
         {
             if (token == null)
             {
-                return RedirectToAction(nameof(Index), nameof(HomeController).Replace(nameof(Controller), ""));
+                return RedirectToAction(nameof(HomeController.Index), nameof(HomeController).Replace(nameof(Controller), ""));
             }
 
             if (!_tokenValidation.ValidateToken(token))
             {
-                return RedirectToAction(nameof(Index), nameof(HomeController).Replace(nameof(Controller), ""));
+                return RedirectToAction(nameof(HomeController.Index), nameof(HomeController).Replace(nameof(Controller), ""));
             }
 
             var claim = _tokenValidation.GetClaim(token, "nameid");
             if (String.IsNullOrEmpty(claim))
             {
-                return RedirectToAction(nameof(Index), nameof(HomeController).Replace(nameof(Controller), ""));
+                return RedirectToAction(nameof(HomeController.Index), nameof(HomeController).Replace(nameof(Controller), ""));
             }
 
             User user = _userRepo.SearchFor(u => u.Id.ToString().Equals(claim)).FirstOrDefault();
@@ -207,10 +207,10 @@ namespace SmartSaver.MVC.Controllers
                 user.Token = null;
                 _userRepo.Save();
                 UserAuthentication(claim);
-                return RedirectToAction(nameof(DashboardController.Complete), nameof(DashboardController).Replace(nameof(Controller), ""));
+                return RedirectToAction(nameof(AccountController.Complete), nameof(AccountController).Replace(nameof(Controller), ""));
             }
 
-            return RedirectToAction(nameof(Index), nameof(HomeController).Replace(nameof(Controller), ""));
+            return RedirectToAction(nameof(HomeController.Index), nameof(HomeController).Replace(nameof(Controller), ""));
         }
 
         public User GetUser(string user)

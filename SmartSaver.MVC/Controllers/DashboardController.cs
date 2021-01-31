@@ -32,7 +32,7 @@ namespace SmartSaver.MVC.Controllers
             Account account = _accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).FirstOrDefault();
             if (account == null)
             {
-                return View(nameof(Complete));
+                return View(nameof(AccountController.Index));
             }
 
             account.Transactions = _transactionRepo
@@ -41,12 +41,6 @@ namespace SmartSaver.MVC.Controllers
 
             return View(new DashboardViewModel()
             {
-                Goal = account.Goal,
-
-                GoalEndDate = account.GoalEndDate,
-
-                Revenue = account.Revenue,
-
                 SavedCurrentMonth = TransactionsCounter
                     .AmountSavedCurrentMonth(account.Transactions),
 
@@ -65,59 +59,6 @@ namespace SmartSaver.MVC.Controllers
 
                 EstimatedTime = MoneyCounter.EstimatedTime(account)
             });
-        }
-
-        [HttpGet]
-        public IActionResult Complete()
-        {
-            Account account = _accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).FirstOrDefault();
-            if (account == null)
-            {
-                return View(nameof(Complete));
-            }
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        [HttpPost]
-        public IActionResult Complete(DashboardViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                if (model.GoalEndDate <= DateTime.Now)
-                {
-                    ModelState.AddModelError("GoalEndDate", "Invalid date");
-                    return View();
-                }
-
-                _accountRepo.Insert(new Account
-                {
-                    UserId = int.Parse(User.Identity.Name),
-                    Goal = model.Goal,
-                    Revenue = model.Revenue,
-                    GoalStartDate = DateTime.Today,
-                    GoalEndDate = model.GoalEndDate
-                });
-                _accountRepo.Save();
-                return RedirectToAction(nameof(Index));
-            }
-            else
-            {
-                if (model.GoalEndDate <= DateTime.Now)
-                {
-                    ModelState.AddModelError(nameof(model.GoalEndDate), "Invalid date");
-                }
-
-                return View();
-            }
-        }
-
-        [HttpPost]
-        public IActionResult Delete()
-        {
-            _accountRepo.Delete(_accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).FirstOrDefault().Id);
-            _accountRepo.Save();
-            return RedirectToAction(nameof(Complete));
         }
     }
 }

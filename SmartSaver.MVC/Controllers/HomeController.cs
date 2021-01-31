@@ -16,7 +16,7 @@ namespace SmartSaver.MVC.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace("Controller", ""));
+                return RedirectToAction(nameof(AccountController.Index), nameof(AccountController).Replace(nameof(Controller), ""));
             }
 
             return View();

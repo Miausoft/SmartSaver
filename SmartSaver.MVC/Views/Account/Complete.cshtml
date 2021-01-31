@@ -1,4 +1,4 @@
-﻿@model DashboardViewModel
+﻿@model AccountViewModel
 @{
     ViewData["Title"] = "Create";
 
@@ -15,7 +15,7 @@
                 <div class="card">
                     <div class="card-block">
                         <h4 class="text-center pb-4">Essential information for our AI</h4>
-                        <form role="form" asp-controller="Dashboard" asp-action="Complete" method="POST">
+                        <form role="form" asp-controller="Account" asp-action="Complete" method="POST">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                             <div class="form-group">
