@@ -9,10 +9,11 @@ using SmartSaver.MVC.Models;
 using SmartSaver.Domain.Repositories;
 using System.Collections.Generic;
 using cloudscribe.Pagination.Models;
+using SmartSaver.Domain.CustomAttributes;
 
 namespace SmartSaver.MVC.Controllers
 {
-    [Authorize]
+    [Authorize, RequiresAccount]
     public class TransactionsController : Controller
     {
         private readonly IRepository<Account> _accountRepo;

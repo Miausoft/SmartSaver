@@ -15,10 +15,11 @@ using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.Domain.Repositories;
 using SmartSaver.MVC.Models;
 using System.Linq;
+using SmartSaver.Domain.CustomAttributes;
 
 namespace SmartSaver.MVC.Controllers
 {
-    [AllowAnonymous]
+    [AnonymousOnly]
     public class AuthenticationController : Controller
     {
         private readonly Domain.Services.AuthenticationServices.IAuthenticationService _auth;
@@ -42,21 +43,11 @@ namespace SmartSaver.MVC.Controllers
 
         public IActionResult Register()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction(nameof(AccountController.Index), nameof(AccountController).Replace(nameof(Controller), ""));
-            }
-
             return View();
         }
 
         public IActionResult Login()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction(nameof(AccountController.Index), nameof(AccountController).Replace(nameof(Controller), ""));
-            }
-
             return View();
         }
 
@@ -117,6 +108,7 @@ namespace SmartSaver.MVC.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
@@ -126,15 +118,11 @@ namespace SmartSaver.MVC.Controllers
         [HttpPost]
         public IActionResult ExternalLogin(string returnUrl, string provider)
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction(nameof(AccountController.Index), nameof(AccountController).Replace(nameof(Controller), ""));
-            }
-
             var properties = new AuthenticationProperties { RedirectUri = Url.Action(nameof(ExternalResponse), new { ReturnUrl = returnUrl }) };
             return Challenge(properties, provider);
         }
 
+        [AllowAnonymous]
         public IActionResult ExternalResponse(string returnUrl)
         {
             var result = HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);

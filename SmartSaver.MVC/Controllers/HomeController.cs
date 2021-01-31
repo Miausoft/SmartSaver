@@ -1,24 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using SmartSaver.Domain.CustomAttributes;
 
 namespace SmartSaver.MVC.Controllers
 {
+    [AnonymousOnly]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
+        public HomeController() { }
 
         public IActionResult Index()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction(nameof(AccountController.Index), nameof(AccountController).Replace(nameof(Controller), ""));
-            }
-
             return View();
         }
     }

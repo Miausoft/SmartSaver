@@ -6,6 +6,7 @@ using SmartSaver.MVC.Models;
 
 namespace SmartSaver.MVC.Controllers
 {
+    [AllowAnonymous]
     public class ErrorController : Controller
     {
         private readonly ILogger _logger;
@@ -32,7 +33,6 @@ namespace SmartSaver.MVC.Controllers
         }
 
         [Route("Error")]
-        [AllowAnonymous]
         public IActionResult Error(ErrorViewModel model)
         {
             model.RequestId = "500";

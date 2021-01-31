@@ -7,10 +7,11 @@ using SmartSaver.MVC.Models;
 using SmartSaver.Domain.Services.TransactionsCounterService;
 using SmartSaver.Domain.Services.SavingMethodSuggestion;
 using SmartSaver.Domain.Repositories;
+using SmartSaver.Domain.CustomAttributes;
 
 namespace SmartSaver.MVC.Controllers
 {
-    [Authorize]
+    [Authorize, RequiresAccount]
     public class DashboardController : Controller
     {
         private readonly IRepository<Transaction> _transactionRepo;
@@ -29,11 +30,9 @@ namespace SmartSaver.MVC.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            Account account = _accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).FirstOrDefault();
-            if (account == null)
-            {
-                return View(nameof(AccountController.Index));
-            }
+            Account account = _accountRepo
+                .SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name))
+                .FirstOrDefault();
 
             account.Transactions = _transactionRepo
                 .SearchFor(t => t.AccountId.ToString().Equals(account.Id.ToString()))
