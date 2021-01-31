@@ -57,6 +57,12 @@ namespace SmartSaver.MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind("Amount,CategoryId,ActionTime")] Transaction transaction)
         {
+            if(transaction.Amount <= 0 || !_categoryRepo.GetAll().Any(c => c.Id == transaction.CategoryId))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            transaction.Amount = _categoryRepo.GetById(transaction.CategoryId).TypeOfIncome ? transaction.Amount : -transaction.Amount;
             transaction.AccountId = _accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).FirstOrDefault().Id;
             _transactionRepo.Insert(transaction);
             _transactionRepo.Save();
