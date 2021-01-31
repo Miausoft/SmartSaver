@@ -31,7 +31,6 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
         /// <returns>RegistrationResult.Success</returns>
         public virtual RegistrationResult Register(User user)
         {
-            Context.Accounts.Add(new Account { User = user, UserId = user.Id });
             Context.Users.Add(user);
             Context.SaveChanges();
 

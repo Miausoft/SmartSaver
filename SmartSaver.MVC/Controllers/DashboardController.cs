@@ -30,7 +30,7 @@ namespace SmartSaver.MVC.Controllers
         public IActionResult Index()
         {
             Account account = _accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).FirstOrDefault();
-            if (account.Goal == 0)
+            if (account == null)
             {
                 return View(nameof(Complete));
             }
@@ -71,7 +71,7 @@ namespace SmartSaver.MVC.Controllers
         public IActionResult Complete()
         {
             Account account = _accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).FirstOrDefault();
-            if (account.Goal == 0)
+            if (account == null)
             {
                 return View(nameof(Complete));
             }
@@ -90,11 +90,14 @@ namespace SmartSaver.MVC.Controllers
                     return View();
                 }
 
-                Account account = _accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).FirstOrDefault();
-                account.Goal = model.Goal;
-                account.Revenue = model.Revenue;
-                account.GoalStartDate = DateTime.Today;
-                account.GoalEndDate = model.GoalEndDate;
+                _accountRepo.Insert(new Account
+                {
+                    UserId = int.Parse(User.Identity.Name),
+                    Goal = model.Goal,
+                    Revenue = model.Revenue,
+                    GoalStartDate = DateTime.Today,
+                    GoalEndDate = model.GoalEndDate
+                });
                 _accountRepo.Save();
                 return RedirectToAction(nameof(Index));
             }
@@ -112,13 +115,9 @@ namespace SmartSaver.MVC.Controllers
         [HttpPost]
         public IActionResult Delete()
         {
-            Account account = _accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).FirstOrDefault();
-            account.GoalStartDate = DateTime.MinValue;
-            account.GoalEndDate = DateTime.MinValue;
-            account.Goal = 0;
+            _accountRepo.Delete(_accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).FirstOrDefault().Id);
             _accountRepo.Save();
-
-            return View(nameof(Complete));
+            return RedirectToAction(nameof(Complete));
         }
     }
 }
