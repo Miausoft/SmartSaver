@@ -6,7 +6,7 @@ using SmartSaver.Domain.Repositories;
 using SmartSaver.WebApi.RequestModels;
 using SmartSaver.WebApi.ResponseModels;
 using AutoMapper;
-using SmartSaver.Domain.ActionFilters;
+using SmartSaver.Domain.CustomAttributes;
 
 namespace SmartSaver.WebApi.Controllers
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using SmartSaver.Domain.ActionFilters;
+using SmartSaver.Domain.CustomAttributes;
 
 namespace SmartSaver.MVC.Models
 {

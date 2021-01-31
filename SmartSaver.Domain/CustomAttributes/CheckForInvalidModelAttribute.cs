@@ -1,7 +1,7 @@
 ﻿using System.Web.Mvc;
 using SmartSaver.Domain.CustomExceptions;
 
-namespace SmartSaver.Domain.ActionFilters
+namespace SmartSaver.Domain.CustomAttributes
 {
     public class CheckForInvalidModelAttribute : ActionFilterAttribute
     {

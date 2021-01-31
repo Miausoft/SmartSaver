@@ -5,7 +5,7 @@ using SmartSaver.Domain.Repositories;
 using SmartSaver.EntityFrameworkCore.Models;
 using System.Linq;
 
-namespace SmartSaver.Domain.ActionFilters
+namespace SmartSaver.Domain.CustomAttributes
 {
     public class RequiresAccountAttribute : ActionFilterAttribute
     {

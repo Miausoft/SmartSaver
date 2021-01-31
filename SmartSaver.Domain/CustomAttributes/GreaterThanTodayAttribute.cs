@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace SmartSaver.Domain.ActionFilters
+namespace SmartSaver.Domain.CustomAttributes
 {
     public class GreaterThanTodayAttribute : ValidationAttribute
     {
