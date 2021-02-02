@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -9,13 +11,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using SmartSaver.Domain.CustomAttributes;
+using SmartSaver.Domain.CustomExceptions;
 using SmartSaver.Domain.Services.EmailServices;
 using SmartSaver.Domain.TokenValidation;
-using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.Domain.Repositories;
+using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.MVC.Models;
-using System.Linq;
-using SmartSaver.Domain.CustomAttributes;
 
 namespace SmartSaver.MVC.Controllers
 {
@@ -70,7 +72,7 @@ namespace SmartSaver.MVC.Controllers
 
             if (String.IsNullOrEmpty(email) || user == null || user.Token == null)
             {
-                return RedirectToAction(nameof(Login));
+                throw new HttpStatusException(HttpStatusCode.NotFound, "404 Error Occured.");
             }
 
             var confirmationLink = Url.Action(nameof(ConfirmEmail), nameof(AuthenticationController).Replace(nameof(Controller), ""), new { token = user.Token }, Request.Scheme);
@@ -175,18 +177,18 @@ namespace SmartSaver.MVC.Controllers
         {
             if (token == null)
             {
-                return RedirectToAction(nameof(HomeController.Index), nameof(HomeController).Replace(nameof(Controller), ""));
+                throw new HttpStatusException(HttpStatusCode.NotFound, "404 Error Occured.");
             }
 
             if (!_tokenValidation.ValidateToken(token))
             {
-                return RedirectToAction(nameof(HomeController.Index), nameof(HomeController).Replace(nameof(Controller), ""));
+                throw new HttpStatusException(HttpStatusCode.NotFound, "404 Error Occured.");
             }
 
             var claim = _tokenValidation.GetClaim(token, "nameid");
             if (String.IsNullOrEmpty(claim))
             {
-                return RedirectToAction(nameof(HomeController.Index), nameof(HomeController).Replace(nameof(Controller), ""));
+                throw new HttpStatusException(HttpStatusCode.NotFound, "404 Error Occured.");
             }
 
             User user = _userRepo.SearchFor(u => u.Id.ToString().Equals(claim)).FirstOrDefault();

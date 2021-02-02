@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
+using SmartSaver.Domain.CustomExceptions;
 using SmartSaver.Domain.Repositories;
 using SmartSaver.EntityFrameworkCore.Models;
-using System;
 using System.Linq;
+using System.Net;
 
 namespace SmartSaver.Domain.CustomAttributes
 {
@@ -37,7 +38,7 @@ namespace SmartSaver.Domain.CustomAttributes
             }
             else if (account == null || !account.UserId.ToString().Equals(filterContext.HttpContext.User.Identity.Name))
             {
-                filterContext.HttpContext.Response.StatusCode = 404;
+                throw new HttpStatusException(HttpStatusCode.NotFound, "404 Error Occured.");
             }
         }
     }
