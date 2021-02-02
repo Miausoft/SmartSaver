@@ -20,10 +20,15 @@ namespace SmartSaver.MVC.Controllers
         }
 
         [HttpGet]
-        [RequiresAccount]
         public IActionResult Index()
         {
-            return View();
+            var accounts = _accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).ToList();
+            if (!accounts.Any())
+            {
+                return View(nameof(Complete));
+            }
+
+            return View(accounts);
         }
 
         [HttpGet]
@@ -42,6 +47,7 @@ namespace SmartSaver.MVC.Controllers
 
             _accountRepo.Insert(new Account
             {
+                Name = model.Name,
                 UserId = int.Parse(User.Identity.Name),
                 Goal = model.Goal,
                 Revenue = model.Revenue,
@@ -57,7 +63,7 @@ namespace SmartSaver.MVC.Controllers
         [RequiresAccount]
         public IActionResult Delete()
         {
-            _accountRepo.Delete(_accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).FirstOrDefault().Id);
+            _accountRepo.Delete(_accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).FirstOrDefault());
             _accountRepo.Save();
 
             return RedirectToAction(nameof(Index));

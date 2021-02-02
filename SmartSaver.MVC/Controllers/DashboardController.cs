@@ -28,14 +28,16 @@ namespace SmartSaver.MVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(string name)
         {
-            Account account = _accountRepo
-                .SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name))
+            var account = _accountRepo
+                .SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name) &&
+                                a.Name.Equals(name))
                 .FirstOrDefault();
 
             account.Transactions = _transactionRepo
-                .SearchFor(t => t.AccountId.ToString().Equals(account.Id.ToString()))
+                .SearchFor(t => t.UserId.ToString().Equals(User.Identity.Name) &&
+                                t.AccountId.ToString().Equals(account.Id.ToString()))
                 .ToList();
 
             return View(new DashboardViewModel()

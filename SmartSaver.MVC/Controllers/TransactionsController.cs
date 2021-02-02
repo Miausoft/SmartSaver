@@ -29,12 +29,18 @@ namespace SmartSaver.MVC.Controllers
             _categoryRepo = categoryRepo;
         }
 
-        [Route("Transactions/{pageNumber?}")]
         [HttpGet]
-        public ActionResult Index(int pageNumber = 1, int pageSize = 10)
+        public IActionResult Index(string name, int pageNumber = 1, int pageSize = 10)
         {
-            Account account = _accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).FirstOrDefault();
-            var transactions = _transactionRepo.SearchFor(t => t.AccountId.ToString().Equals(account.Id.ToString()));
+            var account = _accountRepo
+                .SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name) &&
+                           a.Name.Equals(name))
+                .FirstOrDefault();
+            
+            var transactions = _transactionRepo
+                .SearchFor(t => t.UserId.ToString().Equals(User.Identity.Name) &&
+                                t.AccountId == account.Id);
+
             return View(new PagedResult<TransactionViewModel>
             {
                 TotalItems = transactions.Count(),
@@ -65,6 +71,7 @@ namespace SmartSaver.MVC.Controllers
 
             transaction.Amount = _categoryRepo.GetById(transaction.CategoryId).TypeOfIncome ? transaction.Amount : -transaction.Amount;
             transaction.AccountId = _accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).FirstOrDefault().Id;
+            transaction.UserId = int.Parse(User.Identity.Name);
             _transactionRepo.Insert(transaction);
             _transactionRepo.Save();
 
