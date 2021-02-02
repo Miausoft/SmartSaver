@@ -22,9 +22,9 @@ namespace SmartSaver.Domain.Repositories
             return _table;
         }
 
-        public T GetById(object id)
+        public T GetById(params object[] keyValues)
         {
-            return _table.Find(id);
+            return _table.Find(keyValues);
         }
 
         public IQueryable<T> SearchFor(Expression<Func<T, bool>> predicate)
@@ -32,14 +32,14 @@ namespace SmartSaver.Domain.Repositories
             return _table.Where(predicate);
         }
 
-        public void Insert(T obj)
+        public void Insert(T entity)
         {
-            _table.Add(obj);
+            _table.Add(entity);
         }
 
-        public void Delete(object id)
+        public void Delete(T entity)
         {
-            _table.Remove(_table.Find(id));
+            _table.Remove(entity);
         }
 
         public void Save()

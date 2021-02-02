@@ -6,11 +6,11 @@ namespace SmartSaver.Domain.Repositories
 {
     public interface IRepository<T> where T : class
     {
-        T GetById(object id);
+        T GetById(params object[] keyValues);
         IQueryable<T> GetAll();
         IQueryable<T> SearchFor(Expression<Func<T, bool>> predicate);
-        void Insert(T obj);
-        void Delete(object id);
+        void Insert(T entity);
+        void Delete(T entity);
         void Save();
     }
 }
