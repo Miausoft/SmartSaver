@@ -7,6 +7,11 @@ namespace SmartSaver.MVC.Models
     public class AccountViewModel
     {
         [Required]
+        [MaxLength(100)]
+        [Display(Name = "Goal Name")]
+        public string Name { get; set; }
+
+        [Required]
         [Range(double.Epsilon, double.MaxValue, ErrorMessage = "Invalid input")]
         [Display(Name = "Amount")]
         public decimal Goal { get; set; }
