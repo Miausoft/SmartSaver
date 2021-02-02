@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using SmartSaver.MVC.Models;
+using SmartSaver.Domain.CustomExceptions;
 
 namespace SmartSaver.MVC.Controllers
 {
@@ -21,25 +22,34 @@ namespace SmartSaver.MVC.Controllers
         {
             var statusCodeResult = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
 
-            switch(statusCode)
+            switch (statusCode)
             {
+                case 400:
+                    model.RequestId = "400";
+                    break;
+                case 401:
+                    model.RequestId = "401";
+                    break;
                 case 404:
-                    _logger.Warning($"404 Error Occured. Path = {statusCodeResult.OriginalPath}" +
-                        $"and QueryString = {statusCodeResult.OriginalQueryString}");
                     model.RequestId = "404";
                     break;
             }
+
+            _logger.Warning($"{statusCode} Error Occured. Path = {statusCodeResult?.OriginalPath}" + 
+                $"and QueryString = {statusCodeResult?.OriginalQueryString}");
+
             return View(nameof(Error), model);
         }
 
         [Route("Error")]
         public IActionResult Error(ErrorViewModel model)
         {
-            model.RequestId = "500";
             var exceptionDetails = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
 
-           _logger.Error($"The path {exceptionDetails.Path} threw an exception " +
-                $"{exceptionDetails.Error}");
+            model.RequestId = exceptionDetails?.Error is HttpStatusException httpException ? ((int)httpException.StatusCode).ToString() : "500";
+
+            _logger.Error($"The path {exceptionDetails?.Path} threw an exception " +
+                 $"{exceptionDetails?.Error}");
 
             return View(nameof(Error), model);
         }
