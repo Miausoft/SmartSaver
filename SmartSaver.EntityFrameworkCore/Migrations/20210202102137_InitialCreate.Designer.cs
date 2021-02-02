@@ -10,7 +10,7 @@ using SmartSaver.EntityFrameworkCore;
 namespace SmartSaver.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210127223422_InitialCreate")]
+    [Migration("20210202102137_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,33 +24,44 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
             modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Account", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<decimal>("Goal")
-                        .HasColumnType("decimal(18,4)");
-
-                    b.Property<DateTime>("GoalEndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("GoalStartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("MonthlyExpenses")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Revenue")
-                        .HasColumnType("float");
+                        .HasColumnType("int");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<decimal>("Goal")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,4)")
+                        .HasDefaultValue(0m);
+
+                    b.Property<DateTime>("GoalEndDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("dateadd(DD, 1 ,getdate())");
+
+                    b.Property<DateTime>("GoalStartDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<double>("MonthlyExpenses")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Revenue")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id", "UserId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Accounts");
+
+                    b.HasCheckConstraint("PositiveGoal", "Goal > 0");
+
+                    b.HasCheckConstraint("StartEarlierThanEnd", "GoalStartDate < GoalEndDate");
                 });
 
             modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Category", b =>
@@ -61,41 +72,78 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("TypeOfIncome")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Title")
+                        .IsUnique();
+
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.EmailVerification", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Token")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("EmailVerifications");
-                });
-
-            modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Transaction", b =>
+            modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.ProblemSuggestion", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ProblemText")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("SolutionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProblemText")
+                        .IsUnique()
+                        .HasFilter("[ProblemText] IS NOT NULL");
+
+                    b.HasIndex("SolutionId");
+
+                    b.ToTable("ProblemSuggestions");
+                });
+
+            modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.SolutionSuggestion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("SolutionText")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SolutionText")
+                        .IsUnique()
+                        .HasFilter("[SolutionText] IS NOT NULL");
+
+                    b.ToTable("SolutionSuggestions");
+                });
+
+            modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Transaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("ActionTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,4)");
@@ -105,11 +153,13 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(1);
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
+                    b.HasKey("Id", "AccountId", "UserId");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("AccountId", "UserId");
 
                     b.ToTable("Transactions");
                 });
@@ -122,7 +172,9 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("DateJoined")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -130,6 +182,9 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
 
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -139,6 +194,10 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
 
                     b.HasIndex("Email")
                         .IsUnique();
+
+                    b.HasIndex("Token")
+                        .IsUnique()
+                        .HasFilter("[Token] IS NOT NULL");
 
                     b.HasIndex("Username")
                         .IsUnique();
@@ -155,26 +214,32 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.EmailVerification", b =>
+            modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.ProblemSuggestion", b =>
                 {
-                    b.HasOne("SmartSaver.EntityFrameworkCore.Models.User", "User")
+                    b.HasOne("SmartSaver.EntityFrameworkCore.Models.SolutionSuggestion", "SolutionSuggestion")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("SolutionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Transaction", b =>
                 {
-                    b.HasOne("SmartSaver.EntityFrameworkCore.Models.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("SmartSaver.EntityFrameworkCore.Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SmartSaver.EntityFrameworkCore.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SmartSaver.EntityFrameworkCore.Models.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

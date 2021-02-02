@@ -22,9 +22,10 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
             modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Account", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Goal")
                         .ValueGeneratedOnAdd()
@@ -32,27 +33,33 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                         .HasDefaultValue(0m);
 
                     b.Property<DateTime>("GoalEndDate")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("dateadd(DD, 1 ,getdate())");
 
                     b.Property<DateTime>("GoalStartDate")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<double>("MonthlyExpenses")
                         .HasColumnType("float");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<double>("Revenue")
                         .HasColumnType("float");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("Id", "UserId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Accounts");
 
-                    b.HasCheckConstraint("PositiveGoal", "Goal >= 0");
+                    b.HasCheckConstraint("PositiveGoal", "Goal > 0");
+
+                    b.HasCheckConstraint("StartEarlierThanEnd", "GoalStartDate < GoalEndDate");
                 });
 
             modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Category", b =>
@@ -123,11 +130,12 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
             modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Transaction", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ActionTime")
@@ -143,11 +151,13 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(1);
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
+                    b.HasKey("Id", "AccountId", "UserId");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("AccountId", "UserId");
 
                     b.ToTable("Transactions");
                 });
@@ -213,15 +223,21 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
 
             modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Transaction", b =>
                 {
-                    b.HasOne("SmartSaver.EntityFrameworkCore.Models.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("SmartSaver.EntityFrameworkCore.Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SmartSaver.EntityFrameworkCore.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SmartSaver.EntityFrameworkCore.Models.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

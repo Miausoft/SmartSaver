@@ -55,6 +55,9 @@ namespace SmartSaver.EntityFrameworkCore
             modelBuilder.Entity<User>()
                 .Property(u => u.DateJoined)
                 .HasDefaultValueSql("getdate()");
+            
+            modelBuilder.Entity<Account>(a =>
+                a.HasCheckConstraint("PositiveGoal", "Goal > 0"));
 
             modelBuilder.Entity<Account>()
                 .Property(a => a.Goal)
@@ -63,6 +66,23 @@ namespace SmartSaver.EntityFrameworkCore
             modelBuilder.Entity<Account>()
                 .Property(a => a.Goal)
                 .HasDefaultValue(0);
+
+            modelBuilder.Entity<Account>()
+                .HasKey(a => new { a.Id, a.UserId });
+
+            modelBuilder.Entity<Account>(a =>
+                a.HasCheckConstraint("StartEarlierThanEnd", "GoalStartDate < GoalEndDate"));
+
+            modelBuilder.Entity<Account>()
+                .Property(a => a.GoalStartDate)
+                .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<Account>()
+                .Property(a => a.GoalEndDate)
+                .HasDefaultValueSql("dateadd(DD, 1 ,getdate())");
+
+            modelBuilder.Entity<Transaction>()
+                .HasKey(a => new { a.Id, a.AccountId, a.UserId });
 
             modelBuilder.Entity<Transaction>()
                 .Property(t => t.Amount)
@@ -75,9 +95,6 @@ namespace SmartSaver.EntityFrameworkCore
             modelBuilder.Entity<Transaction>()
                 .Property(t => t.ActionTime)
                 .HasDefaultValueSql("getdate()");
-
-            modelBuilder.Entity<Account>(a =>
-                a.HasCheckConstraint("PositiveGoal", "Goal >= 0"));
 
             modelBuilder.Entity<Category>()
                 .Property(c => c.TypeOfIncome)
