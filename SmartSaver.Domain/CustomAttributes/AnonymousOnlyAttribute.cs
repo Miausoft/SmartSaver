@@ -21,8 +21,7 @@ namespace SmartSaver.Domain.CustomAttributes
                         new
                         {
                             controller = "Account",
-                            action = "Index",
-                            returnUrl = filterContext.HttpContext.Request.Path
+                            action = "Index"
                         })
                     );
             }
