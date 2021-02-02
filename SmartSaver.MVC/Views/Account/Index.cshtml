@@ -1,0 +1,16 @@
+﻿@model IEnumerable<SmartSaver.EntityFrameworkCore.Models.Account>
+
+<div>
+    <p>My Accounts: </p>
+    @foreach (var a in Model)
+    {
+        <a asp-controller="Dashboard" asp-action="Index" asp-route-name="@a.Name">
+            <p name="@a.Id" value="a.Id">
+                Name: @a.Name
+                Goal: @a.Goal
+                StartDate: @a.GoalStartDate.ToShortDateString()
+                EndDate: @a.GoalEndDate.ToShortDateString()
+            </p>
+        </a>
+    }
+</div>
