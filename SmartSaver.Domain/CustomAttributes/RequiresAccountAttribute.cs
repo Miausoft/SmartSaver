@@ -21,7 +21,7 @@ namespace SmartSaver.Domain.CustomAttributes
 
             var account = accountRepo
                 .SearchFor(a => a.UserId.ToString().Equals(filterContext.HttpContext.User.Identity.Name) &&
-                                a.Name.Equals(filterContext.HttpContext.Request.Query["name"]))
+                                a.Name.Equals(filterContext.HttpContext.GetRouteValue("name").ToString()))
                 .FirstOrDefault();
 
             if (!accountRepo.GetAll().Any(a => a.UserId.ToString().Equals(filterContext.HttpContext.User.Identity.Name)))
