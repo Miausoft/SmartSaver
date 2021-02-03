@@ -8,6 +8,7 @@ namespace SmartSaver.EntityFrameworkCore.Models
     public class Account
     {
         [Key, Column(Order = 0)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Name { get; set; }
 

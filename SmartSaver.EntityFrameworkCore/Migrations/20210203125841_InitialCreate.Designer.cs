@@ -10,7 +10,7 @@ using SmartSaver.EntityFrameworkCore;
 namespace SmartSaver.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210202102137_InitialCreate")]
+    [Migration("20210203125841_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,15 +24,15 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
             modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Account", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Goal")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(18,4)")
-                        .HasDefaultValue(0m);
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("GoalEndDate")
                         .ValueGeneratedOnAdd()
@@ -48,14 +48,16 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("Revenue")
                         .HasColumnType("float");
 
                     b.HasKey("Id", "UserId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "Name")
+                        .IsUnique();
 
                     b.ToTable("Accounts");
 
@@ -132,7 +134,9 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
             modelBuilder.Entity("SmartSaver.EntityFrameworkCore.Models.Transaction", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
@@ -146,7 +150,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                         .HasDefaultValueSql("getdate()");
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("CategoryId")
                         .ValueGeneratedOnAdd()

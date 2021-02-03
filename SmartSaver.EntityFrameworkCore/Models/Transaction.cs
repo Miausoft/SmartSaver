@@ -7,6 +7,7 @@ namespace SmartSaver.EntityFrameworkCore.Models
     public class Transaction
     {
         [Key, Column(Order = 0)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public DateTime ActionTime { get; set; }
         public decimal Amount { get; set; }

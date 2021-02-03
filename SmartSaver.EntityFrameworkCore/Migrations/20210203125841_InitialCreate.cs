@@ -75,10 +75,11 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                 name: "Accounts",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    Goal = table.Column<decimal>(type: "decimal(18,4)", nullable: false, defaultValue: 0m),
+                    Name = table.Column<string>(nullable: false),
+                    Goal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     GoalStartDate = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()"),
                     GoalEndDate = table.Column<DateTime>(nullable: false, defaultValueSql: "dateadd(DD, 1 ,getdate())"),
                     Revenue = table.Column<double>(nullable: false),
@@ -101,11 +102,12 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                 name: "Transactions",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     AccountId = table.Column<int>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
                     ActionTime = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()"),
-                    Amount = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CategoryId = table.Column<int>(nullable: false, defaultValue: 1)
                 },
                 constraints: table =>
@@ -132,9 +134,10 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Accounts_UserId",
+                name: "IX_Accounts_UserId_Name",
                 table: "Accounts",
-                column: "UserId");
+                columns: new[] { "UserId", "Name" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Categories_Title",
