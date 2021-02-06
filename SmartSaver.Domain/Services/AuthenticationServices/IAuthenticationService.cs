@@ -1,4 +1,5 @@
 ﻿using SmartSaver.EntityFrameworkCore.Models;
+using System.Threading.Tasks;
 
 namespace SmartSaver.Domain.Services.AuthenticationServices
 {
@@ -6,12 +7,15 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
     {
         Success,
         UserAlreadyExist,
-        BadPasswordFormat
+        BadPasswordFormat,
+        Failure
     }
 
     public interface IAuthenticationService
     {
-        User Login(string userAttribute, string password);
+        User Login(string email, string password);
         RegistrationResult Register(User user);
+        public bool VerifyEmail(User user);
+        public Task SignInAsync<T>(T userId);
     }
 }

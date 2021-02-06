@@ -1,40 +1,80 @@
-﻿using System.Linq;
-using SmartSaver.EntityFrameworkCore;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using SmartSaver.Domain.Repositories;
+using SmartSaver.Domain.TokenValidation;
 using SmartSaver.EntityFrameworkCore.Models;
 
 namespace SmartSaver.Domain.Services.AuthenticationServices
 {
     public class BasicAuthenticationService : IAuthenticationService
     {
-        protected readonly ApplicationDbContext Context;
+        private readonly IRepository<User> _userRepo;
+        private readonly ITokenValidationService _tokenValidation;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public BasicAuthenticationService(ApplicationDbContext context)
+        public BasicAuthenticationService(IRepository<User> userRepo, 
+                                          ITokenValidationService tokenValidation, 
+                                          IHttpContextAccessor httpContextAccessor)
         {
-            Context = context;
+            _userRepo = userRepo;
+            _tokenValidation = tokenValidation;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        /// <summary>
-        /// Returns user with the given username and password.
-        /// </summary>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
-        /// <returns>Account</returns>
         public virtual User Login(string email, string password)
         {
-            return Context.Users.FirstOrDefault(u => password != null && u.Email.Equals(email));
+            return _userRepo.SearchFor(u => password != null && u.Email.Equals(email)).FirstOrDefault();
         }
 
-        /// <summary>
-        /// Registers user and returns Success message.
-        /// </summary>
-        /// <param name="user"></param>
-        /// <returns>RegistrationResult.Success</returns>
         public virtual RegistrationResult Register(User user)
         {
-            Context.Users.Add(user);
-            Context.SaveChanges();
+            _userRepo.Insert(user);
+
+            try
+            {
+                _userRepo.Save();
+                user.Token = _tokenValidation.GenerateToken(user.Id);
+                _userRepo.Save();
+
+            }
+            catch (DbUpdateException)
+            {
+                return RegistrationResult.Failure;
+            }
 
             return RegistrationResult.Success;
+        }
+
+        public virtual bool VerifyEmail(User user)
+        {
+            user.Token = null;
+            try
+            {
+                _userRepo.Save();
+            }
+            catch (DbUpdateException)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public virtual Task SignInAsync<T>(T userId)
+        {
+            var claim = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, userId.ToString())
+            };
+            var identity = new ClaimsIdentity(claim, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+            return _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
         }
     }
 }

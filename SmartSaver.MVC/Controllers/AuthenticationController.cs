@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
@@ -14,10 +12,11 @@ using Microsoft.Extensions.Configuration;
 using SmartSaver.Domain.CustomAttributes;
 using SmartSaver.Domain.CustomExceptions;
 using SmartSaver.Domain.Services.EmailServices;
-using SmartSaver.Domain.TokenValidation;
 using SmartSaver.Domain.Repositories;
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.MVC.Models;
+using SmartSaver.Domain.Services.AuthenticationServices;
+using SmartSaver.Domain.TokenValidation;
 
 namespace SmartSaver.MVC.Controllers
 {
@@ -25,21 +24,21 @@ namespace SmartSaver.MVC.Controllers
     public class AuthenticationController : Controller
     {
         private readonly Domain.Services.AuthenticationServices.IAuthenticationService _auth;
+        private readonly ITokenValidationService _tokenValidation;
         private readonly IConfiguration _configuration;
         private readonly IRepository<User> _userRepo;
-        private readonly ITokenValidationService _tokenValidation;
         private readonly IMailer _mailer;
 
         public AuthenticationController(Domain.Services.AuthenticationServices.IAuthenticationService auth,
                                         IConfiguration configuration,
-                                        IRepository<User> userRepo,
                                         ITokenValidationService tokenValidation,
+                                        IRepository<User> userRepo,
                                         IMailer mailer)
         {
             _auth = auth;
             _configuration = configuration;
-            _userRepo = userRepo;
             _tokenValidation = tokenValidation;
+            _userRepo = userRepo;
             _mailer = mailer;
         }
 
@@ -57,9 +56,13 @@ namespace SmartSaver.MVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Register(AuthenticationViewModel model)
         {
-            if (ModelState.IsValid && AddNewUser(model.Username, model.Email, model.Password))
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Verify), new { email = model.Email });
+                var registrationResult = _auth.Register(new User() { Username = model.Username, Email = model.Email, Password = model.Password });
+                if (registrationResult == RegistrationResult.Success)
+                {
+                    return RedirectToAction(nameof(Verify), new { model.Email });
+                }
             }
 
             return View();
@@ -70,12 +73,16 @@ namespace SmartSaver.MVC.Controllers
         {
             User user = _userRepo.SearchFor(e => e.Email.Equals(email)).FirstOrDefault();
 
-            if (String.IsNullOrEmpty(email) || user == null || user.Token == null)
+            if (user == null || user.Token == null)
             {
                 throw new HttpStatusException(HttpStatusCode.NotFound, "404 Error Occured.");
             }
 
-            var confirmationLink = Url.Action(nameof(ConfirmEmail), nameof(AuthenticationController).Replace(nameof(Controller), ""), new { token = user.Token }, Request.Scheme);
+            var confirmationLink = Url.Action(
+                nameof(ConfirmEmail), 
+                nameof(AuthenticationController).Replace(nameof(Controller), ""), 
+                new { token = _tokenValidation.GenerateToken(user.Id) }, 
+                Request.Scheme);
 
             _mailer.SendEmailAsync(
                 new MailMessage(
@@ -85,7 +92,7 @@ namespace SmartSaver.MVC.Controllers
                      System.IO.File.ReadAllText(_configuration["TemplatePaths:Email"]).Replace("@ViewBag.VerifyLink", confirmationLink))
                 { IsBodyHtml = true });
 
-            return View(nameof(Verify), ViewBag.Email = email);
+            return View(nameof(Verify), ViewBag.Email = user.Email);
         }
 
         [HttpPost]
@@ -105,7 +112,7 @@ namespace SmartSaver.MVC.Controllers
                 return View(nameof(Verify), ViewBag.Email = model.Email);
             }
 
-            UserAuthentication(user.Id);
+            _auth.SignInAsync(user.Id).Wait();
             return LocalRedirect(returnUrl ?? Url.Content("~/"));
         }
 
@@ -120,87 +127,42 @@ namespace SmartSaver.MVC.Controllers
         [HttpPost]
         public IActionResult ExternalLogin(string returnUrl, string provider)
         {
-            var properties = new AuthenticationProperties { RedirectUri = Url.Action(nameof(ExternalResponse), new { ReturnUrl = returnUrl }) };
+            var properties = new AuthenticationProperties { RedirectUri = Url.Action(nameof(ExternalResponse), new { returnUrl, provider }) };
             return Challenge(properties, provider);
         }
 
+        [HttpGet]
         [AllowAnonymous]
-        public IActionResult ExternalResponse(string returnUrl)
+        public IActionResult ExternalResponse(string returnUrl, string provider)
         {
             var result = HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             if (result.Result.Succeeded)
             {
                 var email = result.Result.Principal.FindFirstValue(ClaimTypes.Email);
-                AddNewUser(email, email, null);
-                UserAuthentication(_userRepo.SearchFor(e => e.Email.Equals(email)).FirstOrDefault().Id);
-                return LocalRedirect(returnUrl ?? Url.Content("~/"));
-            }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "Error while trying to login.");
-                return View(nameof(Login));
-            }
-        }
+                var registrationResult = _auth.Register(new User() { Username = email, Email = email, Password = null });
 
-        private void UserAuthentication<T>(T userId)
-        {
-            var claim = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, userId.ToString())
-            };
-            var identity = new ClaimsIdentity(claim, CookieAuthenticationDefaults.AuthenticationScheme);
-            var principal = new ClaimsPrincipal(identity);
-            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal).Wait();
-        }
-
-        private bool AddNewUser(string username, string email, string password)
-        {
-            if (_userRepo.SearchFor(u => u.Email.Equals(email)).FirstOrDefault() != null)
-            {
-                return false;
+                if (registrationResult == RegistrationResult.Success || registrationResult == RegistrationResult.UserAlreadyExist)
+                {
+                    _auth.SignInAsync(_userRepo.SearchFor(e => e.Email.Equals(email)).FirstOrDefault().Id);
+                    return LocalRedirect(returnUrl ?? Url.Content("~/"));
+                }
             }
 
-            _auth.Register(new User() { Username = username, Email = email, Password = password });
-
-            if (password != null)
-            {
-                User user = _userRepo.SearchFor(u => u.Email.Equals(email)).FirstOrDefault();
-                user.Token = _tokenValidation.GenerateToken(user.Id);
-                _userRepo.Save();
-            }
-
-            return true;
+            ModelState.AddModelError(string.Empty, $"Something unexpected happened with {provider} authentication. Please try again, or if this doesn't work, contact us for help");
+            return View(nameof(Login));
         }
 
         [HttpGet]
-        public IActionResult ConfirmEmail(string token)
+        public IActionResult ConfirmEmail (string token)
         {
-            if (token == null)
+            if (_auth.VerifyEmail(_userRepo.SearchFor(u => u.Token.Equals(token)).FirstOrDefault()))
             {
-                throw new HttpStatusException(HttpStatusCode.NotFound, "404 Error Occured.");
+                return View("Success");
             }
-
-            if (!_tokenValidation.ValidateToken(token))
+            else
             {
-                throw new HttpStatusException(HttpStatusCode.NotFound, "404 Error Occured.");
+                return View("Failure");
             }
-
-            var claim = _tokenValidation.GetClaim(token, "nameid");
-            if (String.IsNullOrEmpty(claim))
-            {
-                throw new HttpStatusException(HttpStatusCode.NotFound, "404 Error Occured.");
-            }
-
-            User user = _userRepo.SearchFor(u => u.Id.ToString().Equals(claim)).FirstOrDefault();
-            if (token == user.Token)
-            {
-                user.Token = null;
-                _userRepo.Save();
-                UserAuthentication(claim);
-                return RedirectToAction(nameof(AccountController.Complete), nameof(AccountController).Replace(nameof(Controller), ""));
-            }
-
-            return RedirectToAction(nameof(HomeController.Index), nameof(HomeController).Replace(nameof(Controller), ""));
         }
 
         public User GetUser(string user)
