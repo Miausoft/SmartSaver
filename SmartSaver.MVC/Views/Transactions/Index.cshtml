@@ -39,7 +39,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form asp-controller="Transactions" asp-action="Create" method="POST">
+            <form asp-controller="Transactions" asp-action="Create" asp-route-name="@Context.Request.RouteValues["name"].ToString()" method="POST">
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Amount</label>
@@ -91,7 +91,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form asp-controller="Transactions" asp-action="Create" method="POST">
+            <form asp-controller="Transactions" asp-action="Create" asp-route-name="@Context.Request.RouteValues["name"].ToString()" method="POST">
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Amount</label>
@@ -143,7 +143,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form asp-controller="Transactions" asp-action="CreatePDF" method="get">
+            <form asp-controller="Transactions" asp-action="CreatePDF" asp-route-name="@Context.Request.RouteValues["name"].ToString()" method="get">
                 <div class="modal-body">
                     <div class="form-group">
                         <small class="form-text text-muted">FROM DATE</small>
