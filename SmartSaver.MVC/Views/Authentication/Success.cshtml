@@ -1,0 +1,39 @@
+﻿@{
+    Layout = null;
+}
+
+<head>
+    <title>Email verified</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/css/circleLoader.css" />
+    <link rel="stylesheet" type="text/css" href="~/css/dotPulse.css" />
+</head>
+
+<header>
+    <nav class="navbar navbar-expand-sm navbar-light justify-content-center" style="background-color: rgb(30, 51, 45)">
+        <a class="navbar-brand font-weight-bold text-light" asp-area="" asp-controller="Home" asp-action="Index">
+            <img href="/Home/Index/" src="/images/caticowhite.png" width="30" height="30" alt="">
+            smartsaver
+        </a>
+    </nav>
+</header>
+
+<body>
+    <center>
+        <div class="circle-loader">
+            <div class="checkmark complete"></div>
+        </div>
+        <h1 class="mb-4 font-weight-light">Email verified</h1>
+        <p class="mb-3" style="font-size:18px;">Continuing to Login Page</p>
+        <div class="dot-pulse d-flex"></div>
+    </center>
+</body>
+
+<script>
+    setTimeout(function () {
+        $('.circle-loader').toggleClass('load-complete');
+        $('.checkmark').toggle();
+        setTimeout(function () { window.location.href = "/Authentication/Login"; }, 2000);
+    }, 1000);
+</script>

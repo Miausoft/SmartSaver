@@ -1,0 +1,40 @@
+﻿@{
+    Layout = null;
+}
+
+<head>
+    <title>Email verification failure</title>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/css/circleLoader.css" />
+</head>
+
+<header>
+    <nav class="navbar navbar-expand-sm navbar-light justify-content-center" style="background-color: rgb(30, 51, 45)">
+        <a class="navbar-brand font-weight-bold text-light" asp-area="" asp-controller="Home" asp-action="Index">
+            <img href="/Home/Index/" src="/images/caticowhite.png" width="30" height="30" alt="">
+            smartsaver
+        </a>
+    </nav>
+</header>
+
+<body>
+    <center>
+        <div class="circle-loader">
+            <div class="checkmark error"></div>
+        </div>
+        <h1 class="mb-4 font-weight-light text-danger">Email verification failure</h1>
+        <p style="font-size:18px;">
+            Your email address was not verified. <br>
+            You can request
+            <a href="/Authentication/Login" style="color: #5551ff;">
+                a new email verification link
+            </a>
+        </p>
+    </center>
+</body>
+
+<script>
+    $('.circle-loader').toggleClass('load-error');
+    $('.checkmark').toggle();
+</script>
