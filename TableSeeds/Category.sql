@@ -1,0 +1,17 @@
+INSERT INTO Categories ("Title", "TypeOfIncome") VALUES ('Food', 0);
+INSERT INTO Categories ("Title", "TypeOfIncome") VALUES ('Bills', 0);
+INSERT INTO Categories ("Title", "TypeOfIncome") VALUES ('Car', 0);
+INSERT INTO Categories ("Title", "TypeOfIncome") VALUES ('Clothes', 0);
+INSERT INTO Categories ("Title", "TypeOfIncome") VALUES ('Communication', 0);
+INSERT INTO Categories ("Title", "TypeOfIncome") VALUES ('Eating out', 0);
+INSERT INTO Categories ("Title", "TypeOfIncome") VALUES ('Entertainment', 0);
+INSERT INTO Categories ("Title", "TypeOfIncome") VALUES ('Gifts', 0);
+INSERT INTO Categories ("Title", "TypeOfIncome") VALUES ('Health', 0);
+INSERT INTO Categories ("Title", "TypeOfIncome") VALUES ('House', 0);
+INSERT INTO Categories ("Title", "TypeOfIncome") VALUES ('Sports', 0);
+INSERT INTO Categories ("Title", "TypeOfIncome") VALUES ('Taxi', 0);
+INSERT INTO Categories ("Title", "TypeOfIncome") VALUES ('Toiletry', 0);
+INSERT INTO Categories ("Title", "TypeOfIncome") VALUES ('Transport', 0);
+INSERT INTO Categories ("Title", "TypeOfIncome") VALUES ('Deposits', 1);
+INSERT INTO Categories ("Title", "TypeOfIncome") VALUES ('Salary', 1);
+INSERT INTO Categories ("Title", "TypeOfIncome") VALUES ('Savings', 1);
