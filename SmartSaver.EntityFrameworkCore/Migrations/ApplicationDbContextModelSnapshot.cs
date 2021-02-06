@@ -236,7 +236,7 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                     b.HasOne("SmartSaver.EntityFrameworkCore.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SmartSaver.EntityFrameworkCore.Models.Account", "Account")

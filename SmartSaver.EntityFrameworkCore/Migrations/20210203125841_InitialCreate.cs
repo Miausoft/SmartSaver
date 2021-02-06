@@ -124,13 +124,13 @@ namespace SmartSaver.EntityFrameworkCore.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Transactions_Accounts_AccountId_UserId",
                         columns: x => new { x.AccountId, x.UserId },
                         principalTable: "Accounts",
                         principalColumns: new[] { "Id", "UserId" },
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
