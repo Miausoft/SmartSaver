@@ -77,3 +77,9 @@ body {
     width: 100%;
 }
 
+.validation-summary-errors ul {
+    list-style: none;
+    margin-left: -40px;
+    margin-bottom: 0px;
+    position: relative;
+}
