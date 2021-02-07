@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SmartSaver.Domain.CustomAttributes;
+using Microsoft.EntityFrameworkCore;
 using SmartSaver.Domain.Repositories;
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.MVC.Models;
@@ -22,13 +22,8 @@ namespace SmartSaver.MVC.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var accounts = _accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).ToList();
-            if (!accounts.Any())
-            {
-                return View(nameof(Complete));
-            }
-
-            return View(accounts);
+            var accounts = _accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name));
+            return !accounts.Any() ? View(nameof(Complete)) : View(accounts);
         }
 
         [HttpGet]
@@ -38,13 +33,13 @@ namespace SmartSaver.MVC.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Complete(AccountViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View();
             }
-
             _accountRepo.Insert(new Account
             {
                 Name = model.Name,
@@ -54,17 +49,38 @@ namespace SmartSaver.MVC.Controllers
                 GoalStartDate = DateTime.Today,
                 GoalEndDate = model.GoalEndDate
             });
-            _accountRepo.Save();
+
+            try
+            {
+                _accountRepo.Save();
+            }
+            catch (DbUpdateException)
+            {
+                ModelState.AddModelError(string.Empty, $"{model.Name} goal is already set. Please select a new name");
+                return View();
+            }
 
             return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
-        [RequiresAccount]
-        public IActionResult Delete()
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(string name)
         {
-            _accountRepo.Delete(_accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).FirstOrDefault());
-            _accountRepo.Save();
+            try
+            {
+                var account = _accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).FirstOrDefault();
+                _accountRepo.Delete(account);
+                _accountRepo.Save();
+            }
+            catch (ArgumentNullException)
+            {
+                // TODO: nedd to send the error message to the Index view
+            }
+            catch (DbUpdateException)
+            {
+                // TODO: nedd to send the error message to the Index view
+            }
 
             return RedirectToAction(nameof(Index));
         }

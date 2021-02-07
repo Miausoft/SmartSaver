@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.MVC.Models;
@@ -8,22 +6,24 @@ using SmartSaver.Domain.Services.TransactionsCounterService;
 using SmartSaver.Domain.Services.SavingMethodSuggestion;
 using SmartSaver.Domain.Repositories;
 using SmartSaver.Domain.CustomAttributes;
+using System;
+using System.Linq;
 
 namespace SmartSaver.MVC.Controllers
 {
     [Authorize, RequiresAccount]
     public class DashboardController : Controller
     {
-        private readonly IRepository<Transaction> _transactionRepo;
         private readonly IRepository<Account> _accountRepo;
+        private readonly IRepository<Transaction> _transactionRepo;
         private readonly IRepository<Category> _categoryRepo;
 
-        public DashboardController(IRepository<Transaction> transactionRepo,
-                                   IRepository<Account> accountRepo,
+        public DashboardController(IRepository<Account> accountRepo,
+                                   IRepository<Transaction> transactionRepo,
                                    IRepository<Category> categoryRepo)
         {
-            _transactionRepo = transactionRepo;
             _accountRepo = accountRepo;
+            _transactionRepo = transactionRepo;
             _categoryRepo = categoryRepo;
         }
 
@@ -43,10 +43,12 @@ namespace SmartSaver.MVC.Controllers
             return View(new DashboardViewModel()
             {
                 SavedCurrentMonth = TransactionsCounter
-                    .AmountSavedCurrentMonth(account.Transactions),
+                    .SavedSum(
+                        account.Transactions,
+                        DateCounter.TruncateToDayStart(DateTime.Now),
+                        DateCounter.TruncateToDayStart(DateTime.Now.AddMonths(1))),
 
-                ToSaveCurrentMonth = MoneyCounter
-                    .AmountToSaveAMonth(account),
+                ToSaveCurrentMonth = MoneyCounter.AmountToSaveAMonth(account),
 
                 CurrentMonthBalanceHistory = TransactionsCounter
                     .BalanceHistory(account.Transactions)
@@ -54,7 +56,11 @@ namespace SmartSaver.MVC.Controllers
                     .ToDictionary(x => x.Key, x => x.Value),
 
                 CurrentMonthTotalExpenseByCategory = TransactionsCounter
-                    .TotalExpenseByCategory(account.Transactions, _categoryRepo.GetAll(), new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1), DateTime.Now.AddDays(1)),
+                    .TotalExpenseByCategory(
+                        account.Transactions,
+                        _categoryRepo.GetAll(),
+                        DateCounter.TruncateToDayStart(DateTime.Now),
+                        DateCounter.TruncateToDayStart(DateTime.Now.AddMonths(1))),
 
                 FreeMoneyToSpend = MoneyCounter.FreeMoneyToSpend(account),
 
