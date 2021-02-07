@@ -13,7 +13,6 @@
     <script src="~/js/views/transactions/index.js"></script>
 </head>
 
-
 @section Jumbotron
 {
     <div class="jumbotron jumbotron-fluid mb-5 bg-dollar bg-top">
@@ -168,13 +167,13 @@
     </div>
 </div>
 
-
 <table class="table table-hover table-bordered mb-0">
     <thead class="thead-dark">
         <tr>
             <th scope="col">Time</th>
             <th scope="col">Amount</th>
             <th scope="col">Category</th>
+            <th scope="col" style="width:10%">Edit</th>
         </tr>
     </thead>
     <tbody>
@@ -184,9 +183,24 @@
                 <td>@t.ActionTime.ToShortDateString()</td>
                 <td>@t.Amount.ToString("C2")</td>
                 <td>@t.Category.Title</td>
+                <td>
+                    <ul class="list-inline m-0 d-flex justify-content-center text-white">
+                        <li class="list-inline-item">
+                            <a class="btn-sm btn-success">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <form method="post" asp-controller="Transactions" asp-action="Delete" asp-route-name="@Context.Request.RouteValues["name"]" asp-route-id="@t.Id">
+                                <a class="btn-sm btn-danger" onclick="this.closest('form').submit();">
+                                    <i class="fa fa-trash-alt"></i>
+                                </a>
+                            </form>
+                        </li>
+                    </ul>
+                </td>
             </tr>
         }
-
     </tbody>
 </table>
 
