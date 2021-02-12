@@ -3,25 +3,23 @@ using System.Collections.Generic;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System.IO;
-using SmartSaver.EntityFrameworkCore.Models;
-using SmartSaver.Domain.Services.TransactionsCounterService;
 
 namespace SmartSaver.Domain.Services.DocumentServices
 {
     public class PDFCreator
     {
-        public delegate void TextBlock(string text, string font, float fontSize, int style);
+        private delegate void TextBlock(string text, string font, float fontSize, int style);
 
-        public const int _totalColumn = 3;
-        PdfPCell _pdfPCell;
-        readonly PdfPTable _pdfPTable = new PdfPTable(_totalColumn)
+        private const int _totalColumn = 3;
+        private PdfPCell _pdfPCell;
+        private readonly PdfPTable _pdfPTable = new PdfPTable(_totalColumn)
         {
             WidthPercentage = 100,
             HorizontalAlignment = Element.ALIGN_CENTER,
             HeaderRows = 2
         };
 
-        public byte[] GeneratePDF(IEnumerable<Transaction> transaction, IEnumerable<Category> category, DateTime from, DateTime to)
+        public byte[] GeneratePDF(IDictionary<string, decimal> totalExpenseByCategory, DateTime from, DateTime to)
         {
             Document _document = new Document(PageSize.A4, 20, 20, 20, 20);
             MemoryStream _memoryStream = new MemoryStream();
@@ -29,7 +27,7 @@ namespace SmartSaver.Domain.Services.DocumentServices
             _document.Open();
 
             ReportHeader(FileHeader(), from, to);
-            ReportBody(TransactionsCounter.TotalExpenseByCategory(transaction, category, from, to));
+            ReportBody(totalExpenseByCategory);
 
             _pdfPTable.SetWidths(new float[] { 20, 150, 100 });
             _document.Add(_pdfPTable);
