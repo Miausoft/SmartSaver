@@ -7,23 +7,23 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SmartSaver.Domain.Repositories;
-using SmartSaver.Domain.TokenValidation;
+using SmartSaver.Domain.Services.AuthenticationServices.Jwt;
 using SmartSaver.EntityFrameworkCore.Models;
 
 namespace SmartSaver.Domain.Services.AuthenticationServices
 {
-    public class BasicAuthenticationService : IAuthenticationService
+    public class BasicAuthentication : IAuthentication
     {
         private readonly IRepository<User> _userRepo;
-        private readonly ITokenValidationService _tokenValidation;
+        private readonly ITokenAuthentication _tokenAuth;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public BasicAuthenticationService(IRepository<User> userRepo, 
-                                          ITokenValidationService tokenValidation, 
+        public BasicAuthentication(IRepository<User> userRepo, 
+                                          ITokenAuthentication tokenAuth, 
                                           IHttpContextAccessor httpContextAccessor)
         {
             _userRepo = userRepo;
-            _tokenValidation = tokenValidation;
+            _tokenAuth = tokenAuth;
             _httpContextAccessor = httpContextAccessor;
         }
 
@@ -39,7 +39,7 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
             try
             {
                 _userRepo.Save();
-                user.Token = _tokenValidation.GenerateToken(user.Id);
+                user.Token = _tokenAuth.GenerateToken(user.Id);
                 _userRepo.Save();
 
             }

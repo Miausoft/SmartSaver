@@ -4,27 +4,28 @@ using SmartSaver.Domain.Services.PasswordHash;
 using SmartSaver.Domain.Services.Regex;
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.Domain.Repositories;
-using SmartSaver.Domain.TokenValidation;
+using SmartSaver.Domain.Services.AuthenticationServices.Jwt;
+using System.Linq;
 
 namespace SmartSaver.Domain.Services.AuthenticationServices
 {
-    public class AuthenticationService : BasicAuthenticationService
+    public class Authentication : BasicAuthentication
     {
         private readonly IRepository<User> _userRepo;
         private readonly IPasswordHasherService _hasher;
         private readonly IPasswordRegex _passwordRegex;
-        private readonly ITokenValidationService _tokenValidation;
+        private readonly ITokenAuthentication _tokenAuth;
 
-        public AuthenticationService(IRepository<User> userRepo,
+        public Authentication(IRepository<User> userRepo,
                                      IPasswordHasherService hasher,
                                      IPasswordRegex passwordRegex,
-                                     ITokenValidationService tokenValidation,
-                                     IHttpContextAccessor httpContextAccessor) : base(userRepo, tokenValidation, httpContextAccessor)
+                                     ITokenAuthentication tokenAuth,
+                                     IHttpContextAccessor httpContextAccessor) : base(userRepo, tokenAuth, httpContextAccessor)
         {
             _userRepo = userRepo;
             _hasher = hasher;
             _passwordRegex = passwordRegex;
-            _tokenValidation = tokenValidation;
+            _tokenAuth = tokenAuth;
         }
 
         public override User Login(string email, string password)
@@ -50,7 +51,7 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
                 user.Password = _hasher.Hash(user.Password);
             }
 
-            if (_userRepo.SearchFor(u => u.Email.Equals(user.Email)) != null)
+            if (_userRepo.SearchFor(u => u.Email.Equals(user.Email)).Any())
             {
                 return RegistrationResult.UserAlreadyExist;
             }
@@ -60,12 +61,12 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
 
         public override bool VerifyEmail(User user)
         {
-            if (user == null || !_tokenValidation.ValidateToken(user.Token))
+            if (user == null || !_tokenAuth.ValidateToken(user.Token))
             {
                 return false;
             }
 
-            var claim = _tokenValidation.GetClaim(user.Token, "nameid");
+            var claim = _tokenAuth.GetClaim(user.Token, "nameid");
             if (!user.Id.ToString().Equals(claim))
             {
                 return false;

@@ -11,7 +11,7 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
         Failure
     }
 
-    public interface IAuthenticationService
+    public interface IAuthentication
     {
         User Login(string email, string password);
         RegistrationResult Register(User user);
