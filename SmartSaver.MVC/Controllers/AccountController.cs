@@ -69,17 +69,21 @@ namespace SmartSaver.MVC.Controllers
         {
             try
             {
-                var account = _accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).FirstOrDefault();
+                var account = _accountRepo
+                    .SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name) &&
+                                    a.Name.Equals(name))
+                    .FirstOrDefault();
+
                 _accountRepo.Delete(account);
                 _accountRepo.Save();
             }
             catch (ArgumentNullException)
             {
-                // TODO: nedd to send the error message to the Index view
+                // TODO: need to send the error message to the Index view
             }
             catch (DbUpdateException)
             {
-                // TODO: nedd to send the error message to the Index view
+                // TODO: catching racing condition. Need to send the error message to the Index view
             }
 
             return RedirectToAction(nameof(Index));
