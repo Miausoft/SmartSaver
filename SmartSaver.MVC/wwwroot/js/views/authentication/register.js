@@ -105,6 +105,7 @@ function Password1Check(input, status) {
 
         if (password.val().length >= 5 && hasNumber(password) && hasLower(password) && hasCapital(password)) {
             setSuccess(password, password, "");
+            return true;
         } else {
             setError(password, password, "");
         }
