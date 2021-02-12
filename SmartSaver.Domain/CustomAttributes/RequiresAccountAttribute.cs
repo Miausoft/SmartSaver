@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
-using SmartSaver.Domain.CustomExceptions;
 using SmartSaver.Domain.Repositories;
 using SmartSaver.EntityFrameworkCore.Models;
 using System.Linq;
-using System.Net;
 
 namespace SmartSaver.Domain.CustomAttributes
 {
@@ -19,26 +17,33 @@ namespace SmartSaver.Domain.CustomAttributes
                 .HttpContext.RequestServices
                 .GetService(typeof(IRepository<Account>)) as Repository<Account>;
 
-            var account = accountRepo
-                .SearchFor(a => a.UserId.ToString().Equals(filterContext.HttpContext.User.Identity.Name) &&
-                                a.Name.Equals(filterContext.HttpContext.GetRouteValue("name").ToString()))
-                .FirstOrDefault();
+            var userId = filterContext.HttpContext.User.Identity.Name;
+            var accountName = (filterContext.HttpContext.GetRouteValue("name") ?? string.Empty).ToString();
 
-            if (!accountRepo.GetAll().Any(a => a.UserId.ToString().Equals(filterContext.HttpContext.User.Identity.Name)))
+            if (!accountRepo.SearchFor(a => a.UserId.ToString().Equals(userId)).Any())
             {
                 filterContext.Result = new RedirectToRouteResult(
                     new RouteValueDictionary(
                         new
                         {
                             controller = "Account",
-                            action = "Complete",
-                            returnUrl = filterContext.HttpContext.Request.Path
+                            action = "Complete"
                         })
                     );
             }
-            else if (account == null || !account.UserId.ToString().Equals(filterContext.HttpContext.User.Identity.Name))
+            else if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(accountName))
             {
-                throw new HttpStatusException(HttpStatusCode.NotFound, "404 Error Occured.");
+                filterContext.Result = new RedirectToRouteResult(
+                    new RouteValueDictionary(
+                        new
+                        {
+                            controller = "Account"
+                        })
+                    );
+            }
+            else if (!accountRepo.SearchFor(a => a.UserId.ToString().Equals(userId) && a.Name.Equals(accountName)).Any())
+            {
+                filterContext.Result = new NotFoundResult();
             }
         }
     }
