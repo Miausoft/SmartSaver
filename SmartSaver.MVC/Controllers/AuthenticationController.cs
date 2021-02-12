@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -10,34 +9,33 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using SmartSaver.Domain.CustomAttributes;
-using SmartSaver.Domain.CustomExceptions;
-using SmartSaver.Domain.Services.EmailServices;
 using SmartSaver.Domain.Repositories;
+using SmartSaver.Domain.Services.AuthenticationServices;
+using SmartSaver.Domain.Services.EmailServices;
+using SmartSaver.Domain.Services.AuthenticationServices.Jwt;
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.MVC.Models;
-using SmartSaver.Domain.Services.AuthenticationServices;
-using SmartSaver.Domain.TokenValidation;
 
 namespace SmartSaver.MVC.Controllers
 {
     [AnonymousOnly]
     public class AuthenticationController : Controller
     {
-        private readonly Domain.Services.AuthenticationServices.IAuthenticationService _auth;
-        private readonly ITokenValidationService _tokenValidation;
+        private readonly IAuthentication _auth;
+        private readonly ITokenAuthentication _tokenAuth;
         private readonly IConfiguration _configuration;
         private readonly IRepository<User> _userRepo;
         private readonly IMailer _mailer;
 
-        public AuthenticationController(Domain.Services.AuthenticationServices.IAuthenticationService auth,
+        public AuthenticationController(IAuthentication auth,
                                         IConfiguration configuration,
-                                        ITokenValidationService tokenValidation,
+                                        ITokenAuthentication tokenAuth,
                                         IRepository<User> userRepo,
                                         IMailer mailer)
         {
             _auth = auth;
             _configuration = configuration;
-            _tokenValidation = tokenValidation;
+            _tokenAuth = tokenAuth;
             _userRepo = userRepo;
             _mailer = mailer;
         }
@@ -75,13 +73,16 @@ namespace SmartSaver.MVC.Controllers
 
             if (user == null || user.Token == null)
             {
-                throw new HttpStatusException(HttpStatusCode.NotFound, "404 Error Occured.");
+                return new NotFoundResult();
             }
 
+            user.Token = _tokenAuth.GenerateToken(user.Id);
+            _userRepo.Save();
+
             var confirmationLink = Url.Action(
-                nameof(ConfirmEmail), 
-                nameof(AuthenticationController).Replace(nameof(Controller), ""), 
-                new { token = _tokenValidation.GenerateToken(user.Id) }, 
+                nameof(ConfirmEmail),
+                nameof(AuthenticationController).Replace(nameof(Controller), ""),
+                new { token = user.Token },
                 Request.Scheme);
 
             _mailer.SendEmailAsync(
@@ -153,7 +154,7 @@ namespace SmartSaver.MVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult ConfirmEmail (string token)
+        public IActionResult ConfirmEmail(string token)
         {
             if (_auth.VerifyEmail(_userRepo.SearchFor(u => u.Token.Equals(token)).FirstOrDefault()))
             {
@@ -163,11 +164,6 @@ namespace SmartSaver.MVC.Controllers
             {
                 return View("Failure");
             }
-        }
-
-        public User GetUser(string user)
-        {
-            return _userRepo.SearchFor(u => u.Username.Equals(user) || u.Email.Equals(user)).FirstOrDefault();
         }
     }
 }
