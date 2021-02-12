@@ -6,15 +6,17 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
-namespace SmartSaver.Domain.TokenValidation
+namespace SmartSaver.Domain.Services.AuthenticationServices.Jwt
 {
-    public class TokenValidationService : ITokenValidationService
+    public class TokenAuthentication : ITokenAuthentication
     {
         private readonly IConfiguration _configuration;
-        public TokenValidationService(IConfiguration configuration)
+
+        public TokenAuthentication(IConfiguration configuration)
         {
             _configuration = configuration;
         }
+
         public string GenerateToken<T>(T userId)
         {
             var tokenDescriptor = new SecurityTokenDescriptor

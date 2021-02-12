@@ -1,6 +1,6 @@
-﻿namespace SmartSaver.Domain.TokenValidation
+﻿namespace SmartSaver.Domain.Services.AuthenticationServices.Jwt
 {
-    public interface ITokenValidationService
+    public interface ITokenAuthentication
     {
         public string GenerateToken<T>(T userId);
         public bool ValidateToken(string token);
