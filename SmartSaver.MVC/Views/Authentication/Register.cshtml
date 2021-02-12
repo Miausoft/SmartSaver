@@ -8,32 +8,42 @@
     <script src="~/js/views/authentication/register.js"></script>
 </head>
 
-<body class="pb-15 bg-dollar bg-center" onload="UsernameCheck(); EmailCheck()">
+<body class="pb-15 bg-dollar bg-center">
     <section class="auth-block pt-5">
         <div class="card center w-100" style="max-width:500px;">
             <div class="card-block">
                 <div class="col-md-12">
                     <h4 class="text-center pb-4">Create New Account</h4>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                     <form method="post" asp-action="Register" asp-controller="Authentication" asp-route-returnUrl="@Context.Request.Query["returnurl"]">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group required">
-                            <input asp-for="Username" class="form-control" oninput="UsernameCheck()" id="Username" placeholder="Username" />
-                            <span asp-validation-for="Username" class="text-danger placeholder" id="Status1"></span>
+                            <input asp-for="Username" class="form-control" onfocusout="UsernameCheck()" id="username" placeholder="Username" />
+                            <span asp-validation-for="Username" class="text-danger placeholder" id="usernameStatus"></span>
                         </div>
                         <div class="form-group required">
-                            <input asp-for="Email" class="form-control" oninput="EmailCheck()" id="Email" placeholder="Email" />
-                            <span asp-validation-for="Email" class="text-danger" id="Status2"></span>
+                            <input asp-for="Email" class="form-control" onfocusout="EmailCheck()" id="email" placeholder="Email" />
+                            <span asp-validation-for="Email" class="text-danger" id="emailStatus"></span>
                         </div>
                         <div class="form-group required">
-                            <input asp-for="Password" type="password" class="form-control" placeholder="Password" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                            <small class="form-text text-muted font-italic">Make sure it's at least 5 characters including a number, lowercase and capital letter.</small>
+                            <input asp-for="Password" type="password" class="form-control" oninput="Password1Check()" placeholder="Password" id="password1" />
+                            <span asp-validation-for="Password" class="text-danger" id="password1Status"></span>
+                            <small class="form-text text-muted font-italic">
+                                Make sure it's
+                                <i id="length"> at least 5 characters</i>
+                                <i id="number"> including a number,</i>
+                                <i id="lower"> lowercase</i>
+                                <i id="capital"> and capital letter.</i>
+                            </small>
                         </div>
                         <div class="form-group required">
-                            <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm Password" />
-                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            <input asp-for="ConfirmPassword" type="password" class="form-control" oninput="Password2Check()" placeholder="Confirm Password" id="password2" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger" id="password2Status"></span>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20" style="padding:5px 35px 5px 35px;">Register</button>
+                        <button id="register" type="submit" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20" style="padding:5px 35px 5px 35px;">Register</button>
                     </form>
                     <div class="or-container">
                         <div class="line-separator"></div>
