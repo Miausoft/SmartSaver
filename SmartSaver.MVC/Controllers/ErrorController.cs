@@ -46,7 +46,7 @@ namespace SmartSaver.MVC.Controllers
         {
             var exceptionDetails = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
 
-            model.RequestId = exceptionDetails?.Error is HttpStatusException httpException ? ((int)httpException.StatusCode).ToString() : "500";
+            model.RequestId = "500";
 
             _logger.Error($"The path {exceptionDetails?.Path} threw an exception " +
                  $"{exceptionDetails?.Error}");
