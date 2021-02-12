@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using cloudscribe.Pagination.Models;
+using SmartSaver.Domain.Services.Transactions;
 
 namespace SmartSaver.MVC.Controllers
 {
@@ -19,14 +20,17 @@ namespace SmartSaver.MVC.Controllers
         private readonly IRepository<Account> _accountRepo;
         private readonly IRepository<Transaction> _transactionRepo;
         private readonly IRepository<Category> _categoryRepo;
+        private readonly ITransactionsService _transactionsService;
 
         public TransactionsController(IRepository<Account> accountRepo,
                                       IRepository<Transaction> transactionRepo,
-                                      IRepository<Category> categoryRepo)
+                                      IRepository<Category> categoryRepo,
+                                      ITransactionsService transactionsService)
         {
             _accountRepo = accountRepo;
             _transactionRepo = transactionRepo;
             _categoryRepo = categoryRepo;
+            _transactionsService = transactionsService;
         }
 
         [HttpGet]
@@ -135,8 +139,7 @@ namespace SmartSaver.MVC.Controllers
                 .SearchFor(t => t.UserId.ToString().Equals(User.Identity.Name) &&
                                 t.AccountId == account.Id);
 
-            var bytes = new PDFCreator()
-                .GeneratePDF(transactions, _categoryRepo.GetAll(), fromDate, toDate);
+            var bytes = new PDFCreator().GeneratePDF(_transactionsService.TotalExpenseByCategory(transactions, _categoryRepo.GetAll(), fromDate, toDate), fromDate, toDate);
 
             return File(bytes, "application/pdf");
         }
