@@ -1,48 +1,172 @@
-﻿async function UsernameCheck() {
-    var length = $("#Username").val().length;
-    if (length != 0) {
-        $("#Status1").html('<font color="Green">Loading...</font>');
-        $("#Username").css("border-color", "Green");
-        if (length >= 5) {
-            try {
-                if (await getUser($("#Username").val()) != null) {
-                    $("#Status1").html('<font color="Red">Username is already taken.</font>');
-                    $("#Username").css("border-color", "Red");
-                } else {
-                    $("#Status1").html('<font color="Green">Username is available.</font>');
-                    $("#Username").css("border-color", "Green");
-                }
-            } catch (error) {
-                $("#Status1").html('<font color="Red"Something went wrong.</font>');
+﻿$(document).ready(function () {
+    $("#register").on('click', function (e) {
+        UsernameCheck().then(function (result) {
+            if (!result) {
+                e.preventDefault();
             }
+        });
+
+        EmailCheck().then(function (result) {
+            if (!result) {
+                e.preventDefault();
+            }
+        });
+
+        if (!Password1Check() || !Password2Check()) {
+            e.preventDefault();
         }
-        else {
-            $("#Status1").html('<font color="Red">Username must be at least 5 characters long.</font>');
-            $("#Username").css("border-color", "Red");
+    });
+});
+
+async function UsernameCheck() {
+    const username = $("#username");
+    const usernameStatus = $("#usernameStatus");
+
+    if (username.val() !== '') {
+        setSuccess(username, usernameStatus, "Loading...");
+        if (validateUsername(username.val())) {
+            if (username.val().length >= 5) {
+                try {
+                    if (getObjects(await getUsers(), "username", username.val()).length !== 0) {
+                        setError(username, usernameStatus, "Username is already taken.");
+                    } else {
+                        setSuccess(username, usernameStatus, "");
+                        return true;
+                    }
+                } catch (error) {
+                    setError(username, usernameStatus, "Something went wrong.");
+                }
+            } else {
+                setError(username, usernameStatus, "Username must be at least 5 characters long.");
+            }
+        } else {
+            setError(username, usernameStatus, "Username may only contain alphanumeric characters.");
         }
+    } else {
+        setError(username, usernameStatus, "");
     }
 }
 
 async function EmailCheck() {
-    if ($("#Email").val().length != 0) {
-        try {
-            if (await getUser($("#Email").val()) != null) {
-                $("#Status2").html('<font color="Red">Email is already asociated with another account.</font>');
-                $("#Email").css("border-color", "Red");
-            } else {
-                $("#Status2").html("");
+    const email = $("#email");
+    const emailStatus = $("#emailStatus");
+
+    if (email.val() !== '') {
+        if (!validateEmail(email.val())) {
+            setError(email, emailStatus, "Email is invalid.");
+        } else {
+            try {
+                if (getObjects(await getUsers(), "email", email.val()).length !== 0) {
+                    setError(email, emailStatus, "Email is already asociated with another account.");
+                } else {
+                    setSuccess(email, emailStatus, "")
+                    return true;
+                }
+            } catch (error) {
+                setError(email, emailStatus, "Something went wrong.");
             }
-        } catch (error) {
-            $("#Status1").html('<font color="Red"Something went wrong.</font>');
         }
+    } else {
+        setError(email, emailStatus, "");
     }
 }
 
-function getUser(data) { // TODO: need to call api 
+function Password1Check(input, status) {
+    const password = $("#password1");
+    const length = $("#length");
+    const number = $("#number");
+    const lower = $("#lower");
+    const capital = $("#capital");
+
+    if (password.val() !== '') {
+        if (password.val().length < 5) {
+            bad(length);
+        } else {
+            good(length);
+        }
+
+        if (!hasNumber(password)) {
+            bad(number);
+        } else {
+            good(number);
+        }
+
+        if (!hasLower(password)) {
+            bad(lower);
+        } else {
+            good(lower);
+        }
+
+        if (!hasCapital(password)) {
+            bad(capital);
+        } else {
+            good(capital);
+        }
+
+        if (password.val().length >= 5 && hasNumber(password) && hasLower(password) && hasCapital(password)) {
+            setSuccess(password, password, "");
+        } else {
+            setError(password, password, "");
+        }
+    } else {
+        setError(password, password, "");
+        bad(length);
+        bad(number);
+        bad(lower);
+        bad(capital);
+    }
+}
+
+function Password2Check() {
+    const password1 = $("#password1");
+    const password2 = $("#password2");
+    const password2Status = $("#password2Status");
+
+    if (password2.val() === '') {
+        setError(password2, password2Status, "The field is required")
+    } else if (password1.val() !== password2.val()) {
+        setError(password2, password2Status, 'Passwords does not match');
+    } else {
+        setSuccess(password2, password2Status, "");
+        return true;
+    }
+}
+
+function getUsers() {
     return Promise.resolve($.ajax({
-        url: '/Authentication/GetUser',
+        url: 'https://localhost:44320/users',
         datatype: 'json',
-        method: 'GET',
-        data: { user: data }
+        method: 'GET'
     }));
+}
+
+function validateUsername(username) {
+    return /^[a-zA-Z][a-zA-Z0-9]*$/.test(username);
+}
+
+function validateEmail(email) {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
+
+function hasNumber(input) {
+    return /\d/.test(input.val());
+}
+
+function hasLower(input) {
+    return /[a-z]+/.test(input.val());
+}
+
+function hasCapital(input) {
+    return /[A-Z]+/.test(input.val());
+}
+
+function good(input) {
+    input.removeClass("font-weight-bold").addClass("font-wight-light");
+    input.removeClass("text-danger").addClass("text-success");
+}
+
+function bad(input) {
+    input.addClass("font-weight-bold");
+    input.addClass("text-danger");
 }
