@@ -1,7 +1,7 @@
 # SmartSaver
 
 ### ER Diagram
-![ER Diagram](./ER-diagram.png)
+![ER Diagram](./diagram.png)
 
 ### Requirements
 - [X] Creating and using your own class, **_struct_** and enum (with flag(s), preferably)
