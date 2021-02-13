@@ -1,0 +1,80 @@
+﻿@model AccountViewModel
+@{
+    ViewData["Title"] = "Create";
+
+    string currencySymbol = System.Globalization.RegionInfo.CurrentRegion.CurrencySymbol;
+}
+
+<head class="background-complete">
+    <title>@ViewBag.Title</title>
+</head>
+<body style="background: rgb(25,25,25); background: radial-gradient(circle, rgba(25,25,25,0.28925073447347693) 0%, rgba(99,124,113,1) 100%); ">
+    <div class="row mt-5 justify-content-center">
+        <div class="col-md-6 mt-4">
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="text-center pb-4">Essential information for our AI</h4>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form role="form" asp-controller="Account" asp-action="Complete" method="POST">
+
+                        <div class="form-group">
+                            <label asp-for="Name" class="col-form-label"></label>
+                            <input asp-for="Name" type="text" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Goal" class="col-form-label"></label>
+                            <div class="input-group">
+                                <input asp-for="Goal" type="text" class="form-control">
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span>@currencySymbol</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <small class="form-text text-muted">Amount or money you are willing to save.</small>
+                            <span asp-validation-for="Goal" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Revenue" class="col-form-label"></label>
+                            <div class="input-group">
+                                <input asp-for="Revenue" type="text" class="form-control">
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span>@currencySymbol</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <small class="form-text text-muted">Your average monthly income.</small>
+                            <span asp-validation-for="Revenue" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="GoalEndDate" class="col-form-label"></label>
+                            <div class="date-input">
+                                <input asp-for="GoalEndDate" type="date" required class="form-control">
+                            </div>
+                            <small class="form-text text-muted">When do you believe you will achieve your goal?</small>
+                            <span asp-validation-for="GoalEndDate" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mx-5">
+                            <button type="submit" class="btn btn-primary btn-md btn-block waves-effect text-center">Submit</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mt-4">
+            <img class="img-thumbnail" id="pablo-waiting" />
+        </div>
+    </div>
+</body>

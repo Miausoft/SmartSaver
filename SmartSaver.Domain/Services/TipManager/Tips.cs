@@ -7,20 +7,15 @@ namespace SmartSaver.Domain.Services.TipManager
 {
     public static class Tips
     {
-        static string workingDirectory = Environment.CurrentDirectory;
-        static string path = Directory.GetParent(workingDirectory).FullName + "\\SmartSaver.Domain\\Resources\\AllTips.txt";
-        static List<string> tips = System.IO.File.ReadLines(path).ToList();
-
+        private static readonly string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "AllTips.txt");
+        private static readonly List<string> tips = File.ReadLines(filePath).ToList();
 
         /// <summary>
-        /// completely random tip from list
+        /// completely random tip from the list
         /// </summary>
         public static string RandomTip()
         {
-            var random = new Random();
-            int index = random.Next(tips.Count);
-
-            return tips[index];
+            return tips[new Random().Next(tips.Count)];
         }
 
         /// <summary>
@@ -28,10 +23,7 @@ namespace SmartSaver.Domain.Services.TipManager
         /// </summary>
         public static string DayBasedTip()
         {
-            Random random = new Random(DateTime.Now.Day);
-            int index = random.Next(tips.Count);
-
-            return tips[index];
+            return tips[new Random(DateTime.Now.Day).Next(tips.Count)];
         }
     }
 }

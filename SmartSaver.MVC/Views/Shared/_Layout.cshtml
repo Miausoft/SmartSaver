@@ -7,12 +7,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/generalDesign.css" />
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 </head>
 <body>
-    <div class="load"></div>
+    <div class="preloader">
+        <p>@Tips.RandomTip()</p>
+    </div>
     <header>
         <nav class="navbar navbar-expand-sm navbar-light" style="background-color: rgb(30, 51, 45)">
             <div class="container">
@@ -30,20 +33,38 @@
                     <ul class="navbar-nav flex-grow-1">
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Transactions" asp-action="Index">Account history</a>
-                            </li>
+                            @if (Context.Request.RouteValues.ContainsKey("name"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-controller="Dashboard" asp-action="Index" asp-route-name="@Context.Request.RouteValues["name"].ToString()">Dashboard</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-controller="Transactions" asp-action="Index" asp-route-name="@Context.Request.RouteValues["name"].ToString()">Account history</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-controller="Account" asp-action="Index" asp-route-name="@Context.Request.RouteValues["name"].ToString()">My Accounts</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-controller="Account" asp-action="Complete" asp-route-name="@Context.Request.RouteValues["name"].ToString()">Set Goal</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-controller="Account" asp-action="Index">My Accounts</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-controller="Account" asp-action="Complete">Set Goal</a>
+                                </li>
+                            }
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Authentication" asp-action="Login">Login</a>
+                                <a class="nav-link text-light" asp-controller="Authentication" asp-action="Login">Login</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Authentication" asp-action="Register">Register</a>
+                                <a class="nav-link text-light" asp-controller="Authentication" asp-action="Register">Register</a>
                             </li>
                         }
                     </ul>

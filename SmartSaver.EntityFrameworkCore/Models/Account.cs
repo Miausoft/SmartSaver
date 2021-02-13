@@ -7,10 +7,12 @@ namespace SmartSaver.EntityFrameworkCore.Models
 {
     public class Account
     {
-        [Key]
+        [Key, Column(Order = 0)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        public string Name { get; set; }
 
-        [ForeignKey(nameof(UserId))]
+        [Key, ForeignKey(nameof(UserId)), Column(Order = 1)]
         public User User { get; set; }
         public int UserId { get; set; }
         public decimal Goal { get; set; }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Linq;
 using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -9,54 +8,45 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using SmartSaver.Domain.Services.EmailServices;
-using SmartSaver.Domain.TokenValidation;
-using SmartSaver.EntityFrameworkCore.Models;
+using SmartSaver.Domain.CustomAttributes;
 using SmartSaver.Domain.Repositories;
+using SmartSaver.Domain.Services.AuthenticationServices;
+using SmartSaver.Domain.Services.EmailServices;
+using SmartSaver.Domain.Services.AuthenticationServices.Jwt;
+using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.MVC.Models;
-using System.Linq;
 
 namespace SmartSaver.MVC.Controllers
 {
-    [AllowAnonymous]
+    [AnonymousOnly]
     public class AuthenticationController : Controller
     {
-        private readonly Domain.Services.AuthenticationServices.IAuthenticationService _auth;
+        private readonly IAuthentication _auth;
+        private readonly ITokenAuthentication _tokenAuth;
         private readonly IConfiguration _configuration;
         private readonly IRepository<User> _userRepo;
-        private readonly ITokenValidationService _tokenValidation;
         private readonly IMailer _mailer;
 
-        public AuthenticationController(Domain.Services.AuthenticationServices.IAuthenticationService auth,
+        public AuthenticationController(IAuthentication auth,
                                         IConfiguration configuration,
+                                        ITokenAuthentication tokenAuth,
                                         IRepository<User> userRepo,
-                                        ITokenValidationService tokenValidation,
                                         IMailer mailer)
         {
             _auth = auth;
             _configuration = configuration;
+            _tokenAuth = tokenAuth;
             _userRepo = userRepo;
-            _tokenValidation = tokenValidation;
             _mailer = mailer;
         }
 
         public IActionResult Register()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace(nameof(Controller), ""));
-            }
-
             return View();
         }
 
         public IActionResult Login()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace(nameof(Controller), ""));
-            }
-
             return View();
         }
 
@@ -64,9 +54,13 @@ namespace SmartSaver.MVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Register(AuthenticationViewModel model)
         {
-            if (ModelState.IsValid && AddNewUser(model.Username, model.Email, model.Password))
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Verify), new { email = model.Email });
+                var registrationResult = _auth.Register(new User() { Username = model.Username, Email = model.Email, Password = model.Password });
+                if (registrationResult == RegistrationResult.Success)
+                {
+                    return RedirectToAction(nameof(Verify), new { model.Email });
+                }
             }
 
             return View();
@@ -77,12 +71,19 @@ namespace SmartSaver.MVC.Controllers
         {
             User user = _userRepo.SearchFor(e => e.Email.Equals(email)).FirstOrDefault();
 
-            if (String.IsNullOrEmpty(email) || user == null || user.Token == null)
+            if (user == null || user.Token == null)
             {
-                return RedirectToAction(nameof(Login));
+                return new NotFoundResult();
             }
 
-            var confirmationLink = Url.Action(nameof(ConfirmEmail), nameof(AuthenticationController).Replace(nameof(Controller), ""), new { token = user.Token }, Request.Scheme);
+            user.Token = _tokenAuth.GenerateToken(user.Id);
+            _userRepo.Save();
+
+            var confirmationLink = Url.Action(
+                nameof(ConfirmEmail),
+                nameof(AuthenticationController).Replace(nameof(Controller), ""),
+                new { token = user.Token },
+                Request.Scheme);
 
             _mailer.SendEmailAsync(
                 new MailMessage(
@@ -92,7 +93,7 @@ namespace SmartSaver.MVC.Controllers
                      System.IO.File.ReadAllText(_configuration["TemplatePaths:Email"]).Replace("@ViewBag.VerifyLink", confirmationLink))
                 { IsBodyHtml = true });
 
-            return View(nameof(Verify), ViewBag.Email = email);
+            return View(nameof(Verify), ViewBag.Email = user.Email);
         }
 
         [HttpPost]
@@ -112,11 +113,12 @@ namespace SmartSaver.MVC.Controllers
                 return View(nameof(Verify), ViewBag.Email = model.Email);
             }
 
-            UserAuthentication(user.Id);
+            _auth.SignInAsync(user.Id).Wait();
             return LocalRedirect(returnUrl ?? Url.Content("~/"));
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
@@ -126,96 +128,42 @@ namespace SmartSaver.MVC.Controllers
         [HttpPost]
         public IActionResult ExternalLogin(string returnUrl, string provider)
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction(nameof(DashboardController.Index), nameof(DashboardController).Replace(nameof(Controller), ""));
-            }
-
-            var properties = new AuthenticationProperties { RedirectUri = Url.Action(nameof(ExternalResponse), new { ReturnUrl = returnUrl }) };
+            var properties = new AuthenticationProperties { RedirectUri = Url.Action(nameof(ExternalResponse), new { returnUrl, provider }) };
             return Challenge(properties, provider);
         }
 
-        public IActionResult ExternalResponse(string returnUrl)
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ExternalResponse(string returnUrl, string provider)
         {
             var result = HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             if (result.Result.Succeeded)
             {
                 var email = result.Result.Principal.FindFirstValue(ClaimTypes.Email);
-                AddNewUser(email, email, null);
-                UserAuthentication(_userRepo.SearchFor(e => e.Email.Equals(email)).FirstOrDefault().Id);
-                return LocalRedirect(returnUrl ?? Url.Content("~/"));
-            }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "Error while trying to login.");
-                return View(nameof(Login));
-            }
-        }
+                var registrationResult = _auth.Register(new User() { Username = email, Email = email, Password = null });
 
-        private void UserAuthentication<T>(T userId)
-        {
-            var claim = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, userId.ToString())
-            };
-            var identity = new ClaimsIdentity(claim, CookieAuthenticationDefaults.AuthenticationScheme);
-            var principal = new ClaimsPrincipal(identity);
-            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal).Wait();
-        }
-
-        private bool AddNewUser(string username, string email, string password)
-        {
-            if (_userRepo.SearchFor(u => u.Email.Equals(email)).FirstOrDefault() != null)
-            {
-                return false;
+                if (registrationResult == RegistrationResult.Success || registrationResult == RegistrationResult.UserAlreadyExist)
+                {
+                    _auth.SignInAsync(_userRepo.SearchFor(e => e.Email.Equals(email)).FirstOrDefault().Id);
+                    return LocalRedirect(returnUrl ?? Url.Content("~/"));
+                }
             }
 
-            _auth.Register(new User() { Username = username, Email = email, Password = password });
-
-            if (password != null)
-            {
-                User user = _userRepo.SearchFor(u => u.Email.Equals(email)).FirstOrDefault();
-                user.Token = _tokenValidation.GenerateToken(user.Id);
-                _userRepo.Save();
-            }
-
-            return true;
+            ModelState.AddModelError(string.Empty, $"Something unexpected happened with {provider} authentication. Please try again, or if this doesn't work, contact us for help");
+            return View(nameof(Login));
         }
 
         [HttpGet]
         public IActionResult ConfirmEmail(string token)
         {
-            if (token == null)
+            if (_auth.VerifyEmail(_userRepo.SearchFor(u => u.Token.Equals(token)).FirstOrDefault()))
             {
-                return RedirectToAction(nameof(Index), nameof(HomeController).Replace(nameof(Controller), ""));
+                return View("Success");
             }
-
-            if (!_tokenValidation.ValidateToken(token))
+            else
             {
-                return RedirectToAction(nameof(Index), nameof(HomeController).Replace(nameof(Controller), ""));
+                return View("Failure");
             }
-
-            var claim = _tokenValidation.GetClaim(token, "nameid");
-            if (String.IsNullOrEmpty(claim))
-            {
-                return RedirectToAction(nameof(Index), nameof(HomeController).Replace(nameof(Controller), ""));
-            }
-
-            User user = _userRepo.SearchFor(u => u.Id.ToString().Equals(claim)).FirstOrDefault();
-            if (token == user.Token)
-            {
-                user.Token = null;
-                _userRepo.Save();
-                UserAuthentication(claim);
-                return RedirectToAction(nameof(DashboardController.Complete), nameof(DashboardController).Replace(nameof(Controller), ""));
-            }
-
-            return RedirectToAction(nameof(Index), nameof(HomeController).Replace(nameof(Controller), ""));
-        }
-
-        public User GetUser(string user)
-        {
-            return _userRepo.SearchFor(u => u.Username.Equals(user) || u.Email.Equals(user)).FirstOrDefault();
         }
     }
 }

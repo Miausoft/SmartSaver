@@ -1,5 +1,4 @@
-﻿
-namespace SmartSaver.Domain.Services.Regex
+﻿namespace SmartSaver.Domain.Services.Regex
 {
     public interface IPasswordRegex
     {

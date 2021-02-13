@@ -1,0 +1,28 @@
+﻿@model IEnumerable<SmartSaver.EntityFrameworkCore.Models.Account>
+
+<body>
+    <div>
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <p>My Accounts: </p>
+        @foreach (var a in Model)
+        {
+            <a asp-controller="Dashboard" asp-action="Index" asp-route-name="@a.Name">
+                <p name="@a.Id" value="a.Id">
+                    Name: @a.Name
+                    Goal: @a.Goal
+                    StartDate: @a.GoalStartDate.ToShortDateString()
+                    EndDate: @a.GoalEndDate.ToShortDateString()
+                </p>
+            </a>
+            <form method="post" asp-controller="Account" asp-action="Delete" asp-route-name="@a.Name">
+                <button type="submit" class="btn btn-danger">
+                    Delete data
+                </button>
+            </form>
+        }
+    </div>
+</body>

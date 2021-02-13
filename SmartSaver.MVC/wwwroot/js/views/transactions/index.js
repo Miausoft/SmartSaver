@@ -1,11 +1,11 @@
 ﻿$(document).ready(function () {
     $("#spendingButton").on('click', function () {
-        if (!checkInputs($("#spending").val().trim(), $("#spendingStatus")))
+        if (!checkInputs($("#spending"), $("#spending").val().trim(), $("#spendingStatus")))
             return false;
     });
 
     $("#incomeButton").on('click', function () {
-        if (!checkInputs($("#income").val().trim(), $("#incomeStatus")))
+        if (!checkInputs($("#income"), $("#income").val().trim(), $("#incomeStatus")))
             return false;
     });
 
@@ -13,36 +13,33 @@
         $("#fromStatus").html("");
         $("#toStatus").html("");
 
-        if (!checkDate($("#fromDate").val(), $("#toDate").val(), $("#fromStatus"), $("#toStatus")))
+        if (!checkDate($("#fromDate"), $("#toDate"), $("#fromStatus"), $("#toStatus")))
             return false;
     });
 });
 
-function checkInputs(value, status) {
+function checkInputs(input, value, status) {
     if (value === '') {
-        setError(status, "Amount cannot be blank");
+        setError(input, status, "Amount cannot be blank");
     } else if (!isNumber(value)) {
-        setError(status, "Please provide numbers only without any signs");
+        setError(input, status, "Please provide numbers only without any sign");
     } else {
+        setSuccess(input, status, "");
         return true;
     }
 }
 
 function checkDate(from, to, fromStatus, toStatus) {
-    if (from === '') {
-        setError(fromStatus, "Please pick a date");
-    } if (to === '') {
-        setError(toStatus, "Please pick a date");
-    } else if (from > to) {
-        setError(toStatus, "Invalid date selection");
+    if (from.val() === '') {
+        setError(from, fromStatus, "Please pick a date");
+    } if (to.val() === '') {
+        setError(to, toStatus, "Please pick a date");
+    } else if (from.val() > to.val()) {
+        setError(to, toStatus, "Invalid date selection");
     } else {
-        setError(toStatus, "");
+        setSuccess(to, toStatus, "");
         return true;
     }
-}
-
-function setError(status, message) {
-    $(status).html('<font color="Red">' + message + '</font>');
 }
 
 function isNumber(amount) {

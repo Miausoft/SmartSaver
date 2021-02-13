@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using SmartSaver.EntityFrameworkCore.Models;
+using SmartSaver.Domain.CustomAttributes;
 using SmartSaver.Domain.Repositories;
+using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.WebApi.RequestModels;
 using SmartSaver.WebApi.ResponseModels;
 using AutoMapper;
-using SmartSaver.Domain.ActionFilters;
 
 namespace SmartSaver.WebApi.Controllers
 {
@@ -54,7 +54,7 @@ namespace SmartSaver.WebApi.Controllers
         [HttpDelete("transaction/{transactionId}")]
         public ActionResult Delete(int transactionId)
         {
-            _transactions.Delete(transactionId);
+            _transactions.Delete(_transactions.GetById(transactionId));
             _transactions.Save();
             return Ok();
         }

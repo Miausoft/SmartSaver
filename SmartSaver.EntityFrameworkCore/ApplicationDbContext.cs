@@ -5,8 +5,8 @@ namespace SmartSaver.EntityFrameworkCore
 {
     public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext() {}
-        public ApplicationDbContext(DbContextOptions options) : base(options) {}
+        public ApplicationDbContext() { }
+        public ApplicationDbContext(DbContextOptions options) : base(options) { }
 
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Account> Accounts { get; set; }
@@ -24,80 +24,62 @@ namespace SmartSaver.EntityFrameworkCore
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<User>()
-                .HasIndex(u => u.Username)
-                .IsUnique();
+            modelBuilder.Entity<User>(u =>
+            {
+                u.HasIndex(u => u.Username).IsUnique();
+                u.HasIndex(u => u.Email).IsUnique();
+                u.HasIndex(u => u.Token).IsUnique();
 
-            modelBuilder.Entity<User>()
-                .HasIndex(u => u.Email)
-                .IsUnique();
+                u.Property(u => u.Username).IsRequired();
+                u.Property(u => u.Email).IsRequired();
+                u.Property(u => u.Password).IsRequired(false);
+                u.Property(u => u.Token).IsRequired(false);
 
-            modelBuilder.Entity<User>()
-                .HasIndex(u => u.Token)
-                .IsUnique();
-
-            modelBuilder.Entity<User>()
-                .Property(u => u.Token)
-                .IsRequired(false);
-
-            modelBuilder.Entity<User>()
-                .Property(u => u.Username)
-                .IsRequired();
-
-            modelBuilder.Entity<User>()
-                .Property(u => u.Email)
-                .IsRequired();
-
-            modelBuilder.Entity<User>()
-                .Property(u => u.Password)
-                .IsRequired(false);
-
-            modelBuilder.Entity<User>()
-                .Property(u => u.DateJoined)
-                .HasDefaultValueSql("getdate()");
-
-            modelBuilder.Entity<Account>()
-                .Property(a => a.Goal)
-                .HasColumnType("decimal(18,4)");
-
-            modelBuilder.Entity<Account>()
-                .Property(a => a.Goal)
-                .HasDefaultValue(0);
-
-            modelBuilder.Entity<Transaction>()
-                .Property(t => t.Amount)
-                .HasColumnType("decimal(18,4)");
-
-            modelBuilder.Entity<Transaction>()
-                .Property(t => t.CategoryId)
-                .HasDefaultValue(1);
-
-            modelBuilder.Entity<Transaction>()
-                .Property(t => t.ActionTime)
-                .HasDefaultValueSql("getdate()");
+                u.Property(u => u.DateJoined).HasDefaultValueSql("getdate()");
+            });
 
             modelBuilder.Entity<Account>(a =>
-                a.HasCheckConstraint("PositiveGoal", "Goal >= 0"));
+            {
+                a.HasKey(a => new { a.Id, a.UserId });
+                a.HasIndex(a => new { a.UserId, a.Name }).IsUnique();
 
-            modelBuilder.Entity<Category>()
-                .Property(c => c.TypeOfIncome)
-                .IsRequired();
+                a.Property(a => a.Goal).HasColumnType("decimal(18,2)");
+                a.Property(a => a.Name).IsRequired();
 
-            modelBuilder.Entity<Category>()
-                .Property(c => c.Title)
-                .IsRequired();
+                a.Property(a => a.GoalStartDate).HasDefaultValueSql("getdate()");
+                a.Property(a => a.GoalEndDate).HasDefaultValueSql("dateadd(DD, 1 ,getdate())");
 
-            modelBuilder.Entity<Category>()
-                .HasIndex(c => c.Title)
-                .IsUnique();
+                a.HasCheckConstraint("PositiveGoal", "Goal > 0");
+                a.HasCheckConstraint("StartEarlierThanEnd", "GoalStartDate < GoalEndDate");
+            });
 
-            modelBuilder.Entity<SolutionSuggestion>()
-                .HasIndex(s => s.SolutionText)
-                .IsUnique();
+            modelBuilder.Entity<Transaction>(t =>
+            {
+                t.HasKey(t => new { t.Id, t.AccountId, t.UserId });
 
-            modelBuilder.Entity<ProblemSuggestion>()
-                .HasIndex(p => p.ProblemText)
-                .IsUnique();
+                t.Property(t => t.Amount).HasColumnType("decimal(18,2)");
+
+                t.Property(t => t.CategoryId).HasDefaultValue(1);
+                t.Property(t => t.ActionTime).HasDefaultValueSql("getdate()");
+            });
+
+            modelBuilder.Entity<Category>(c =>
+            {
+                c.HasIndex(c => c.Title).IsUnique();
+
+                c.Property(c => c.TypeOfIncome).IsRequired();
+                c.Property(c => c.Title).IsRequired();
+            });
+
+            modelBuilder.Entity<SolutionSuggestion>(s =>
+            {
+                s.HasIndex(s => s.SolutionText).IsUnique();
+            });
+
+            modelBuilder.Entity<ProblemSuggestion>(p =>
+            {
+                p.HasIndex(p => p.ProblemText).IsUnique();
+            });
         }
     }
 }

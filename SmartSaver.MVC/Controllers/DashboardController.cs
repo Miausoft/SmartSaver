@@ -1,124 +1,78 @@
-﻿using System;
-using System.Linq;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.MVC.Models;
-using SmartSaver.Domain.Services.TransactionsCounterService;
-using SmartSaver.Domain.Services.SavingMethodSuggestion;
+using SmartSaver.Domain.Services.Transactions;
+using SmartSaver.Domain.Services.SavingSuggestions;
 using SmartSaver.Domain.Repositories;
+using SmartSaver.Domain.CustomAttributes;
+using System;
+using System.Linq;
+using SmartSaver.Domain.Helpers;
 
 namespace SmartSaver.MVC.Controllers
 {
-    [Authorize]
+    [Authorize, RequiresAccount]
     public class DashboardController : Controller
     {
-        private readonly IRepository<Transaction> _transactionRepo;
         private readonly IRepository<Account> _accountRepo;
+        private readonly IRepository<Transaction> _transactionRepo;
         private readonly IRepository<Category> _categoryRepo;
+        private readonly ITransactionsService _transactionsService;
+        private readonly ISuggestions _suggestions;
 
-        public DashboardController(IRepository<Transaction> transactionRepo,
-                                   IRepository<Account> accountRepo,
-                                   IRepository<Category> categoryRepo)
+        public DashboardController(IRepository<Account> accountRepo,
+                                   IRepository<Transaction> transactionRepo,
+                                   IRepository<Category> categoryRepo,
+                                   ITransactionsService transactionsService,
+                                   ISuggestions suggestions)
         {
-            _transactionRepo = transactionRepo;
             _accountRepo = accountRepo;
+            _transactionRepo = transactionRepo;
             _categoryRepo = categoryRepo;
+            _transactionsService = transactionsService;
+            _suggestions = suggestions;
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(string name)
         {
-            Account account = _accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).FirstOrDefault();
-            if (account.Goal == 0)
-            {
-                return View(nameof(Complete));
-            }
+            var account = _accountRepo
+                .SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name) &&
+                                a.Name.Equals(name))
+                .FirstOrDefault();
 
             account.Transactions = _transactionRepo
-                .SearchFor(t => t.AccountId.ToString().Equals(account.Id.ToString()))
+                .SearchFor(t => t.UserId.ToString().Equals(User.Identity.Name) &&
+                                t.AccountId.ToString().Equals(account.Id.ToString()))
                 .ToList();
 
             return View(new DashboardViewModel()
             {
-                Goal = account.Goal,
+                SavedCurrentMonth = _transactionsService
+                    .SavedSum(
+                        account.Transactions,
+                        DateTimeHelper.TruncateToDayStart(DateTime.Now),
+                        DateTimeHelper.TruncateToDayStart(DateTime.Now.AddMonths(1))),
 
-                GoalEndDate = account.GoalEndDate,
+                ToSaveCurrentMonth = _suggestions.AmountToSaveAMonth(account),
 
-                Revenue = account.Revenue,
-
-                SavedCurrentMonth = TransactionsCounter
-                    .AmountSavedCurrentMonth(account.Transactions),
-
-                ToSaveCurrentMonth = MoneyCounter
-                    .AmountToSaveAMonth(account),
-
-                CurrentMonthBalanceHistory = TransactionsCounter
+                CurrentMonthBalanceHistory = _transactionsService
                     .BalanceHistory(account.Transactions)
                     .Where(x => x.Key.Year == DateTime.Now.Year && x.Key.Month == DateTime.Now.Month)
                     .ToDictionary(x => x.Key, x => x.Value),
 
-                CurrentMonthTotalExpenseByCategory = TransactionsCounter
-                    .TotalExpenseByCategory(account.Transactions, _categoryRepo.GetAll(), new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1), DateTime.Now.AddDays(1)),
+                CurrentMonthTotalExpenseByCategory = _transactionsService
+                    .TotalExpenseByCategory(
+                        account.Transactions,
+                        _categoryRepo.GetAll(),
+                        DateTimeHelper.TruncateToDayStart(DateTime.Now),
+                        DateTimeHelper.TruncateToDayStart(DateTime.Now.AddMonths(1))),
 
-                FreeMoneyToSpend = MoneyCounter.FreeMoneyToSpend(account),
+                FreeMoneyToSpend = _suggestions.FreeMoneyToSpend(account),
 
-                EstimatedTime = MoneyCounter.EstimatedTime(account)
+                EstimatedTime = _suggestions.EstimatedTime(account)
             });
-        }
-
-        [HttpGet]
-        public IActionResult Complete()
-        {
-            Account account = _accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).FirstOrDefault();
-            if (account.Goal == 0)
-            {
-                return View(nameof(Complete));
-            }
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        [HttpPost]
-        public IActionResult Complete(DashboardViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                if (model.GoalEndDate <= DateTime.Now)
-                {
-                    ModelState.AddModelError("GoalEndDate", "Invalid date");
-                    return View();
-                }
-
-                Account account = _accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).FirstOrDefault();
-                account.Goal = model.Goal;
-                account.Revenue = model.Revenue;
-                account.GoalStartDate = DateTime.Today;
-                account.GoalEndDate = model.GoalEndDate;
-                _accountRepo.Save();
-                return RedirectToAction(nameof(Index));
-            }
-            else
-            {
-                if (model.GoalEndDate <= DateTime.Now)
-                {
-                    ModelState.AddModelError(nameof(model.GoalEndDate), "Invalid date");
-                }
-
-                return View();
-            }
-        }
-
-        [HttpPost]
-        public IActionResult Delete()
-        {
-            Account account = _accountRepo.SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name)).FirstOrDefault();
-            account.GoalStartDate = DateTime.MinValue;
-            account.GoalEndDate = DateTime.MinValue;
-            account.Goal = 0;
-            _accountRepo.Save();
-
-            return View(nameof(Complete));
         }
     }
 }
