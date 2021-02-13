@@ -17,10 +17,10 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
         private readonly ITokenAuthentication _tokenAuth;
 
         public Authentication(IRepository<User> userRepo,
-                                     IPasswordHasherService hasher,
-                                     IPasswordRegex passwordRegex,
-                                     ITokenAuthentication tokenAuth,
-                                     IHttpContextAccessor httpContextAccessor) : base(userRepo, tokenAuth, httpContextAccessor)
+                              IPasswordHasherService hasher,
+                              IPasswordRegex passwordRegex,
+                              ITokenAuthentication tokenAuth,
+                              IHttpContextAccessor httpContextAccessor) : base(userRepo, tokenAuth, httpContextAccessor)
         {
             _userRepo = userRepo;
             _hasher = hasher;

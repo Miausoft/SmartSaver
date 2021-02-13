@@ -19,8 +19,8 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public BasicAuthentication(IRepository<User> userRepo, 
-                                          ITokenAuthentication tokenAuth, 
-                                          IHttpContextAccessor httpContextAccessor)
+                                   ITokenAuthentication tokenAuth, 
+                                   IHttpContextAccessor httpContextAccessor)
         {
             _userRepo = userRepo;
             _tokenAuth = tokenAuth;
@@ -41,7 +41,6 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
                 _userRepo.Save();
                 user.Token = _tokenAuth.GenerateToken(user.Id);
                 _userRepo.Save();
-
             }
             catch (DbUpdateException)
             {
