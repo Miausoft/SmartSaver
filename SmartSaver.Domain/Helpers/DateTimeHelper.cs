@@ -17,7 +17,7 @@ namespace SmartSaver.Domain.Helpers
         /// </summary>
         public static decimal DifferenceInMonths(DateTime startDate, DateTime endDate)
         {
-            return endDate.Subtract(startDate).Days / (365.25m / 12);//(endDate.Month - startDate.Month) + 12 * (endDate.Year - startDate.Year) + 1;
+            return endDate.Subtract(startDate).Days / (365.25m / 12);
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace SmartSaver.Domain.Helpers
         /// </summary>
         public static int DaysUntilMonthEnd(DateTime now, DateTime startDate, DateTime endDate)
         {
-            if(startDate.Year == endDate.Year && startDate.Month == endDate.Month)
+            if (startDate.Year == endDate.Year && startDate.Month == endDate.Month)
             {
                 return endDate.Subtract(startDate).Days;
             }
