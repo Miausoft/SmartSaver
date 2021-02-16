@@ -27,7 +27,7 @@ namespace SmartSaver.Domain.Services.SavingSuggestion
 
         public decimal FreeMoneyToSpend(Account acc)
         {
-            return _transactionsService.SavedSum(acc.Transactions, acc.GoalStartDate, acc.GoalEndDate)
+            return _transactionsService.AmountSaved(acc.Transactions, acc.GoalStartDate, acc.GoalEndDate)
                 - (AmountToSaveAMonth(acc) * Math.Ceiling(DateTimeHelper.DifferenceInMonths(acc.GoalStartDate, DateTime.Now)));
         }
 
@@ -41,7 +41,7 @@ namespace SmartSaver.Domain.Services.SavingSuggestion
             {
                 firstDayOfPreviousMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-i);
                 var lastDayOfPreviousMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-i+1).AddDays(-1);
-                var savedPreviousMonth = _transactionsService.SavedSum(acc.Transactions, firstDayOfPreviousMonth, lastDayOfPreviousMonth);
+                var savedPreviousMonth = _transactionsService.AmountSaved(acc.Transactions, firstDayOfPreviousMonth, lastDayOfPreviousMonth);
                 var amountToSavePreviousMonth = (acc.Goal / DateTimeHelper.DifferenceInDays(acc.GoalStartDate, acc.GoalEndDate)) * DateTimeHelper.DaysUntilMonthEnd(firstDayOfPreviousMonth, acc.GoalStartDate, acc.GoalEndDate);
 
                 leftToSpend += amountToSavePreviousMonth - savedPreviousMonth;
@@ -53,7 +53,7 @@ namespace SmartSaver.Domain.Services.SavingSuggestion
 
         public DateTime EstimatedTime(Account acc)
         {
-            decimal savedSum = _transactionsService.SavedSum(acc.Transactions, acc.GoalStartDate, acc.GoalEndDate);
+            decimal savedSum = _transactionsService.AmountSaved(acc.Transactions, acc.GoalStartDate, acc.GoalEndDate);
 
             if (savedSum < 0) return DateTime.MinValue;
             if (savedSum >= acc.Goal && DateTime.Today < acc.GoalEndDate) return DateTime.Today;
