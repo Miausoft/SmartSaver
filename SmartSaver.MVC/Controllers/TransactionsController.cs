@@ -58,7 +58,7 @@ namespace SmartSaver.MVC.Controllers
                                        .Skip((pageSize * pageNumber) - pageSize)
                                        .Take(pageSize)
                                        .ToList(),
-                        Categories = _categoryRepo.GetAll().ToList()
+                        Categories = _categoryRepo.GetAll().OrderBy(t => t.Title).ToList()
                     }
                 }
             });
