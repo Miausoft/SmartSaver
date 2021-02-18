@@ -14,7 +14,7 @@ namespace SmartSaver.MVC.ServiceCollectionExtensions
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.ConsentCookie.IsEssential = true;
-                options.CheckConsentNeeded = context => false;
+                options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 

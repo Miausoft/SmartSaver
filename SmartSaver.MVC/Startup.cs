@@ -79,14 +79,13 @@ namespace SmartSaver.MVC
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseCookiePolicy();
 
             app.UseRouting();
 
             app.UseAuthentication();
 
             app.UseAuthorization();
-
-            app.UseCookiePolicy();
 
             app.UseEndpoints(endpoints =>
             {
