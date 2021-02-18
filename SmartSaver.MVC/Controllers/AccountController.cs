@@ -6,6 +6,7 @@ using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.MVC.Models;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SmartSaver.MVC.Controllers
 {
@@ -34,13 +35,14 @@ namespace SmartSaver.MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Complete(AccountViewModel model)
+        public async Task<IActionResult> Complete(AccountViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View();
             }
-            _accountRepo.Insert(new Account
+
+            await _accountRepo.InsertAsync(new Account
             {
                 Name = model.Name,
                 UserId = int.Parse(User.Identity.Name),
@@ -52,7 +54,7 @@ namespace SmartSaver.MVC.Controllers
 
             try
             {
-                _accountRepo.Save();
+                await _accountRepo.SaveAsync();
             }
             catch (DbUpdateException)
             {
@@ -65,7 +67,7 @@ namespace SmartSaver.MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(string name)
+        public async Task<IActionResult> Delete(string name)
         {
             try
             {
@@ -75,7 +77,7 @@ namespace SmartSaver.MVC.Controllers
                     .FirstOrDefault();
 
                 _accountRepo.Delete(account);
-                _accountRepo.Save();
+                await _accountRepo.SaveAsync();
             }
             catch (ArgumentNullException)
             {

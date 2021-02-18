@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SmartSaver.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace SmartSaver.Domain.Repositories
 {
@@ -22,9 +24,9 @@ namespace SmartSaver.Domain.Repositories
             return _table;
         }
 
-        public T GetById(params object[] keyValues)
+        public async Task<T> GetByIdAsync(params object[] keyValues)
         {
-            return _table.Find(keyValues);
+            return await _table.FindAsync(keyValues);
         }
 
         public IQueryable<T> SearchFor(Expression<Func<T, bool>> predicate)
@@ -32,9 +34,9 @@ namespace SmartSaver.Domain.Repositories
             return _table.Where(predicate);
         }
 
-        public void Insert(T entity)
+        public ValueTask<EntityEntry<T>> InsertAsync(T entity)
         {
-            _table.Add(entity);
+            return _table.AddAsync(entity);
         }
 
         public void Delete(T entity)
@@ -42,9 +44,9 @@ namespace SmartSaver.Domain.Repositories
             _table.Remove(entity);
         }
 
-        public void Save()
+        public Task SaveAsync()
         {
-            _context.SaveChanges();
+            return _context.SaveChangesAsync();
         }
     }
 }

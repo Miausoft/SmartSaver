@@ -7,6 +7,8 @@ using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.WebApi.RequestModels;
 using SmartSaver.WebApi.ResponseModels;
 using AutoMapper;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace SmartSaver.WebApi.Controllers
 {
@@ -23,39 +25,40 @@ namespace SmartSaver.WebApi.Controllers
         }
 
         [HttpGet("transaction/{transactionId}")]
-        public TransactionResponseModel Index(int transactionId)
+        public async Task<TransactionResponseModel> Index(int transactionId)
         {
             return _mapper.Map<TransactionResponseModel>(
-                _transactions.GetById(transactionId));
+                await _transactions.GetByIdAsync(transactionId));
         }
 
         [HttpGet("transactions/{accountId}")]
-        public IEnumerable<TransactionResponseModel> Get(int accountId)
+        public async Task<IEnumerable<TransactionResponseModel>> Get(int accountId)
         {
             return _mapper.Map<IEnumerable<TransactionResponseModel>>(
-                _transactions.SearchFor(t => t.AccountId == accountId));
+               await _transactions.SearchFor(t => t.AccountId == accountId).ToListAsync());
         }
 
         [HttpGet("transactions/{accountId}/{start}/{end}")]
-        public IEnumerable<TransactionResponseModel> Get(int accountId, DateTime start, DateTime end)
+        public async Task<IEnumerable<TransactionResponseModel>> Get(int accountId, DateTime start, DateTime end)
         {
             return _mapper.Map<IEnumerable<TransactionResponseModel>>(
-                _transactions.SearchFor(t => t.AccountId == accountId && t.ActionTime >= start && t.ActionTime < end));
+                await _transactions.SearchFor(t => t.AccountId == accountId && t.ActionTime >= start && t.ActionTime < end).ToListAsync());
         }
 
         [HttpPost("transactions")]
         [CheckForInvalidModel]
-        public ActionResult Create(TransactionRequestModel transaction)
+        public async Task<IActionResult> Create(TransactionRequestModel transaction)
         {
-            _transactions.Insert(_mapper.Map<Transaction>(transaction));
+            await _transactions.InsertAsync(_mapper.Map<Transaction>(transaction));
+            await _transactions.SaveAsync();
             return Created($"transaction/{transaction}", transaction);
         }
 
         [HttpDelete("transaction/{transactionId}")]
-        public ActionResult Delete(int transactionId)
+        public async Task<IActionResult> Delete(int transactionId)
         {
-            _transactions.Delete(_transactions.GetById(transactionId));
-            _transactions.Save();
+            _transactions.Delete(await _transactions.GetByIdAsync(transactionId));
+            await _transactions.SaveAsync();
             return Ok();
         }
     }

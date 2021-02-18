@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using cloudscribe.Pagination.Models;
 using SmartSaver.Domain.Services.Transactions;
+using System.Threading.Tasks;
 
 namespace SmartSaver.MVC.Controllers
 {
@@ -34,16 +35,17 @@ namespace SmartSaver.MVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(string name, int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(string name, int pageNumber = 1, int pageSize = 10)
         {
             var account = _accountRepo
                 .SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name) &&
                            a.Name.Equals(name))
                 .FirstOrDefault();
             
-            var transactions = _transactionRepo
+            var transactions = await _transactionRepo
                 .SearchFor(t => t.UserId.ToString().Equals(User.Identity.Name) &&
-                                t.AccountId == account.Id);
+                                t.AccountId == account.Id)
+                .ToListAsync();
 
             return View(new PagedResult<TransactionViewModel>
             {
@@ -55,6 +57,7 @@ namespace SmartSaver.MVC.Controllers
                     new TransactionViewModel
                     {
                         Transactions = transactions
+                                       .OrderBy(t => t.ActionTime)
                                        .Skip((pageSize * pageNumber) - pageSize)
                                        .Take(pageSize)
                                        .ToList(),
@@ -66,15 +69,15 @@ namespace SmartSaver.MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind("Amount,CategoryId,ActionTime")] string name, Transaction transaction)
+        public async Task<IActionResult> Create([Bind("Amount,CategoryId,ActionTime")] string name, Transaction transaction)
         {   
             if (transaction.Amount <= 0 || !_categoryRepo.GetAll().Any(c => c.Id == transaction.CategoryId))
             {
                 return RedirectToAction(nameof(Index));
             }
 
-            transaction.Amount = _categoryRepo
-                .GetById(transaction.CategoryId)
+            transaction.Amount = (await _categoryRepo
+                .GetByIdAsync(transaction.CategoryId))
                 .TypeOfIncome ? transaction.Amount : -transaction.Amount;
 
             transaction.AccountId = _accountRepo
@@ -84,15 +87,15 @@ namespace SmartSaver.MVC.Controllers
 
             transaction.UserId = int.Parse(User.Identity.Name);
 
-            _transactionRepo.Insert(transaction);
-            _transactionRepo.Save();
+            await _transactionRepo.InsertAsync(transaction);
+            await _transactionRepo.SaveAsync();
 
             return RedirectToAction(nameof(Index), new { Name = name });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, string name)
+        public async Task<IActionResult> Delete(int id, string name)
         {
             var account = _accountRepo
                 .SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name) &&
@@ -108,7 +111,7 @@ namespace SmartSaver.MVC.Controllers
             try
             {
                 _transactionRepo.Delete(transaction);
-                _transactionRepo.Save();
+                await _transactionRepo.SaveAsync();
             }
             catch (ArgumentNullException)
             {
@@ -123,7 +126,7 @@ namespace SmartSaver.MVC.Controllers
         }
 
         [HttpGet] 
-        public ActionResult CreatePDF(string name, DateTime fromDate, DateTime toDate)
+        public async Task<IActionResult> CreatePDFAsync(string name, DateTime fromDate, DateTime toDate)
         {
             if (fromDate > toDate)
             {
@@ -137,9 +140,10 @@ namespace SmartSaver.MVC.Controllers
 
             var transactions = _transactionRepo
                 .SearchFor(t => t.UserId.ToString().Equals(User.Identity.Name) &&
-                                t.AccountId == account.Id);
+                                t.AccountId == account.Id)
+                .ToListAsync();
 
-            var bytes = new PDFCreator().GeneratePDF(_transactionsService.TotalExpenseByCategory(transactions, _categoryRepo.GetAll(), fromDate, toDate), fromDate, toDate);
+            var bytes = new PDFCreator().GeneratePDF(_transactionsService.TotalExpenseByCategory(await transactions, _categoryRepo.GetAll(), fromDate, toDate), fromDate, toDate);
 
             return File(bytes, "application/pdf");
         }

@@ -1,11 +1,12 @@
-﻿using System;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using SmartSaver.Domain.Services.PasswordHash;
 using SmartSaver.Domain.Services.Regex;
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.Domain.Repositories;
 using SmartSaver.Domain.Services.AuthenticationServices.Jwt;
+using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SmartSaver.Domain.Services.AuthenticationServices
 {
@@ -39,13 +40,13 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
             return user;
         }
 
-        public override RegistrationResult Register(User user)
+        public override Task<RegistrationResult> RegisterAsync(User user)
         {
             if (!String.IsNullOrEmpty(user.Password))
             {
                 if (!_passwordRegex.Match(user.Password))
                 {
-                    return RegistrationResult.BadPasswordFormat;
+                    return Task.FromResult(RegistrationResult.BadPasswordFormat);
                 }
 
                 user.Password = _hasher.Hash(user.Password);
@@ -53,26 +54,26 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
 
             if (_userRepo.SearchFor(u => u.Email.Equals(user.Email)).Any())
             {
-                return RegistrationResult.UserAlreadyExist;
+                return Task.FromResult(RegistrationResult.UserAlreadyExist);
             }
 
-            return base.Register(user);
+            return base.RegisterAsync(user);
         }
 
-        public override bool VerifyEmail(User user)
+        public override Task<bool> VerifyEmailAsync(User user)
         {
             if (user == null || !_tokenAuth.ValidateToken(user.Token))
             {
-                return false;
+                return Task.FromResult(false);
             }
 
             var claim = _tokenAuth.GetClaim(user.Token, "nameid");
             if (!user.Id.ToString().Equals(claim))
             {
-                return false;
+                return Task.FromResult(false);
             }
 
-            return base.VerifyEmail(user);
+            return base.VerifyEmailAsync(user);
         }
     }
 }

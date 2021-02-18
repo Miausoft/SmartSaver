@@ -6,6 +6,8 @@ using SmartSaver.Domain.CustomAttributes;
 using SmartSaver.WebApi.RequestModels;
 using SmartSaver.WebApi.ResponseModels;
 using AutoMapper;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace SmartSaver.WebApi.Controllers
 {
@@ -22,25 +24,25 @@ namespace SmartSaver.WebApi.Controllers
         }
 
         [HttpGet("categories")]
-        public IEnumerable<CategoryResponseModel> Index()
+        public async Task<IEnumerable<CategoryResponseModel>> Index()
         {
             return _mapper.Map<IEnumerable<CategoryResponseModel>>(
-                _categories.GetAll());
+                await _categories.GetAll().ToListAsync());
         }
 
         [HttpGet("category/{categoryId}")]
-        public CategoryResponseModel Get(int categoryId)
+        public async Task<CategoryResponseModel> Get(int categoryId)
         {
             return _mapper.Map<CategoryResponseModel>(
-                _categories.GetById(categoryId));
+                await _categories.GetByIdAsync(categoryId));
         }
 
         [HttpPost("categories")]
         [CheckForInvalidModel]
-        public ActionResult Create(CategoryRequestModel category)
+        public async Task<IActionResult> Create(CategoryRequestModel category)
         {
-            _categories.Insert(_mapper.Map<Category>(category));
-            _categories.Save();
+            await _categories.InsertAsync(_mapper.Map<Category>(category));
+            await _categories.SaveAsync();
             return Created($"category/{category}", category);
         }
     }

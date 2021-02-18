@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.Domain.Repositories;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace SmartSaver.WebApi.Controllers
 {
@@ -15,27 +17,27 @@ namespace SmartSaver.WebApi.Controllers
         }
 
         [HttpGet("users")]
-        public IEnumerable<User> Index()
+        public async Task<IEnumerable<User>> Index()
         {
-            return _users.GetAll();
+            return await _users.GetAll().ToListAsync();
         }
 
         [HttpGet("user/{userId}")]
-        public User Get(int userId)
+        public async Task<User> Get(int userId)
         {
-            return _users.GetById(userId);
+            return await _users.GetByIdAsync(userId);
         }
 
         [HttpPost("users")]
-        public ActionResult Create(User user)
+        public async Task<IActionResult> Create(User user)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            _users.Insert(user);
-            _users.Save();
+            await _users.InsertAsync(user);
+            await _users.SaveAsync();
             return Ok();
         }
     }

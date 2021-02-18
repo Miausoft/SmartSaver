@@ -14,8 +14,8 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
     public interface IAuthentication
     {
         User Login(string email, string password);
-        RegistrationResult Register(User user);
-        public bool VerifyEmail(User user);
+        Task<RegistrationResult> RegisterAsync(User user);
+        public Task<bool> VerifyEmailAsync(User user);
         public Task SignInAsync<T>(T userId);
     }
 }

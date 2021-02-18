@@ -15,6 +15,7 @@ using SmartSaver.Domain.Services.EmailServices;
 using SmartSaver.Domain.Services.AuthenticationServices.Jwt;
 using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.MVC.Models;
+using System.Threading;
 
 namespace SmartSaver.MVC.Controllers
 {
@@ -52,22 +53,23 @@ namespace SmartSaver.MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Register(AuthenticationViewModel model)
+        public async Task<IActionResult> Register(AuthenticationViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var registrationResult = _auth.Register(new User() { Username = model.Username, Email = model.Email, Password = model.Password });
+                var registrationResult = await _auth.RegisterAsync(new User() { Username = model.Username, Email = model.Email, Password = model.Password });
                 if (registrationResult == RegistrationResult.Success)
                 {
                     return RedirectToAction(nameof(Verify), new { model.Email });
                 }
             }
 
+            ModelState.AddModelError(string.Empty, "Registration failed. Please try again.");
             return View();
         }
 
         [HttpGet]
-        public IActionResult Verify(string email)
+        public async Task<IActionResult> Verify(string email)
         {
             User user = _userRepo.SearchFor(e => e.Email.Equals(email)).FirstOrDefault();
 
@@ -77,7 +79,7 @@ namespace SmartSaver.MVC.Controllers
             }
 
             user.Token = _tokenAuth.GenerateToken(user.Id);
-            _userRepo.Save();
+            var saveTask = _userRepo.SaveAsync();
 
             var confirmationLink = Url.Action(
                 nameof(ConfirmEmail),
@@ -90,8 +92,10 @@ namespace SmartSaver.MVC.Controllers
                     _configuration["Email:Address"],
                     _configuration["Email:Address"],
                     "Verify your email address",
-                     System.IO.File.ReadAllText(_configuration["TemplatePaths:Email"]).Replace("@ViewBag.VerifyLink", confirmationLink))
-                { IsBodyHtml = true });
+                    System.IO.File.ReadAllText(_configuration["TemplatePaths:Email"]).Replace("@ViewBag.VerifyLink", confirmationLink))
+            { IsBodyHtml = true });
+
+            await saveTask;
 
             return View(nameof(Verify), ViewBag.Email = user.Email);
         }
@@ -134,17 +138,17 @@ namespace SmartSaver.MVC.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult ExternalResponse(string returnUrl, string provider)
+        public async Task<IActionResult> ExternalResponse(string returnUrl, string provider)
         {
-            var result = HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            if (result.Result.Succeeded)
+            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            if (result.Succeeded)
             {
-                var email = result.Result.Principal.FindFirstValue(ClaimTypes.Email);
-                var registrationResult = _auth.Register(new User() { Username = email, Email = email, Password = null });
+                var email = result.Principal.FindFirstValue(ClaimTypes.Email);
+                var registrationResult = await _auth.RegisterAsync(new User() { Username = email, Email = email, Password = null });
 
                 if (registrationResult == RegistrationResult.Success || registrationResult == RegistrationResult.UserAlreadyExist)
                 {
-                    _auth.SignInAsync(_userRepo.SearchFor(e => e.Email.Equals(email)).FirstOrDefault().Id);
+                    await _auth.SignInAsync(_userRepo.SearchFor(e => e.Email.Equals(email)).FirstOrDefault().Id);
                     return LocalRedirect(returnUrl ?? Url.Content("~/"));
                 }
             }
@@ -156,7 +160,7 @@ namespace SmartSaver.MVC.Controllers
         [HttpGet]
         public IActionResult ConfirmEmail(string token)
         {
-            if (_auth.VerifyEmail(_userRepo.SearchFor(u => u.Token.Equals(token)).FirstOrDefault()))
+            if (_auth.VerifyEmailAsync(_userRepo.SearchFor(u => u.Token.Equals(token)).FirstOrDefault()).Result)
             {
                 return View("Success");
             }

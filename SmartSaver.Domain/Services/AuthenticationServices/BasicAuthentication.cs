@@ -32,15 +32,15 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
             return _userRepo.SearchFor(u => password != null && u.Email.Equals(email)).FirstOrDefault();
         }
 
-        public virtual RegistrationResult Register(User user)
+        public virtual async Task<RegistrationResult> RegisterAsync(User user)
         {
-            _userRepo.Insert(user);
+            await _userRepo.InsertAsync(user);
 
             try
             {
-                _userRepo.Save();
+                await _userRepo.SaveAsync();
                 user.Token = _tokenAuth.GenerateToken(user.Id);
-                _userRepo.Save();
+                await _userRepo.SaveAsync();
             }
             catch (DbUpdateException)
             {
@@ -50,12 +50,12 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
             return RegistrationResult.Success;
         }
 
-        public virtual bool VerifyEmail(User user)
+        public virtual async Task<bool> VerifyEmailAsync(User user)
         {
             user.Token = null;
             try
             {
-                _userRepo.Save();
+               await _userRepo.SaveAsync();
             }
             catch (DbUpdateException)
             {

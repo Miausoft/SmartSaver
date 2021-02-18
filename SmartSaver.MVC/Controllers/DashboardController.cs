@@ -9,6 +9,8 @@ using SmartSaver.EntityFrameworkCore.Models;
 using SmartSaver.MVC.Models;
 using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace SmartSaver.MVC.Controllers
 {
@@ -35,17 +37,17 @@ namespace SmartSaver.MVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(string name)
+        public async Task<IActionResult> Index(string name)
         {
             var account = _accountRepo
                 .SearchFor(a => a.UserId.ToString().Equals(User.Identity.Name) &&
                                 a.Name.Equals(name))
                 .FirstOrDefault();
 
-            account.Transactions = _transactionRepo
+            account.Transactions = await _transactionRepo
                 .SearchFor(t => t.UserId.ToString().Equals(User.Identity.Name) &&
                                 t.AccountId == account.Id)
-                .ToList();
+                .ToListAsync();
 
             var nowStart = account.GoalStartDate.Year == DateTime.Now.Year && account.GoalStartDate.Month == DateTime.Now.Month
                 ? account.GoalStartDate
