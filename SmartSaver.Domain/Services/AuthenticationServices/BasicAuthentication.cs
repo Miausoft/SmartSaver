@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -18,8 +19,8 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
         private readonly ITokenAuthentication _tokenAuth;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public BasicAuthentication(IRepository<User> userRepo, 
-                                   ITokenAuthentication tokenAuth, 
+        public BasicAuthentication(IRepository<User> userRepo,
+                                   ITokenAuthentication tokenAuth,
                                    IHttpContextAccessor httpContextAccessor)
         {
             _userRepo = userRepo;
@@ -39,8 +40,12 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
             try
             {
                 await _userRepo.SaveAsync();
-                user.Token = _tokenAuth.GenerateToken(user.Id);
-                await _userRepo.SaveAsync();
+
+                if (!String.IsNullOrEmpty(user.Password))
+                {
+                    user.Token = _tokenAuth.GenerateToken(user.Id);
+                    await _userRepo.SaveAsync();
+                }
             }
             catch (DbUpdateException)
             {
@@ -55,7 +60,7 @@ namespace SmartSaver.Domain.Services.AuthenticationServices
             user.Token = null;
             try
             {
-               await _userRepo.SaveAsync();
+                await _userRepo.SaveAsync();
             }
             catch (DbUpdateException)
             {
